@@ -1,0 +1,39 @@
+<IfModule mod_rewrite.c>
+IndexIgnore *
+RewriteEngine On
+
+#ErrorDocument 400   https://www.promoterblast.com/error/400
+#ErrorDocument 401   https://www.promoterblast.com/error/401
+#ErrorDocument 403   https://www.promoterblast.com/error/403
+#ErrorDocument 500   https://www.promoterblast.com/error/500
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)/(.*)/(.*)/(.*)$ index.php?url=$1&type=$2&id=$3&end=$4&all=$5 [QSA,L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)/(.*)/(.*)/(.*)$ index.php?url=$1&type=$2&id=$3&end=$4 [QSA,L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)/(.*)/(.*)$ index.php?url=$1&type=$2&id=$3 [QSA,L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)/(.*)$ index.php?url=$1&type=$2 [QSA,L]
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+RewriteCond %{REQUEST_URI} !(.*)/(.*)$
+RewriteRule ^(.*)/(.*)$ $1/$2/
+
+</IfModule>
+
+
+#RewriteEngine On
+#RewriteCond %{REQUEST_URI} !\.(css|gif|ico|jpg|js|png|swf|txt)$
+#RewriteCond %{REMOTE_ADDR} !^111\.111\.111\.111$
+#RewriteRule .* index.php [L]

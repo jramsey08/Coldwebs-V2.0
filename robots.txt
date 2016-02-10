@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /api
+Disallow: /config
+Disallow: /admin
+Disallow: /cron
+Disallow: /forms

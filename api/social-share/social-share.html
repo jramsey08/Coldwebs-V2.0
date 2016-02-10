@@ -1,0 +1,28 @@
+
+
+<body>
+
+
+
+<div class="selectMe shareSelector">I'm selectable text. When you select me, I trigger to open SocialShare Window</div>
+
+<div id="menu" class="shareSelector" style="left:50%; top:0; margin: -125px 0 0 -125px; width:250px; height:250px; background:#f00; border-radius:100%; position:fixed; z-index:11; cursor:pointer;"></div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="assets/javascripts/socialShare.min.js"></script>
+
+<script>
+	$(document).ready(function () {
+
+		$('.shareSelector').socialShare({
+			social: 'blogger,delicious,digg,facebook,friendfeed,google,linkedin,myspace,pinterest,reddit,stumbleupon,tumblr,twitter,windows,yahoo',
+			whenSelect: true,
+			selectContainer: '.shareSelector'
+		});
+
+	});
+
+</script>
+
+</body>
+</html>
