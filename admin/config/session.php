@@ -5,6 +5,9 @@ require_once("config/functions.php");
 require_once("../config/encrypt.php");
 require_once("../config/database.php");
 
+<<<<<<< HEAD
+
+=======
 $session = new session();
 session_set_save_handler(array(&$session,"open"), 
                          array(&$session,"close"), 
@@ -12,6 +15,7 @@ session_set_save_handler(array(&$session,"open"),
                          array(&$session,"write"), 
                          array(&$session,"destroy"), 
                          array(&$session,"gc")); 
+>>>>>>> origin/master
 session_start();
 date_default_timezone_set('America/New_York'); 
 

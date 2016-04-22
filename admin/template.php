@@ -3,8 +3,13 @@
 
 
 if($Login == "1"){
+<<<<<<< HEAD
+    if($Current_Admin_Access <= "3"){
+
+=======
     if($Current_Admin_Access <= "2"){
     
+>>>>>>> origin/master
 // FORCES USERS TO ONLY VIEW A CERTAIN PAGE \\
         if($Current_Admin_Info['id'] == ""){
         }else{
@@ -58,8 +63,19 @@ if($Login == "1"){
         $result = mysql_query($query) or die(mysql_error());
         $row = mysql_fetch_array($result);
         $row = PbUnSerial($row);
+<<<<<<< HEAD
+        if(is_array($row['other'])){
+            if(in_array("tags",$row[other])){
+                if($row['other']['tags'] == ""){
+                    $row['other']['tags'] = $Array['siteinfo']['other']['tags'];
+                }
+            }
+        }else{
+            $row['other'] = array();
+=======
         if($row['other']['tags'] == ""){
             $row['other']['tags'] = $Array['siteinfo']['other']['tags'];
+>>>>>>> origin/master
         }
         if($Cw_Multiple_Cat['active'] == "1"){
             #$row['category'] = unserialize($row['category']);
@@ -84,7 +100,16 @@ if($Login == "1"){
             $row = mysql_fetch_array($result);
             $Article = $row;
         }
+<<<<<<< HEAD
+        if($Get_Url == "useraccess"){
+            $query = "SELECT * FROM cwoptions WHERE id='$ArticleId' AND trash='0'";
+            $result = mysql_query($query) or die(mysql_error());
+            $row = mysql_fetch_array($result);
+            $UserAccess = PbUnserial($row);
+        }
+=======
 
+>>>>>>> origin/master
         if($Get_Url == "offline"){
             $query = "SELECT * FROM articles WHERE id='3'";
             $result = mysql_query($query) or die(mysql_error());

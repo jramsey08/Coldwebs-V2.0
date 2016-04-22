@@ -25,6 +25,10 @@ if($Login == "1"){
 	$Article_Content["code"] = $_POST["code"];
 	$Article_Content["codetype"] = $_POST["codetype"];
 	$Article_Content["embedcode"] = $_POST["embedcode"];
+<<<<<<< HEAD
+	$Article_Content["cattype"] = $_POST["cattype"];
+=======
+>>>>>>> origin/master
 
 	$SettingsAuto = $_POST["auto"];
 	$SettingsAlbum = $_POST["album"];
@@ -61,8 +65,13 @@ if($Login == "1"){
 	$Article_Id = $PageIds["article"];
 	$PageInfo = $_POST["pageinfo"];
 	$PageInfo = OtarDecrypt($key, $PageInfo);
+<<<<<<< HEAD
+	$StructureArticle = $Pageinfo[pagestructure]['article'];
+	$StructureImgSizes = OtarDecrypt($key,$_POST['imgsizes']);
+=======
 	$StructureArticle = $Pageinfo[pagestructure][article];
 	$StructureImgSizes = OtarDecrypt($key,$_POST[imgsizes]);
+>>>>>>> origin/master
 	$files = new UploadedFiles($_FILES);
 
 
@@ -257,16 +266,35 @@ if($Login == "1"){
 		}else{
 			$TagId = $row["content"];
 			$TagId = OtarDecrypt($key,$TagId);
+<<<<<<< HEAD
+			if(is_array($TagId)){
+			    if(in_array($TagArticle, $TagId)){
+			    }else{
+=======
 			if(in_array($TagArticle, $TagId)){
 			}else{
+>>>>>>> origin/master
 				array_push($TagId, $TagArticle);
 				$NewTagArray = OtarEncrypt($key,$TagId);
 				$result = mysql_query("UPDATE cw_tags SET content='$NewTagArray' WHERE id='$TagSearchId'")
 				or die(mysql_error());
+<<<<<<< HEAD
+			    }
+=======
+>>>>>>> origin/master
 			}
 		}
 	}
 
+<<<<<<< HEAD
+    if($_POST['redir'] == ""){
+        $REDIRECT = "admin/Category";
+    }else{
+        $REDIRECT = $_POST['redir'];
+    }
+    $Domain = $Array["siteinfo"]["domain"];
+    header("Location: $Domain/$REDIRECT");
+=======
 //UPDATES THE PAGE_SETTINGS TABLE
 	if($SettingsId == ""){
 	#    mysql_query("INSERT INTO page_settings (url, urlid, urltype, end, secure, autoplay, background, dashboard, active) VALUES('$Article_Url', '$Article_UrlId', '$Article_UrlType', '$Article_End', '$SettingsSecure', '$SettingsAuto', #'$SettingsBackground', '$SettingsDashboard', '$Article_Active') ") or die(mysql_error());    
@@ -298,4 +326,5 @@ if($Login == "1"){
 	$REDIRECT = "admin/Category";
 	$Domain = "$Array["siteinfo"]["domain"];
 	header("Location: $Domain/$REDIRECT");
+>>>>>>> origin/master
 }

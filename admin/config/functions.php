@@ -109,6 +109,17 @@ function TotalVisitors(){
     echo number_format("$row[1]");
 }
 
+<<<<<<< HEAD
+function OrderTotal(){
+    $query = "SELECT id, COUNT(id) FROM trans WHERE active='1' AND trash='0'"; 
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    $row['COUNT(id)'];
+    echo number_format("$row[1]");
+}
+
+=======
+>>>>>>> origin/master
 function MonthlyVisitors(){
 $Date = date("m.y");
 $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker WHERE date3='$Date' AND admin!='1'";
@@ -760,8 +771,11 @@ LOG;
     }
 
 
+<<<<<<< HEAD
+=======
 
 
+>>>>>>> origin/master
 function Cw_Settings($Search){
     $Query = "SELECT * FROM cwoptions WHERE type='settings' AND name='$Search' AND trash='0'";
     $Result = mysql_query($Query) or die(mysql_error());
@@ -782,6 +796,21 @@ function Cw_Load_Avg($Page,$Date,$Array){
         $Speed = $Speed + $Row['loadtime'];
         $Count = $Count + 1;
     }
+<<<<<<< HEAD
+    $Load = $Speed / $Count;
+    $Load = number_format($Load,3) . " Sec";
+return $Load;
+}
+
+
+function CwOrderStatus($Value){
+    if($Value == "0"){ $Value = "Awaiting Payment"; }
+    if($Value == "1"){ $Value = "Processing Order"; }
+    if($Value == "2"){ $Value = "Preparing Shipment"; }
+    if($Value == "3"){ $Value = "Shipped"; }
+    if($Value == "4"){ $Value = "Delivered"; }
+return $Value;
+=======
 
 $Load = $Speed / $Count;
 $Load = number_format($Load,3) . " Sec";
@@ -789,6 +818,7 @@ $Load = number_format($Load,3) . " Sec";
 
 return $Load;
 
+>>>>>>> origin/master
 }
 
 ?>

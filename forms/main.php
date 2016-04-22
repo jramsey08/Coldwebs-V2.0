@@ -64,6 +64,13 @@ if($Get_Type == "category"){
     include("forms/category.php"); 
 }
 
+<<<<<<< HEAD
+if($Get_Type == "order"){ 
+    include("forms/order.php"); 
+}
+
+=======
+>>>>>>> origin/master
 if($Get_Type == "menu"){ 
     include("forms/menu.php"); 
 }
@@ -130,8 +137,15 @@ if($Get_Type == "copy"){
 }
 
 
+<<<<<<< HEAD
+if($Get_Type == "my-info"){ include("forms/myinfo.php"); }
 
 if($Get_Type == "cwfile"){ include("forms/cwfile.php"); }
+if($Get_Type == "reset"){ include("forms/reset.php"); }
+=======
+
+if($Get_Type == "cwfile"){ include("forms/cwfile.php"); }
+>>>>>>> origin/master
 if($Get_Type == "cart"){ include("forms/cart.php"); }
 if($Get_Type == "register"){ include("forms/register.php"); }
 if($Get_Type == "payment"){ include("forms/payment.php"); }

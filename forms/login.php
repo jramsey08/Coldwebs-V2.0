@@ -81,8 +81,13 @@ if($_SESSION['current_user'] == ""){
                   $Login_Type = "200"; 
              }else{
                   $Login = 0;
+<<<<<<< HEAD
+                  $Array['error'] = "114";
+                  $REDIRECT = "Login?error=114"; 
+=======
                   $Array['error'] = "112";
                   $REDIRECT = "Login?error=112"; 
+>>>>>>> origin/master
              }
         }
 
@@ -99,7 +104,11 @@ if($_SESSION['current_user'] == ""){
             $result = mysql_query("UPDATE users SET other='$UserOther' WHERE id='$UserId'") or die(mysql_error());
        mysql_query("INSERT INTO login_session(active, session, date, computerinfo, ipaddress, userid, browser_name, browser_useragent, browser_version, browser_platform, browser_pattern, country, state, city, zip, lat, lon, countrycode, timezone, session_generate, cookie) VALUES('1', '$Session_Generate', '$Date', '$Computer_Name', '$User_Ip', '$UserId', '$Browser_Name', '$Browser_User_Agent', '$Browser_Version', '$Browser_Platform', '$Browser_Pattern', '$Country', '$State', '$City', '$Zipcode', '$Latitude', '$Longitude', '$Country_Code', '$TimeZone', '$Session_Generate', '$Session_Generate' ) ")or die(mysql_error());
        $REDIRECT = "admin/";
+<<<<<<< HEAD
+            if($Access > "3"){
+=======
             if($Access >= "3"){
+>>>>>>> origin/master
                 $Array['error'] = "114"; $REDIRECT = "Dashboard/";
             }else{
                 $Array['error'] = "114"; $REDIRECT = "admin/";
@@ -112,7 +121,11 @@ if($_SESSION['current_user'] == ""){
     $row = mysql_fetch_array($result);
     $row = PbUnserial($row);
     $Access = $row['info']['access'];
+<<<<<<< HEAD
+    if($Access > "3"){
+=======
     if($Access >= "3"){
+>>>>>>> origin/master
         $Array['error'] = "114"; $REDIRECT = "Dashboard/";
     }else{
         $Array['error'] = "114"; $REDIRECT = "admin/";
@@ -122,4 +135,8 @@ if($_SESSION['current_user'] == ""){
 $Domain = $Array["siteinfo"]["domain"];
 header("Location: $Domain/$REDIRECT");
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> origin/master
 ?>

@@ -1,6 +1,9 @@
 <?php
+<<<<<<< HEAD
+=======
 include("forms/logincheck.php");
 if($Login == "1"){
+>>>>>>> origin/master
 	$Name = $_POST["name"];
 	$Email = $_POST["email"];
 	$Subject = $_POST["subject"];
@@ -11,6 +14,11 @@ if($Login == "1"){
 	$Priority = $_POST["priority"];
 	$Url = $_POST["url"];
 
+<<<<<<< HEAD
+        $message = $Message;
+        $to = $SiteInfo['other']['email'];
+=======
+>>>>>>> origin/master
 	$Domain = $Array['siteinfo']['domain'];
 
 	if($Priority == ""){ 
@@ -24,10 +32,24 @@ if($Login == "1"){
 				(name, email, subject, message, user, phone, website, date, priority) VALUES('$Name', '$Email', '$Subject', '$Message', '$User', '$Phone', '$Website', '$Date', '$Priority' ) ") 
 				or die(mysql_error()); 
 			}
+<<<<<<< HEAD
+                    if($Subject == ""){
+                        $subject = "$Get_Name has just sent you a message";
+                    }else{
+                        $subject = $Subject;
+                    }
+                    $headers = "From: $Email" . "\r\n" . "Reply-To: $Email" . "\r\n" . 'X-Mailer: PHP/' . phpversion();
+                    mail($to, $subject, $message, $headers);
+		}
+	}
+	header("Location: /");
+
+=======
 		}
 	}
 
 
 	header("Location: /");
 }
+>>>>>>> origin/master
 ?>

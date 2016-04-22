@@ -60,9 +60,13 @@ while($row = mysql_fetch_array($result)){ ?>
 	
 </div>
 
+<<<<<<< HEAD
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/icheck.min.js"></script>
+=======
 
 
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.icheck/icheck.min.js"></script>
+>>>>>>> origin/master
 
 <script type="text/javascript">
     $(document).ready(function(){

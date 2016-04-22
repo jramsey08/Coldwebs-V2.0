@@ -45,11 +45,14 @@ if($Current_Admin_Access >= $ListedUser['info']['access']){
 <input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $CurrentUser['name']; ?>'>
 </div></div><br><br>
 <div class="form-group">
+<<<<<<< HEAD
+=======
 <label class="col-sm-3 control-label">E-Mail</label>
 <div class="col-sm-6">
 <input type="text" name='email' placeholder="Enter Title" class="form-control" value='<?php echo $CurrentUser['email']; ?>'>
 </div></div><br><br>
 <div class="form-group">
+>>>>>>> origin/master
 <label class="col-sm-3 control-label">Account Type:</label>
 <div class="col-sm-6">
 <input type="text" class="form-control" value='<?php echo CwUserAccess($Current_Admin_Access); ?>' disabled>
@@ -305,6 +308,18 @@ $Social = $Article['other']['social']; ?>
 
 
 
+<<<<<<< HEAD
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jasny-bootstrap.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/moment.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/daterangepicker.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap.touchspin.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-colorpicker.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-switch.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/select2.min.js" ></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-slider.js" ></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/icheck.min.js"></script>
+=======
  </script> <script type="text/javascript" src="http://condorthemes.com/flatdream/js/jasny.bootstrap/extend/js/jasny-bootstrap.min.js"></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/moment.min.js"></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/daterangepicker.js"></script>
@@ -315,6 +330,7 @@ $Social = $Article['other']['social']; ?>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.select2/select2.min.js" ></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.slider/js/bootstrap-slider.js" ></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.icheck/icheck.min.js"></script>
+>>>>>>> origin/master
 <script type="text/javascript">
     $(document).ready(function(){
       /*Date Range Picker*/
@@ -464,11 +480,19 @@ $Social = $Article['other']['social']; ?>
 </script>
 
 
+<<<<<<< HEAD
+<script src="/admin/theme/cwadmin/header/js/ckeditor.js"></script>
+<script src="/admin/theme/cwadmin/header/js/jquery.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/summernote.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/js/wysihtml5-0.3.0.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-wysihtml5.js"></script>
+=======
 <script src="http://condorthemes.com/flatdream/js/ckeditor/ckeditor.js"></script>
 <script src="http://condorthemes.com/flatdream/js/ckeditor/adapters/jquery.js"></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.summernote/dist/summernote.min.js"></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/src/bootstrap-wysihtml5.js"></script>
+>>>>>>> origin/master
 
 <script type="text/javascript">
     $(document).ready(function(){

@@ -23,12 +23,20 @@ if($Website_Db_Setup == "" OR $Website_Db_Setup == "0"){
         
 // SHOWS THE ADMIN SECURED PAGES DURING SITE OFFLINE MODE
     $AdminSession = SessionUser($Array);
+<<<<<<< HEAD
+    include("config/info.php");
+=======
+>>>>>>> origin/master
     if($WBOFF == "1"){
         if($AdminSession == "1"){
             $View_site = "1";
         }
     }
+<<<<<<< HEAD
+
+=======
     
+>>>>>>> origin/master
 // THE FOLLOWING CODE IS FOR GENERAL SITE VARIABLE DEFINITIONS \\
     $Array['urlinfo'] = $_GET;
     $Get_End = strtolower($_GET['end']);
@@ -125,4 +133,9 @@ if($Website_Db_Setup == "" OR $Website_Db_Setup == "0"){
 
 // DETECT ANY ERROR LOGS \\
     #require_once("../error_log.php");
+<<<<<<< HEAD
+
 }
+=======
+}
+>>>>>>> origin/master

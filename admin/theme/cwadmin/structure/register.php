@@ -69,8 +69,13 @@
 </div>
 
 
+<<<<<<< HEAD
+  <script src="/admin/theme/cwadmin/header/js/jquery.js"></script>
+  <script src="/admin/theme/cwadmin/header/js/parsley.js" type="text/javascript"></script>
+=======
   <script src="http://condorthemes.com/flatdream/js/jquery.js"></script>
   <script src="http://condorthemes.com/flatdream/js/jquery.parsley/parsley.js" type="text/javascript"></script>
+>>>>>>> origin/master
 	<script type="text/javascript">
     $(function(){
       $("#cl-wrapper").css({opacity:1,'margin-left':0});

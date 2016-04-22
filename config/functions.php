@@ -352,11 +352,19 @@ function PullPageInfo($Array){
     $UrlType = $row['urltype'];
     $UrlId = $row['urlid'];
     $End = $row['end'];
+<<<<<<< HEAD
+    $SettId = $row['setting'];
+=======
+>>>>>>> origin/master
     $Template = $row['template'];
     if($row['active'] == ""){
         $row['active'] = "0";
     }
+<<<<<<< HEAD
+    $query = "SELECT * FROM page_settings WHERE id='$SettId'"; 
+=======
     $query = "SELECT * FROM page_settings WHERE url='$UrlUrl' AND urltype='$UrlType' AND end='$End' AND urlid='$UrlId'"; 
+>>>>>>> origin/master
     $result = mysql_query($query) or die(mysql_error());
     $RoW = mysql_fetch_array($result);
     $row['pagesettings'] = $RoW;
@@ -592,6 +600,29 @@ $BrowserStatus['status'] = $OfflineError;
 return $BrowserStatus;
 }
 
+<<<<<<< HEAD
+function CwCartTotal($Cart){
+    $query = "SELECT * FROM cw_cart WHERE active='1' AND trash='0' AND session='$Cart'";
+    $result = mysql_query($query) or die(mysql_error());
+    while($row = mysql_fetch_array($result)){
+        $CwCart['id'] = $row['id'];
+        $CwCart['session'] = $row['session'];
+        $CwCart['cart'] = $row['cart'];
+        $CwCart['item'] = $row['item'];
+        $CwCart['user'] = $row['user'];
+        $CwCart['qty'] = $row['qty'];
+        $CwCart['active'] = $row['active'];
+        $CwCart['trash'] = $row['trash'];
+        $CwCart['other'] = $row['other'];
+        $CwCart['price'] = $row['price'];
+        $CwCart['other'] = unserialize($CwCart['other']);
+        $CwTotal = $row['price'] * $row['qty'];
+        $CwCartSubTotal = $CwCartSubTotal + $CwTotal;
+        $CartCount = $CartCount + 1;
+    }
+    $Shopping['total'] = $CwCartSubTotal;
+    $Shopping['count'] = $CartCount;
+=======
 function CwCartTotal($Array){
     $Site_Ecommerce = $Array['shopping']['active'];
     $Cart_Session = $_SESSION['COOKIEPHPSESSID'];
@@ -614,6 +645,7 @@ function CwCartTotal($Array){
             $Shopping['shippingrate'] = $Shipping_Rate;
         }
     }
+>>>>>>> origin/master
 return $Shopping;
 }
 
@@ -1041,7 +1073,10 @@ function Cw_Ecommerce_Attribute($Value){
     $result = mysql_query($query) or die(mysql_error());
     $row = mysql_fetch_array($result);
     $Name = $row['name'];
+<<<<<<< HEAD
+=======
 
+>>>>>>> origin/master
 return $Name;
 }
 
@@ -1227,4 +1262,16 @@ function Cw_Tracker_Validate($Value){
 return $Validate;
 }
 
+<<<<<<< HEAD
+function CwOrderStatus($Value){
+    if($Value == "0"){ $Value = "Awaiting Payment"; }
+    if($Value == "1"){ $Value = "Processing Order"; }
+    if($Value == "2"){ $Value = "Preparing Shipment"; }
+    if($Value == "3"){ $Value = "Shipped"; }
+    if($Value == "4"){ $Value = "Delivered"; }
+return $Value;
+}
+
+=======
+>>>>>>> origin/master
 ?>

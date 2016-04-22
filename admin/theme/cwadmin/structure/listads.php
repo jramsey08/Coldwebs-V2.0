@@ -12,6 +12,10 @@
 <ul class="nav nav-tabs">
 <li class="active"><a href="#basic" data-toggle="tab">Basic Info</a></li>
 <li><a href="#gallery" data-toggle="tab">Extra Images</a></li>
+<<<<<<< HEAD
+<li><a href="#uploads" data-toggle="tab">Uploads</a></li>
+=======
+>>>>>>> origin/master
 </ul>
 
 
@@ -63,6 +67,15 @@
 <label class="col-sm-3 control-label">Ad Location</label>
 <div class="col-sm-6">
 <select class="form-control" name='location'>
+<<<<<<< HEAD
+<option value='any' <?php if($Article['location'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
+<option value='x' <?php if($Article['location'] == "x"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Any*</option>
+<option value='1' <?php if($Article['location'] == "1"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Top Banner</option>
+<option value='2' <?php if($Article['location'] == "2"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Body</option>
+<option value='3' <?php if($Article['location'] == "3"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Sidebar</option>
+<option value='4' <?php if($Article['location'] == "4"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Footer</option>
+<option value='x' <?php if($Article['location'] != "" AND $Loc_Find != "1"){ echo "selected='selected'"; } ?>>Manual</option>
+=======
 <option value='any' <?php if($Article['location'] == "any"){ echo "selected='selected'"; } ?>>Select Below</option>
 <option value='x' <?php if($Article['location'] == "x"){ echo "selected='selected'"; } ?>>Any*</option>
 <option value='1' <?php if($Article['location'] == "1"){ echo "selected='selected'"; } ?>>Top Banner</option>
@@ -70,6 +83,7 @@
 <option value='3' <?php if($Article['location'] == "3"){ echo "selected='selected'"; } ?>>Sidebar</option>
 <option value='4' <?php if($Article['location'] == "4"){ echo "selected='selected'"; } ?>>Footer</option>
 <option value='x' <?php if($Article['location'] == "x"){ echo "selected='selected'"; } ?>>Manual</option>
+>>>>>>> origin/master
 </select></div></div>
 </div>
 <br><br>
@@ -167,7 +181,24 @@
 
 
 
+<<<<<<< HEAD
+<div class="tab-pane cont" id="uploads">
+<div class="col-sm-12 col-md-12">
+<div class="header"><h3>Media Uploader</h3>
+</div></div>
+<div class="row">
+<div class="col-sm-12 col-md-12">
+<?php if($Article['id'] == ""){
+    $Rand = rand("999","9999999");
+}
+?>
+<center>
+<iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $Rand; ?>&id=<?php echo $Article['id']; ?>' scrolling='no' frameborder="0" height="600" width="720" ></iframe></center>
+</div></div>
+</div>
+=======
 
+>>>>>>> origin/master
 
 
 
@@ -178,6 +209,11 @@
 <div class="col-sm-12 col-md-12">
 <div class="header"><h3>Extra Images</h3>
 </div></div>
+<<<<<<< HEAD
+
+<div class="row">
+<div class="col-md-12">
+=======
 <div class="row">
 <div class="col-sm-6 col-md-6">
 <div class="content">
@@ -193,6 +229,7 @@
 <div class="row">
 <div class="col-md-12">
 <div class="header"><h3>View Images</h3></div>
+>>>>>>> origin/master
 <div class="content">
 <div class="table-responsive">
 <table class="table no-border hover">
@@ -521,4 +558,8 @@ function formSubmitter(formTag, messageTag){
 
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.summernote/dist/summernote.min.js"></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
+<<<<<<< HEAD
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/src/bootstrap-wysihtml5.js"></script>
+=======
+<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/src/bootstrap-wysihtml5.js"></script>
+>>>>>>> origin/master

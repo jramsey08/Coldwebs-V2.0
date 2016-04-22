@@ -6,7 +6,11 @@
 <li class="active"><?php echo $Article['content']['name']; ?></li>
 </ol></div>		
 		
+<<<<<<< HEAD
+<div class="row">
+=======
 <div class="row">		
+>>>>>>> origin/master
 <div class="col-sm-12 col-md-9">
 <div class="tab-container">
 <ul class="nav nav-tabs">
@@ -14,6 +18,10 @@
 <li><a href="#articles" data-toggle="tab">Posts</a></li>
 <li><a href="#gallery" data-toggle="tab">Gallery</a></li>
 <li><a href="#social" data-toggle="tab">Social Media</a></li>
+<<<<<<< HEAD
+<li><a href="#uploads" data-toggle="tab">Uploads</a></li>
+=======
+>>>>>>> origin/master
 </ul>
 
 
@@ -21,7 +29,11 @@
 
 <div class="tab-pane active cont" id="basic">
 <div class="row">
+<<<<<<< HEAD
+<form role="form" method='post' action='/Process/Blog' enctype="multipart/form-data">
+=======
 <form role="form" method='post' action='/Process/Articles' enctype="multipart/form-data">
+>>>>>>> origin/master
 <div class="col-sm-12 col-md-12">
 <div class="col-sm-6 col-md-6">
 <div class="header"><h3>Basic Information</h3></div></div>
@@ -96,7 +108,11 @@ while($Row = mysql_fetch_array($Result)){
 <div class="header"><h3>Gallery</h3>
 </div></div>
 <div class="row">
+<<<<<<< HEAD
+<div class="col-sm-12 col-md-6">
+=======
 <div class="col-sm-6 col-md-6">
+>>>>>>> origin/master
 <div class="content">
 <div class="form-group">
 <label class="col-sm-3 control-label">Main Image</label>
@@ -109,6 +125,9 @@ while($Row = mysql_fetch_array($Result)){
 <input type="file" name="profilepic[]"></span>
 <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Remove</a>
 </div></div></div></div></div>
+<<<<<<< HEAD
+</div>
+=======
 <div class="col-sm-6 col-md-6">
 <div class="content">
 <div class="form-group">
@@ -120,6 +139,7 @@ while($Row = mysql_fetch_array($Result)){
 <span class="fileinput-exists">Change</span><input type="file" multiple="" name="gallery[]"></span>
 <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">&times;</a>
 </div></div></div></div></div></div>
+>>>>>>> origin/master
 <div class="row">
 <div class="col-md-12">
 <div class="header"><h3>Extra Images</h3></div>
@@ -132,6 +152,15 @@ while($Row = mysql_fetch_array($Result)){
 <th style="width:30%;"><strong>Order</strong></th>
 <th style="width:30%;"><strong>Url</strong></th>
 <th style="width:30%;"><strong>Delete</strong></th>
+<<<<<<< HEAD
+</tr></thead>
+<tbody class="no-border-y">
+<?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND type='image' AND trash='0' AND active='1' ORDER BY list";
+$result = mysql_query($query) or die(mysql_error());
+while($row = mysql_fetch_array($result)){ 
+if($Article['id'] == ""){
+    #exit;
+=======
 <th style="width:15%;" class="text-center"><strong>Action</strong></th>
 </tr></thead>
 <tbody class="no-border-y">
@@ -140,19 +169,39 @@ $result = mysql_query($query) or die(mysql_error());
 while($row = mysql_fetch_array($result)){ 
 if($Article['id'] == ""){
     exit;
+>>>>>>> origin/master
 } ?>
 <tr>
 <td><img src='<?php echo $row['img']; ?>' height="200" width="200"></td>
 <td style="width:30%;"><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="1" value='<?php echo $row["list"]; ?>'></td>
 <td style="width:30%;"><input type='text' name="ImageUrl[<?php echo $row['id']; ?>]" size="1" value='<?php echo $row["url"]; ?>'></td>
 <td><input type="checkbox" name="removegal[]" value="<?php echo $row['id']; ?>"></td>
+<<<<<<< HEAD
+=======
 <td class="text-center"><a class="label label-danger" href="/Process/Delete/Images/<?php echo OtarEncrypt($key,$row['id']); ?>"><i class="fa"></i></a></td>
+>>>>>>> origin/master
 </tr><?php } ?>
 </tbody></table>
 </div></div></div></div>
 </div>
 
 
+<<<<<<< HEAD
+<div class="tab-pane cont" id="uploads">
+<div class="col-sm-12 col-md-12">
+<div class="header"><h3>Media Uploader</h3>
+</div></div>
+<div class="row">
+<div class="col-sm-12 col-md-12">
+<?php if($Article['id'] == ""){
+    $Rand = rand("999","9999999");
+}
+?><center>
+<iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $Rand; ?>&id=<?php echo $Article['id']; ?>' scrolling='no' frameborder="0" height="600" width="720" ></iframe></center>
+</div></div>
+</div>
+=======
+>>>>>>> origin/master
 
 
 <div class="tab-pane cont" id="articles">

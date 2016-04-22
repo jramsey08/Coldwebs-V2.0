@@ -40,7 +40,11 @@
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery-ui.js" ></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.gritter.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/core.js"></script>
+<<<<<<< HEAD
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/cw.js"></script>
+=======
 
+>>>>>>> origin/master
 
 <script type="text/javascript">
 var auto_refresh = setInterval(

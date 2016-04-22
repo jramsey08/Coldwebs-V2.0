@@ -71,6 +71,17 @@ if($Login == "1"){
 		header("Location: $Domain/admin/Transfer/");
 	}
 
+<<<<<<< HEAD
+	if($Get_Id == "cart"){
+		$Page = $_GET['end'];
+		$Page = OtarDecrypt($key, $Page);
+		$result = mysql_query("UPDATE cw_cart SET trash='1' WHERE id='$Page'") 
+		or die(mysql_error());
+		header("Location: $Domain/Cart/");
+	}
+
+=======
+>>>>>>> origin/master
 	if($Get_Id == "delete"){
 		$Restore = $_GET['end'];
 		$Restore = OtarDecrypt($key, $Restore);

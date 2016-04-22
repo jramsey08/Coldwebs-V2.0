@@ -13,7 +13,10 @@ $row = mysql_fetch_array( $result );
     $Current_Admin_Id = $row['id'];
     $UserSiteAccess = $row['info']['siteaccess'];
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> origin/master
 $result = mysql_query("SELECT * FROM articles WHERE type='author' AND category='$Current_Admin'") or die(mysql_error());
 $row = mysql_fetch_array( $result );
     $Current_Author = $row['id'];

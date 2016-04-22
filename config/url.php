@@ -9,6 +9,11 @@ if($Get_Url == "register"){
 
 if($Get_Url == "login"){
     if($CustomerLogin == "1"){
+<<<<<<< HEAD
+        $OverRight['theme'] = "default";
+        $OverRight['file'] = "login";
+=======
+>>>>>>> origin/master
     }else{
         $OverRight['theme'] = "admin/theme/cwadmin";
         $OverRight['file'] = "login";
@@ -61,6 +66,14 @@ if($Get_Url == "search"){
     $OverRight['file'] = "search";
 }
 
+<<<<<<< HEAD
+if($Get_Url == "reset_pw"){
+    $OverRight['theme'] = "default";
+    $OverRight['file'] = "resetpw";
+}
+
+=======
+>>>>>>> origin/master
 if($Get_Url == "archive"){
     $OverRight['theme'] = "default";
     $OverRight['file'] = "archive";
@@ -104,6 +117,10 @@ if($Get_Url == "services"){
 
 if($Get_Url == "shop"){
     if($Get_Type == ""){
+<<<<<<< HEAD
+        $Get_Url = "shop";
+=======
+>>>>>>> origin/master
     }else{
         $cwdefault = "1";
         $OverRight['theme'] = "default";
@@ -136,6 +153,71 @@ if($Get_Url == "dashboard"){
     }
 }
 
+<<<<<<< HEAD
+$E_Commerce = "1";
+
+
+
+if($E_Commerce == "1"){
+
+    if($Get_Url == "my-account"){
+        $OverRight['theme'] = "default";
+        $OverRight['file'] = "account";
+    }
+
+    if($Get_Url == "my-orders"){
+        if($Get_Type == ""){
+            $OverRight['theme'] = "default";
+            $OverRight['file'] = "orders";
+        }else{
+            $OverRight['theme'] = "default";
+            $OverRight['file'] = "listorder";
+        }
+    }
+
+    if($Get_Url == "my-info"){
+        $OverRight['theme'] = "default";
+        $OverRight['file'] = "myinfo";
+    }
+
+    if($Get_Url == "my-address"){
+        $OverRight['theme'] = "default";
+        $OverRight['file'] = "myaddress";
+    }
+
+    if($Get_Url == "my-wishlist"){
+        $OverRight['theme'] = "default";
+        $OverRight['file'] = "mywishlist";
+    }
+
+    if($Get_Url == "order-confirm"){
+        if($Get_Type == ""){
+            header("Location: $Domain/My-Account");
+        }else{
+            $Trans_Id = OtarDecrypt($key,$_GET['type']);
+            $query = "SELECT * FROM trans WHERE id='$Trans_Id'";
+            $result = mysql_query($query) or die(mysql_error());
+            $Trans_Confirm = mysql_fetch_array($result);
+            $Trans_Confirm = PbUnSerial($Trans_Confirm);
+            $Trans_Ref = $Trans_Confirm['transid'];
+            if($Trans_Confirm['id'] != ""){
+                $OverRight['theme'] = "default";
+                $OverRight['file'] = "confirmation";
+            }else{
+                header("Location: $Domain/My-Orders"); 
+            }
+        }
+    }
+
+    if($Get_Url == "cwpayment"){
+        $OverRight['root'] = "1";
+        $OverRight['file'] = "forms/cwpayment.php";
+    }
+
+
+
+}
+=======
 
 
 
@@ -144,4 +226,5 @@ if($Get_Url == "dashboard"){
 
 
 
+>>>>>>> origin/master
 ?>

@@ -49,6 +49,30 @@
 <span class="input-group-addon">@</span>
 <input type="text" class="form-control" name='url' value="<?php echo $ProductInfo['url']; ?>" placeholder="Example: site.com/'URL'">
 </div></div></div><br><br>
+<<<<<<< HEAD
+
+
+<div class="form-group">
+<label class="col-sm-3 control-label">Category Type</label>
+<div class="col-sm-6">
+<select class="form-control" name='cattype' onchange="catType(this.value)">
+<option value="" <?php if($ProductInfo['content']['cattype'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
+<option value="0" <?php if($ProductInfo['content']['cattype'] == "0"){ echo "selected='selected'"; }; ?>>Women</option>
+<option value="1" <?php if($ProductInfo['content']['cattype'] == "1"){ echo "selected='selected'"; }; ?>>Men</option>
+<option value="2" <?php if($ProductInfo['content']['cattype'] == "2"){ echo "selected='selected'"; }; ?>>Kids</option>
+<option value="3" <?php if($ProductInfo['content']['cattype'] == "3"){ echo "selected='selected'"; }; ?>>Other</option>
+</select></div></div><br><br>
+
+
+<div id="showCatType">
+<div class="form-group">
+<label class="col-sm-3 control-label"></label>
+<div class="col-sm-6">
+<div class="input-group">
+Please select a Category Type.
+</div></div></div><br><br></div>
+
+=======
 <div class="form-group">
 <label class="col-sm-3 control-label">Category</label>
 <div class="col-sm-6">
@@ -61,12 +85,23 @@ while($row = mysql_fetch_array($result)){
 $row = PbUnSerial($row);
 echo "<option value='$row[id]'"; if($row['id'] == $ProductInfo['category']){ echo "selected='selected'"; }; ?>><?php echo $row['content']['name']; ?></option> <?php } ?>
 </select></div></div><br><br>
+>>>>>>> origin/master
 <div class="form-group">
 <label class="col-sm-3 control-label">Price</label>
 <div class="col-sm-6">
 <div class="input-group">
 <span class="input-group-addon">$</span>
+<<<<<<< HEAD
+<input type="text" class="form-control" name='prodprice' value="<?php echo $ProductInfo['content']['prodprice']; ?>" placeholder="Example: $'100.00'">
+</div></div></div><br><br>
+<div class="form-group">
+<label class="col-sm-3 control-label">Qty</label>
+<div class="col-sm-6">
+<div class="input-group">
+<input type="text" class="form-control" name='qty' value="<?php echo $ProductInfo['content']['qty']; ?>" placeholder="Example: '100'">
+=======
 <input type="text" class="form-control" name='prodprice' value="<?php echo isset_get($ProductInfo['content'], 'prodprice'); ?>" placeholder="Example: $'100.00'">
+>>>>>>> origin/master
 </div></div></div><br><br>
 </div>
 <div class="col-sm-6 col-md-6">
@@ -177,7 +212,11 @@ while($row = mysql_fetch_array($result)){ ?>
 <?php
 $PageType = $ProductInfo['type'];
 $CurrentLayout = $ProductInfo['other']['structure'];
+<<<<<<< HEAD
+$Layouts = $ThemeArray['structure']["$PageType"];
+=======
 $Layouts = $ThemeArray[structure][$PageType];
+>>>>>>> origin/master
 echo "<option value=''"; if( $CurrentLayout == $Layout){ echo "selected=selected"; } echo ">Default</option>"; 
 foreach($ThemeArray['structure']["$PageType"] as $Layout=>$x_value){ 
     echo "<option value='"; echo $Layout; echo "'"; if( $CurrentLayout == $Layout){ echo "selected=selected"; } echo ">$Layout</option>";

@@ -2,7 +2,11 @@
 <div class="page-head">
 <ol class="breadcrumb">
 <li><a href="/admin">Dashboard</a></li>
+<<<<<<< HEAD
+<li><a href="/admin/Ecommerce">E-Commerce</a></li>
+=======
 <li><a href="/Ecommerce">E-Commerce</a></li>
+>>>>>>> origin/master
 <li class="active">Product Attributes</li>
 </ol></div>
 

@@ -369,9 +369,17 @@ EmbedCode
 
 <input type="hidden" name="category" value="self">
 <input type="hidden" name="imgtype" value="category">
+<<<<<<< HEAD
+<input type="hidden" name="cattype" value="<?php echo $Article['content']['cattype']; ?>">
 <input type="hidden" name="userid" value="<?php echo $Array['userinfo']['id']; ?>">
 <input type="hidden" name="img" value="<?php echo $Article['content']['img']; ?>">
 <input type="hidden" name="PageIds" value="<?php echo $PageIds; ?>">
+<input type="hidden" name="imgsizes" value="<?php echo OtarEncrypt($key,$StructureImgSizes); ?>">
+=======
+<input type="hidden" name="userid" value="<?php echo $Array['userinfo']['id']; ?>">
+<input type="hidden" name="img" value="<?php echo $Article['content']['img']; ?>">
+<input type="hidden" name="PageIds" value="<?php echo $PageIds; ?>">
+>>>>>>> origin/master
 </form>	
 </div>
 

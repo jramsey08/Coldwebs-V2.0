@@ -71,6 +71,41 @@ $Scart_Session = $_SESSION["COOKIEPHPSESSID"];
     $start_from = ($getpagenumber - 1) * $getlist;
     $Stop_at = $getlist * $getpagenumber;
 
+<<<<<<< HEAD
+if($Get_Url == "home" OR $Get_Url == ""){
+    $getlist = "13";
+}
+
+$Home_Zero = $getlist * $getpagenumber;
+$Home_Zero = $Home_Zero - "13";
+$Home_One = $getlist * $getpagenumber;
+$Home_One = $Home_One - "12";
+$Home_Two = $getlist * $getpagenumber;
+$Home_Two = $Home_Two - "11";
+$Home_Three = $getlist * $getpagenumber;
+$Home_Three = $Home_Three - "10";
+$Home_Four = $getlist * $getpagenumber;
+$Home_Four = $Home_Four - "9";
+$Home_Five = $getlist * $getpagenumber;
+$Home_Five = $Home_Five - "8";
+$Home_Six = $getlist * $getpagenumber;
+$Home_Six = $Home_Six - "7";
+$Home_Seven = $getlist * $getpagenumber;
+$Home_Seven = $Home_Seven - "6";
+$Home_Eight = $getlist * $getpagenumber;
+$Home_Eight = $Home_Eight - "5";
+$Home_Nine = $getlist * $getpagenumber;
+$Home_Nine = $Home_Nine - "4";
+$Home_Ten = $getlist * $getpagenumber;
+$Home_Ten = $Home_Ten - "3";
+$Home_Eleven = $getlist * $getpagenumber;
+$Home_Eleven = $Home_Eleven - "2";
+$Home_Twelve = $getlist * $getpagenumber;
+$Home_Twelve = $Home_Twelve - "1";
+$Home_Thirteen = $getlist * $getpagenumber;
+$Home_Thirteen = $Home_Thirteen - "0";
+
+=======
 $Home_One = $getlist * $getpagenumber;
 $Home_One = $Home_One - $getlist;
 $Home_Two = $getlist * $getpagenumber;
@@ -91,6 +126,7 @@ $Home_Nine = $getlist * $getpagenumber;
 $Home_Nine = $Home_Nine - "1";
 $Home_Ten = $getlist * $getpagenumber;
 $Home_Ten = $Home_Ten - "0";
+>>>>>>> origin/master
 
 $Array['websiteid'] = $Website_Id;
 ?>

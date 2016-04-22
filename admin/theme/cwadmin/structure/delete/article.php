@@ -2,7 +2,12 @@
 <div class="page-head">
 <ol class="breadcrumb">
 <li><a href="/admin">Dashboard</a></li>
+<<<<<<< HEAD
+<li><a href="/admin/Blog">Blog</a></li>
+<li class="active">Blog Trash</li>
+=======
 <li class="active">Articles Trash</li>
+>>>>>>> origin/master
 </ol></div>
 
 <div class="row">

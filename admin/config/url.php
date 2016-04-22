@@ -181,6 +181,8 @@ if($UserSiteAccess['editgallery'] == "1"){
     }
 }
 
+<<<<<<< HEAD
+=======
 if($UserSiteAccess['editsidebar'] == "1"){
     if($Get_Url == "sidebar"){
         $OverRight['theme'] = "theme/cwadmin";
@@ -196,6 +198,7 @@ if($UserSiteAccess['editsidebar'] == "1"){
     }
 }
 
+>>>>>>> origin/master
 if($Get_Url == "profile"){
     $OverRight['theme'] = "theme/cwadmin";
     $OverRight['file'] = "profile";
@@ -273,6 +276,33 @@ if($UserSiteAccess['editoffline'] == "1"){
         $OverRight['file'] = "offline";
         $OverRight['article'] = "3";
     }
+<<<<<<< HEAD
+} 
+
+if($UserSiteAccess['ecommerce'] == "1"){
+    if($Get_Url == "ecommerce"){
+        if($Get_Type == ""){
+            $OverRight['theme'] = "theme/cwadmin";
+            $OverRight['file'] = "ecommerce";
+        }
+        if($Get_Type == "category"){
+            if($Get_Id == ""){
+                $OverRight['theme'] = "theme/cwadmin";
+                $OverRight['file'] = "ecommerce/cat";
+            }else{
+                $OverRight['theme'] = "theme/cwadmin";
+                $OverRight['file'] = "ecommerce/listcat";
+            }
+        }
+    }
+
+
+
+
+
+
+
+=======
 }
 
 if($UserSiteAccess['ecommerce'] == "1"){
@@ -280,6 +310,7 @@ if($UserSiteAccess['ecommerce'] == "1"){
         $OverRight['theme'] = "theme/cwadmin";
         $OverRight['file'] = "ecommerce";
     }
+>>>>>>> origin/master
 }
 
 if($UserSiteAccess['ecommerce'] == "1"){
@@ -376,6 +407,10 @@ if($Get_Url == "advertisement"){
         $OverRight['file'] = "listads";
     }
 }
+<<<<<<< HEAD
+
+=======
+>>>>>>> origin/master
 if($UserSiteAccess['editdesign'] == "1"){
     if($Get_Url == "design"){
         if($Get_Type == ""){
@@ -451,6 +486,8 @@ if($UserSiteAccess['editmessages'] == "1"){
 }
 
 
+<<<<<<< HEAD
+=======
 
 
 
@@ -483,4 +520,5 @@ if($UserSiteAccess['editarticle'] == "1"){
 
 
 
+>>>>>>> origin/master
 ?>

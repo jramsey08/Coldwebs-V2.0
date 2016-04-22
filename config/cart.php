@@ -1,5 +1,65 @@
 <?php
 
+<<<<<<< HEAD
+$Cart_Session = $Session['cart'];
+$SearchCart = OtarDecrypt($key,$_GET['type']);
+$Trans = $_SESSION['trans'];
+
+$Cw_Shipping = "10";
+
+if($Get_Url == "my-orders" AND $Get_Type !=""){
+    $query = "SELECT * FROM trans WHERE active='1' AND trash='0' AND id='$SearchCart'";
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    $Cart_Session = $row['cart'];
+}
+
+$query = "SELECT * FROM cw_coupon WHERE cart='$Cart_Session'";
+$result = mysql_query($query) or die(mysql_error());
+$row = mysql_fetch_array($result);
+if($row['type'] == "percent"){
+    $Discount = $row['amount'] / "100";
+    $Cw_Discount = $row['amount'] * $Discount;
+}else{
+    $Cw_Discount = $row['amount'];
+}
+
+
+$Cart_Info = CwCartTotal($Cart_Session);
+$CartCount = $Cart_Info['count'];
+$CwCartSubTotal = $Cart_Info['total'];
+
+if($Cw_Discount == ""){
+    $Cw_Discount = "0";
+}
+if($Cw_Tax == ""){
+    $Cw_Tax = "0";
+}
+
+$Cw_Tax = $CwCartSubTotal * $Cw_Tax;
+$CwCartTotal = $CwCartSubTotal + $Cw_Tax;
+$CwCartTotal = $CwCartTotal + $Cw_Shipping;
+$CwCartTotal = $CwCartTotal - $Cw_Discount;
+
+if($CartCount <= "0" OR $CartCount == ""){
+    $CwCartTotal = "0";
+    $CartCount == "0";
+}
+
+if($Get_Url == "my-orders" AND $Get_Type !=""){
+    $query = "SELECT * FROM trans WHERE active='1' AND trash='0' AND id='$SearchCart'";
+}else{
+    $query = "SELECT * FROM trans WHERE active='1' AND trash='0' AND id='$Trans'";
+}
+$result = mysql_query($query) or die(mysql_error());
+while($row = mysql_fetch_array($result)){
+    $row = PbUnSerial($row);
+    $TransInfo = $row;
+    if($TransInfo['date'] == ""){
+        $TransInfo['date'] = strtotime("now");
+    } 
+
+=======
 $Cart_Session = $_SESSION['COOKIEPHPSESSID'];
 $Cart_Session = "123";
 $SearchCart = OtarDecrypt($key,$_GET['type']);
@@ -53,6 +113,7 @@ $result = mysql_query($query) or die(mysql_error()); while($row = mysql_fetch_ar
     $TransInfo['delivery_option'] = $row['delivery_option'];
 
     $TransInfo['other'] = unserialize($TransInfo['other']);
+>>>>>>> origin/master
     $query = "SELECT * FROM cw_cart WHERE active='1' AND trash='0' AND session='$Cart_Session'"; 
     $result = mysql_query($query) or die(mysql_error());
     while($row = mysql_fetch_array($result)){
@@ -71,4 +132,22 @@ $result = mysql_query($query) or die(mysql_error()); while($row = mysql_fetch_ar
 }
 
 
+<<<<<<< HEAD
+
+if($_GET['cwedit'] != ""){
+    $Cart_Item['id'] = OtarDecrypt($key,$_GET['cwedit']);
+    $query = "SELECT * FROM cw_cart WHERE active='1' AND trash='0' AND id='$Cart_Item[id]'"; 
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    $row = PbUnSerial($row);
+    $Cart_Item['color'] = $row['content']['color'];
+    $Cart_Item['size'] = $row['content']['size'];
+    $Cart_Item['price'] = $row['price'];
+    $Cart_Item['qty'] = $row['qty'];
+}
+
+
+
+=======
+>>>>>>> origin/master
 ?>

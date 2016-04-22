@@ -15,6 +15,10 @@ if($Login == "1"){
 	$Article_Active = $_POST["active"];
 	$Article_Url = $_POST["url"];
 	$Article_Date = strtotime("now");
+<<<<<<< HEAD
+        $Date_Created = $_POST['date_created'];
+=======
+>>>>>>> origin/master
 
 	$Image_Order = $_POST["ImageOrder"];
 	$Rand = rand(100,100000000);
@@ -33,6 +37,12 @@ if($Login == "1"){
 	$Article_Content['size'] = $_POST['size'];
 	$Article_Content['gender'] = $_POST['gender'];
 	$Article_Content['prodprice'] = $_POST['prodprice'];
+<<<<<<< HEAD
+        $Article_Content['newprice'] = $_POST['newprice'];
+        $Article_Content['qty'] = $_POST['qty'];
+        $Article_Content['condition'] = $_POST['condition'];
+=======
+>>>>>>> origin/master
 
 	$SettingsAuto = $_POST["auto"];
 	$SettingsAlbum = $_POST["album"];
@@ -58,7 +68,15 @@ if($Login == "1"){
 	$Article_Other["model"] = $_POST["other"];
 	$Article_Other["tags"] = $_POST["tags"];
 	$Article_Other["structure"] = $_POST["structure"];
+<<<<<<< HEAD
+        $Article_Other["structure"] = "product";
 
+	$Search_Name = $Article_Content["name"];
+	$Search_Parent = $_POST["id"];
+	$Search_Other = "";
+=======
+
+>>>>>>> origin/master
 
 
 /////////////////////////////////////// PROCESSES ALL MEDIA UPLOADS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -108,7 +126,11 @@ if($Login == "1"){
 
 /////////////////////////////////// SETS DEFAULT VARIABLE VALUES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	if($Article_Category == ""){
+<<<<<<< HEAD
+		$Article_Category = "2";
+=======
 		$Article_Category = "1";
+>>>>>>> origin/master
 	}
 	if($Article_Url == ""){
 		$Article_Url = $Article_Content["name"];
@@ -119,8 +141,16 @@ if($Login == "1"){
 	if($Article_Date == ""){
 		$Article_Date = strtotime("now");
 	}
+<<<<<<< HEAD
+	if($Date_Created == ""){
+		$Date_Created = strtotime("now");
+	}
+	if($Article_Type == ""){
+		$Article_Category = "product";
+=======
 	if($Article_Type == ""){
 		$Article_Category = "post";
+>>>>>>> origin/master
 	}
 
 // REMOVES ALL AND ANY ILLEGAL CHARACTERS \\
@@ -144,7 +174,11 @@ if($Login == "1"){
 
 
 
+<<<<<<< HEAD
+		mysql_query("INSERT INTO articles(url, active, category, type, other, rand, date, feat, content, info, img, date_created) VALUES('$Article_Url', '$Article_Active',  '$Article_Category', '$Article_Type', '$Article_Other', '$Rand','$Article_Date', '$Article_Feat', '$Article_Content', '$Article_Info ', '$PostImages', '$Date_Created') ")or die(mysql_error());
+=======
 		mysql_query("INSERT INTO articles(url, active, category, type, other, rand, date, feat, content, info,img) VALUES('$Article_Url', '$Article_Active',  '$Article_Category', '$Article_Type', '$Article_Other', '$Rand','$Article_Date', '$Article_Feat', '$Article_Content', '$Article_Info ', '$PostImages') ")or die(mysql_error());
+>>>>>>> origin/master
 
 // PROCESS GALLERY IMAGE UPLOADS \\
 		$query = "SELECT * FROM articles WHERE trash='0' AND rand='$Rand'";
@@ -163,10 +197,32 @@ if($Login == "1"){
 		$result = mysql_query("UPDATE transfer SET trash='1' WHERE url='$Article_Url'") 
 		or die(mysql_error());
 
+<<<<<<< HEAD
+// ADD ARTICLE TO SEARCH DATABASE \\
+		mysql_query("INSERT INTO cw_search(parent, title, other, active) VALUES('$Album', '$Search_Name', '$Search_Other', '$Article_Active') ")or die(mysql_error());
+=======
+>>>>>>> origin/master
 
 
 	}else{
 
+<<<<<<< HEAD
+// UPDATE INFORMATION ON SEARCH DATABASE \\
+		$Query = "SELECT * FROM cw_search WHERE parent='$Search_Parent'";
+		$Result = mysql_query($Query) or die(mysql_error());
+		$Row = mysql_fetch_array($Result);
+		if($Row['id'] == ""){
+			mysql_query("INSERT INTO cw_search(parent, title, other, active) VALUES('$Search_Parent', '$Search_Name', '$Search_Other', '$Article_Active') ")or die(mysql_error());
+		}else{
+			$result = mysql_query("UPDATE cw_search SET title='$Search_Name' WHERE parent='$Search_Parent'") 
+			or die(mysql_error());
+			$result = mysql_query("UPDATE cw_search SET other='$Search_Other' WHERE parent='$Search_Parent'") 
+			or die(mysql_error());
+			$result = mysql_query("UPDATE cw_search SET active='$Article_Active' WHERE parent='$Search_Parent'") 
+			or die(mysql_error());
+		}
+=======
+>>>>>>> origin/master
 
 
 // UN-LINK OLD TAGS FROM ARTICLE \\
@@ -217,6 +273,11 @@ if($Login == "1"){
 		or die(mysql_error()); 
 		$result = mysql_query("UPDATE articles SET category='$Article_Category' WHERE id='$Article_Id'") 
 		or die(mysql_error()); 
+<<<<<<< HEAD
+		$result = mysql_query("UPDATE articles SET date_created='$Date_Created' WHERE id='$Article_Id'") 
+		or die(mysql_error());
+=======
+>>>>>>> origin/master
 		$result = mysql_query("UPDATE articles SET other='$Article_Other' WHERE id='$Article_Id'") 
 		or die(mysql_error());
 		$result = mysql_query("UPDATE articles SET feat='$Article_Feat' WHERE id='$Article_Id'") 

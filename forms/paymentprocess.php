@@ -1,4 +1,12 @@
 <?php
+<<<<<<< HEAD
+unset($_SESSION['trans']);
+unset($_COOKIE['_CwCart']);
+
+
+$Session_Cart = RandomCode(100);
+setcookie( "_CwCart", $Session_Cart, $date_of_expiry, "/", $Website_Url_Auth);
+=======
 $theme = CWDEFAULTTHEME;
 
 
@@ -20,4 +28,5 @@ $_POST['state'] = "maryland";
 
 include("theme/$theme/structure/checkout.php");
 
+>>>>>>> origin/master
 ?>

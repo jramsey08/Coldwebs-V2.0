@@ -20,6 +20,10 @@ if($Login == "1"){
 	$Article_Info = $_POST["content"];
 	$StructureType =  $_POST['structure'];
 	$Article_Name = $_POST["name"];
+<<<<<<< HEAD
+        $Date_Created = $_POST['date_created'];
+=======
+>>>>>>> origin/master
 
 	$Article_Content["name"] = $_POST["name"];
 	$Article_Content["img"] = $_POST["img"];
@@ -124,6 +128,12 @@ if($Login == "1"){
 	if($Article_Content['code'] == ""){
 		$Article_Content["code"] = $Article_Content["embedcode"]; 
 	}
+<<<<<<< HEAD
+	if($Date_Created == ""){
+		$Date_Created = strtotime("now");
+	}
+=======
+>>>>>>> origin/master
 	if($Article_Date == ""){
 		$Article_Date = strtotime("now");
 	}
@@ -151,7 +161,11 @@ if($Login == "1"){
 
 
 	if($Article_Id == ""){
+<<<<<<< HEAD
+		mysql_query("INSERT INTO articles(url, active, category, type, other, rand, date, feat, content, info, img, date_created) VALUES('$Article_Url', '$Article_Active',  '$Article_Category', 'page',  '$Article_Other', '$Rand','$Article_Date', '$Article_Feat', '$Article_Content', '$Article_Info ', '$PostImages', '$Date_Created') ")or die(mysql_error());
+=======
 		mysql_query("INSERT INTO articles(url, active, category, type, other, rand, date, feat, content, info,img) VALUES('$Article_Url', '$Article_Active',  '$Article_Category', 'page',  '$Article_Other', '$Rand','$Article_Date', '$Article_Feat', '$Article_Content', '$Article_Info ', '$PostImages') ")or die(mysql_error());
+>>>>>>> origin/master
 // PROCESS GALLERY IMAGE UPLOADS \\
 		$query = "SELECT * FROM articles WHERE trash='0' AND rand='$Rand'";
 		$result = mysql_query($query) or die(mysql_error());
@@ -212,6 +226,11 @@ if($Login == "1"){
 		or die(mysql_error()); 
 		$result = mysql_query("UPDATE articles SET other='$Article_Other' WHERE id='$Article_Id'") 
 		or die(mysql_error());
+<<<<<<< HEAD
+		$result = mysql_query("UPDATE articles SET date_created='$Date_Created' WHERE id='$Article_Id'") 
+		or die(mysql_error());
+=======
+>>>>>>> origin/master
 		$result = mysql_query("UPDATE articles SET feat='$Article_Feat' WHERE id='$Article_Id'") 
 		or die(mysql_error());
 		$result = mysql_query("UPDATE articles SET content='$Article_Content' WHERE id='$Article_Id'") 
@@ -248,7 +267,16 @@ if($Login == "1"){
 			   
 //UPDATES THE PAGE_SETTINGS TABLE
 	if($SettingsId == ""){
+<<<<<<< HEAD
+		mysql_query("INSERT INTO page_settings (url, urlid, urltype, end, secure, autoplay, background, dashboard, active,tempid) VALUES('$Article_Url', '$Article_UrlId', '$Article_UrlType', '$Article_End', '$SettingsSecure', '$SettingsAuto', '$SettingsBackground', '$SettingsDashboard', '$Article_Active', '$TemplateId') ") or die(mysql_error());
+                $Query = "SELECT * FROM page_settings WHERE tempid='$TemplateId'";
+	        $Result = mysql_query($Query) or die(mysql_error());
+	        $Row = mysql_fetch_array($Result);
+                $result = mysql_query("UPDATE page_template SET setting='$Row[id]' WHERE id='$TemplateId'")
+		or die(mysql_error());
+=======
 		mysql_query("INSERT INTO page_settings (url, urlid, urltype, end, secure, autoplay, background, dashboard, active) VALUES('$Article_Url', '$Article_UrlId', '$Article_UrlType', '$Article_End', '$SettingsSecure', '$SettingsAuto', '$SettingsBackground', '$SettingsDashboard', '$Article_Active') ") or die(mysql_error());    
+>>>>>>> origin/master
 	}else{
 		$result = mysql_query("UPDATE page_settings SET url='$Article_Url' WHERE id='$SettingsId'")
 		or die(mysql_error());

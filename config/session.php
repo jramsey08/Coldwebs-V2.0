@@ -55,6 +55,10 @@ if($_COOKIE["_CwCart"] == ""){
 }
 
 $Session['id'] = $_COOKIE["_CwSess"];
+<<<<<<< HEAD
+$Session['cart'] = $_COOKIE["_CwCart"];
+=======
+>>>>>>> origin/master
 $Log_Session = $_COOKIE["_CwSess"];
 $_SESSION["sessiongenerate"] = $Session_Generate;
 
@@ -64,5 +68,8 @@ $row = mysql_fetch_array($result);
 $Current_Admin = $row['userid'];
 $_SESSION["current_user"] = $Current_Admin;
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> origin/master
 ?>

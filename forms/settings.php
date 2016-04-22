@@ -16,7 +16,11 @@ if($Login == "1"){
 	$Settings_Other['article'] = "3";
 	$Settings_Other['email'] = $_POST['email'];
 	$Settings_Other['social'] = $_POST['social'];
+<<<<<<< HEAD
+	$Settings_Other['offline'] = $_POST['offlinetheme'];
+=======
 	$Settings_Other['offline'] = "3";
+>>>>>>> origin/master
 	$Settings_Other['whitespace'] = $_POST['whitespace'];
 	$Settings_Other['menustatus'] = $_POST['menustatus'];
 	$Settings_Other['clogin'] = $_POST['clogin'];

@@ -65,4 +65,11 @@ if($Website_Db_Setup == "" OR $Website_Db_Setup == "0" OR $Website_Offline == "1
 
 // WEBSITE SUBSCRIPTION WINDOW \\
     include("config/subscribe.php");
+<<<<<<< HEAD
+
+
+// WEBSITE E-COMMERCE SETTINGS \\
+    include("config/ecommerce.php");
+=======
+>>>>>>> origin/master
 }

@@ -21,7 +21,11 @@ if($Login == "1"){
 	$Image_Url = $_POST["ImageUrl"];
 	$Rand = rand(100,100000000);
 	$TransferId = $_POST["transferid"];
+<<<<<<< HEAD
+	$Tags = $_POST["tags"];
+=======
 	#$Tags = $_POST["tags"];
+>>>>>>> origin/master
 	$StructureImgSizes = OtarDecrypt($key,$_POST['imgsizes']);
 	$files = new UploadedFiles($_FILES);
 	$Cw_QuickPost = $POST['qucikpost'];
@@ -60,7 +64,11 @@ if($Login == "1"){
 	$Article_Other["email"] = $_POST["email"];
 	$Article_Other["social"] = $_POST["social"];
 	$Article_Other["model"] = $_POST["other"];
+<<<<<<< HEAD
+	$Article_Other["tags"] = $_POST["tags"];
+=======
 	#$Article_Other["tags"] = $_POST["tags"];
+>>>>>>> origin/master
 	$Article_Other["structure"] = $_POST["structure"];
 	$Article_Other["client"] = $_POST["client"];
 
@@ -68,7 +76,11 @@ if($Login == "1"){
 	$Search_Parent = $_POST["id"];
 	$Search_Other = "";
 
+<<<<<<< HEAD
+
+=======
 $Article_Id = "3";
+>>>>>>> origin/master
 
 /////////////////////////////////////// PROCESSES ALL MEDIA UPLOADS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	$Array["profilepic"]["img"] = $Article_Content["img"];
@@ -207,6 +219,34 @@ $Article_Id = "3";
 		}
 
 
+<<<<<<< HEAD
+// UN-LINK OLD TAGS FROM ARTICLE \\
+		$UnlinkTag =  explode(",", $Tags);
+		$query = "SELECT * FROM articles WHERE id='$Article_Id'";
+		$result = mysql_query($query) or die(mysql_error());
+		$row = mysql_fetch_array($result);
+		$row = PbUnSerial($row);
+		$SRTags = $row["other"]["tags"];
+		if($SRTags == ""){
+		}else{
+			$SRTags = explode(",", $SRTags);
+			$TagRemove = array_delete($UnlinkTag, $SRTags);
+			$Count = "0";
+			foreach($TagRemove as $value){
+				$Query = "SELECT * FROM cw_tags WHERE name='$value'";
+				$Result = mysql_query($Query) or die(mysql_error());
+				$Row = mysql_fetch_array($Result);
+				$ListTagId = $Row['id'];
+				$ListTag = OtarDecrypt($key,$Row['content']);
+				$Tag_key = array_search($Article_Id, $ListTag);
+				unset($ListTag[$Tag_key]);
+				$NewTagArray = OtarEncrypt($key,$ListTag);
+				$result = mysql_query("UPDATE cw_tags SET content='$NewTagArray' WHERE id='$ListTagId'")
+				or die(mysql_error());
+		   }
+		}
+=======
+>>>>>>> origin/master
 
 // PROCESS GALLERY IMAGE UPLOADS \\
 		$Array["galleryupload"]["id"] = $Article_Id;
@@ -246,8 +286,13 @@ $Article_Id = "3";
 		$result = mysql_query("UPDATE articles SET content='$Article_Content' WHERE id='$Article_Id'") 
 		or die(mysql_error());
 		if($PostImages == ""){ }else{
+<<<<<<< HEAD
+			$result = mysql_query("UPDATE articles SET img='$PostImages' WHERE id='$Article_Id'") 
+			or die(mysql_error());
+=======
 			#$result = mysql_query("UPDATE articles SET img='$PostImages' WHERE id='$Article_Id'") 
 			#or die(mysql_error());
+>>>>>>> origin/master
 		}
 
 		if(is_array($GalleryRemoval)){
@@ -258,10 +303,20 @@ $Article_Id = "3";
 		}
 
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> origin/master
 	}
 
 
 
+<<<<<<< HEAD
+
+
+
+=======
+>>>>>>> origin/master
 	$Domain = $Array["siteinfo"]["domain"];
 	header("Location: $Domain/admin/Offline");
 }

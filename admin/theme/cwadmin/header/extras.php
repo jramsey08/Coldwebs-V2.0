@@ -18,5 +18,8 @@ word-wrap: break-word;
 <script src="/api/dropzone/dist/dropzone.js"></script>
 <link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css">
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> origin/master
 </head>

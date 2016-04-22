@@ -1,4 +1,8 @@
 <?php
+<<<<<<< HEAD
+
+=======
+>>>>>>> origin/master
 include("forms/logincheck.php");
 if($Login == "1"){
 

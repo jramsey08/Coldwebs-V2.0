@@ -6,7 +6,11 @@ if($Login == "1"){
 	$Id = OtarDecrypt($key,$Id);
 	$Id = $Id['user'];
 
+<<<<<<< HEAD
+	if($Current_Admin == $Id){
+=======
 	if($CurrentAdmin == $Id){
+>>>>>>> origin/master
 		$Allow = "1";
 	}else{
 		if($Current_Access <= "2"){
@@ -25,6 +29,10 @@ if($Login == "1"){
 		$Info['access'] = $_POST["access"];
 		$Info['status'] = $_POST["status"];
 		$Info['siteaccess'] = $_POST['siteaccess'];
+<<<<<<< HEAD
+		$Info['address'] = $_POST['address'];
+=======
+>>>>>>> origin/master
 		$Img = $_POST['img'];
 
 		$Array["profilepic"]["img"] = $Img;

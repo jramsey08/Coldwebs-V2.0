@@ -41,5 +41,12 @@ if($Mobile['phone'] == "1"){
     $Show_Subscribe_Pop_Up = "0";
 }
 
+<<<<<<< HEAD
+if($Get_Url == "login"){
+    $Show_Subscribe_Pop_Up = "0";
+}
+
+=======
+>>>>>>> origin/master
 
 ?>

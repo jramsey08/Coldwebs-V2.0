@@ -1,18 +1,27 @@
 <?php
 // PULLS THE STRUCTURE AVAILABLE FOR THIS THEME \\
 
+<<<<<<< HEAD
+#if($Get_Url == "pages" OR $Get_Url == "articles" OR $Get_Url == "category" OR $Get_Url == "functions" OR $Get_Url == "design" OR $Get_Url == #"products"){
+     $SearchUrl = $_GET['type']; 
+     $SearchUrl = strtolower($SearchUrl);
+=======
 if($Get_Url == "pages" OR $Get_Url == "articles" OR $Get_Url == "category" OR $Get_Url == "functions" OR $Get_Url == "design" OR $Get_Url == "products"){
      $SearchUrl = $_GET['type']; 
      
      $SearchUrl = strtolower($SearchUrl);
      
+>>>>>>> origin/master
      if($Get_Url == "pages"){
          $StructureTheme = $PageStructure['template'];
      }
      if($StructureTheme == "default"){
          $StructureTheme = $Array['siteinfo']['theme'];
      }
+<<<<<<< HEAD
+=======
          
+>>>>>>> origin/master
      if($Get_Url == "functions"){
           $Id = OtarDecrypt($key,$SearchUrl);
           $QuerY = "SELECT * FROM page_function WHERE id='$Id' AND trash='0'";
@@ -24,7 +33,10 @@ if($Get_Url == "pages" OR $Get_Url == "articles" OR $Get_Url == "category" OR $G
                #$StructureTheme = isset_get($Article['structure']['pagestructure'], "template");
           }   
      }
+<<<<<<< HEAD
+=======
 
+>>>>>>> origin/master
      if($StructureTheme == "" OR $StructureTheme == "cwadmin"){
           $Query = "SELECT * FROM info ORDER BY name";
           $Result = mysql_query($Query) or die(mysql_error());
@@ -47,6 +59,10 @@ if($Get_Url == "pages" OR $Get_Url == "articles" OR $Get_Url == "category" OR $G
      $ThemeArray['structure'] = $THEMESTRUCTURE;
      $ThemeArray['name'] = $StructureTheme;
          
+<<<<<<< HEAD
+#}  
+=======
 }  
+>>>>>>> origin/master
          
 ?>

@@ -21,7 +21,11 @@
 
 <div class="tab-pane active cont" id="basic">
 <div class="row">
+<<<<<<< HEAD
+<form role="form" method='post' action='/Process/Blog' enctype="multipart/form-data">
+=======
 <form role="form" method='post' action='/Process/Articles' enctype="multipart/form-data">
+>>>>>>> origin/master
 <div class="col-sm-12 col-md-12">
 <div class="col-sm-6 col-md-6">
 <div class="header"><h3>Basic Information</h3></div></div>

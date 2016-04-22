@@ -67,6 +67,25 @@ $ListedUserAccess = $ListedUser['info']['siteaccess'];
 <label class="col-sm-3 control-label">Account Type</label>
 <div class="col-sm-6">
 <select class="form-control" name='access'>
+<<<<<<< HEAD
+<option value="<?php if($ListedUser['info']['access'] == ""){ echo "1"; } ?>">Select Below</option>
+<?php $query = "SELECT * FROM cwoptions WHERE type='useraccess' AND active='1' AND trash='0' ORDER by category";
+$result = mysql_query($query) or die(mysql_error());
+while($row = mysql_fetch_array($result)){
+$row = PbUnSerial($row); 
+if($row['category'] == "0"){
+    if($Current_Admin_Access == "0"){
+        $Show = "1";
+    }
+}else{
+    $Show = "1";
+}
+if($Show == "1"){ ?>
+<option value="<?php echo $row['category']; ?>" <?php if($row['category'] == $ListedUser['info']['access']){ echo "selected=selected"; } ?>><?php echo $row['name']; ?></option>
+<?php }} ?>
+</select>
+</div></div><br><br><?php } ?>
+=======
 <option value="<?php if($Article['access'] == ""){ echo "1"; } ?>">Select Below</option>
 <?php if($Current_Admin_Access == "0"){ ?>
 <option value="0" <?php if($ListedUser['info']['access'] == "0"){ echo "selected='selected'"; } ?>>Developer</option>
@@ -76,6 +95,7 @@ $ListedUserAccess = $ListedUser['info']['siteaccess'];
 <option value="3" <?php if($ListedUser['info']['access'] == "3"){ echo "selected='selected'"; } ?>>Moderator</option>
 <option value="4" <?php if($ListedUser['info']['access'] == "4"){ echo "selected='selected'"; } ?>>Registered User</option>
 </select></div></div><br><br><?php } ?>
+>>>>>>> origin/master
 
 <br><br>
 Change Account Password: 
@@ -356,6 +376,18 @@ if(is_array($ListedUserAccess)){
 
 
 
+<<<<<<< HEAD
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jasny-bootstrap.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/moment.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/daterangepicker.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap.touchspin.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-colorpicker.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-switch.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/select2.min.js" ></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-slider.js" ></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/icheck.min.js"></script>
+=======
  </script> <script type="text/javascript" src="http://condorthemes.com/flatdream/js/jasny.bootstrap/extend/js/jasny-bootstrap.min.js"></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/moment.min.js"></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/daterangepicker.js"></script>
@@ -366,6 +398,7 @@ if(is_array($ListedUserAccess)){
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.select2/select2.min.js" ></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.slider/js/bootstrap-slider.js" ></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.icheck/icheck.min.js"></script>
+>>>>>>> origin/master
 <script type="text/javascript">
     $(document).ready(function(){
       /*Date Range Picker*/
@@ -516,7 +549,13 @@ if(is_array($ListedUserAccess)){
 
 
 
+<<<<<<< HEAD
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/summernote.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/wysihtml5-0.3.0.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-wysihtml5.js"></script>
+=======
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.summernote/dist/summernote.min.js"></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/src/bootstrap-wysihtml5.js"></script>
 
+>>>>>>> origin/master

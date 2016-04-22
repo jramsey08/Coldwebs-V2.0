@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+<?php if($UserSiteAccess["viewanalytics"] == "1"){ ?>
+=======
+>>>>>>> origin/master
 <div class="cl-mcont">
 <div class="row">
       <div class="col-md-3 col-sm-6">
@@ -29,6 +33,10 @@
         </div>
 </div>
 </div>
+<<<<<<< HEAD
+<?php } ?>
+=======
+>>>>>>> origin/master
 
 <?php if($UserSiteAccess['editarticle'] == "1"){ ?>
 <div class="row">
@@ -50,11 +58,18 @@
 <div class="header"><h3>Quick Links</h3></div>
 <div class="content overflow-hidden">
 <ul>
+<<<<<<< HEAD
+<li><a href="/admin/Blog/">Blog Posts</a></li>
+<li><a href="/admin/Category/">Category</a></li>
+<li><a href="/admin/Pages/">Pages</a></li>
+<li><a href="/admin/Menu/">Menu</a></li>
+=======
 <li><a href="/admin/Articles/New">Create Article</a></li>
 <li><a href="/admin/Category/New">Create Category</a></li>
 <li><a href="/admin/Pages/New">Create Page</a></li>
 <li><a href="/admin/Menu/">Edit Menu</a></li>
 <li><a href="/admin/Articles/New">Full Featured UI</a></li>
+>>>>>>> origin/master
 </ul>						
 </div></div></div>
 
@@ -225,9 +240,15 @@ while($Row = mysql_fetch_array($Result)){
 	initSample();
 </script>
 
+<<<<<<< HEAD
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/summernote.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/wysihtml5-0.3.0.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-wysihtml5.js"></script>
+=======
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.summernote/dist/summernote.min.js"></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/src/bootstrap-wysihtml5.js"></script>
+>>>>>>> origin/master
 
 
 

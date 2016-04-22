@@ -22,6 +22,45 @@
           <ul class="cl-vnavigation">
 <li class="active"><a href="/admin"><i class="fa"></i><span>Dashboard</span></a></li>
 
+<<<<<<< HEAD
+
+<?php
+$query = "SELECT * FROM admin WHERE type='menu' AND active='1' AND category='self' AND trash='0' ORDER BY list";
+$result = mysql_query($query) or die(mysql_error());
+while($row = mysql_fetch_array($result)){
+    $row = PbUnSerial($row);
+    $rowAccess = $row['access'];
+?>
+<?php if($UserSiteAccess["$rowAccess"] == "1"  OR $rowAccess == ""){ ?>
+    <li><a href="#"><i class="fa"></i><span><?php echo $row['name']; ?></span></a>
+<?php
+$Query = "SELECT * FROM admin WHERE type='menu' AND active='1' AND category='$row[id]' AND trash='0' ORDER BY name";
+$Result = mysql_query($Query) or die(mysql_error());
+while($Row = mysql_fetch_array($Result)){
+    $Row = PbUnSerial($Row);
+    $RowAccess = $Row['access'];
+    $Count = $Count + 1;
+if($Count == "1"){
+?>
+<ul class="sub-menu">
+<?php } ?>
+<?php if($UserSiteAccess["$RowAccess"] == "1" OR $RowAccess == ""){ ?>
+    <li><a href="/admin/<?php echo $Row['url']; ?>"><span><?php echo $Row['name']; ?></a></li>
+<?php 
+}}
+if($Count >= "1"){
+?>
+</ul>
+<?php }}
+$Count = "0";
+} ?>
+
+<?php if($UserSiteAccess['editdesign'] == "1"){ ?>
+<li><a href="#"><i class="fa"></i><span>Themes</span></a>
+<ul class="sub-menu">
+<li ><a href="/admin/Design/Upload">Upload</a></li>
+<li  ><a href="/admin/Design/">View All</a></li>
+=======
 <?php if($UserSiteAccess['editarticle'] == "1"){ ?>
 <li><a href="#"><i class="fa"></i><span>Posts</span></a>
 <ul class="sub-menu">
@@ -73,10 +112,30 @@
 <li><a href="/admin/Author/"> Authors</a></li>
 <?php } ?>
 <li><a href="/admin/Users">User Accounts</a></li>
+>>>>>>> origin/master
 </ul></li><?php } ?>
 
 <li><a href="#"><i class="fa"></i><span>Extra</span></a>
 <ul class="sub-menu">
+<<<<<<< HEAD
+<?php if($UserSiteAccess['editcwfile'] == "1"){ ?>
+<li ><a href="/admin/CwFile">CW File Transfer</a></li>
+<?php } ?>
+</ul></li>
+
+<li><a href="#"><i class="fa"></i><span>Settings</span></a>
+<ul class="sub-menu">
+<li ><a href="/admin/Profile">My Profile</a></li>
+<?php if($UserSiteAccess['editoffline'] == "1"){ ?><li ><a href="/admin/Offline">Offline Page</a></li><?php } ?>
+<?php if($UserSiteAccess['editsocial'] == "1"){ ?><li ><a href="/admin/SocialMedia">Social Media</a></li><?php } ?>
+<?php if($UserSiteAccess['edituseraccess'] == "1"){ ?><li ><a href="/admin/UserAccess">User Access</a></li><?php } ?>
+<?php if($UserSiteAccess['editsettings'] == "1"){ ?><li ><a href="/admin/Settings">Website Config</a></li>
+<?php if($UserSiteAccess['setaccess'] == "1"){ ?><li ><a href="/admin/CwAccess">Website Access</a></li><?php } ?>
+<?php if($UserSiteAccess['bgmenu'] == "1"){ ?><li ><a href="/admin/Bg-Menu">Background Menu</a></li><?php } ?>
+<?php } ?>
+</ul></li>
+
+=======
 <li ><a href="/admin/Advertisement">Advertisement</a></li>
 <?php if($UserSiteAccess['viewanalytics'] == "1"){ ?>
 <li ><a href="/admin/Analytics">Analytics</a></li>
@@ -112,6 +171,7 @@
 
 
 
+>>>>>>> origin/master
 </ul>
 </div></div>
 

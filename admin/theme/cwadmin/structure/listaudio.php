@@ -12,7 +12,12 @@
 <ul class="nav nav-tabs">
 <li class="active"><a href="#basic" data-toggle="tab">Basic Info</a></li>
 <li><a href="#gallery" data-toggle="tab">Gallery</a></li>
+<<<<<<< HEAD
+<li><a href="#tracks" data-toggle="tab">Tracks</a></li>
+<li><a href="#uploads" data-toggle="tab">Uploads</a></li>
+=======
 <li><a href="#social" data-toggle="tab">Social Media</a></li>
+>>>>>>> origin/master
 </ul>
 
 
@@ -21,7 +26,11 @@
 
 <div class="tab-pane active cont" id="basic">
 <div class="row">
+<<<<<<< HEAD
+<form role="form" method='post' action='/Process/Blog' enctype="multipart/form-data">
+=======
 <form role="form" method='post' action='/Process/Articles' enctype="multipart/form-data">
+>>>>>>> origin/master
 <div class="col-sm-12 col-md-12">
 <div class="col-sm-6 col-md-6">
 <div class="header"><h3>Basic Information</h3></div></div>
@@ -79,7 +88,11 @@ echo "<option value='$row[id]'"; if($row['id'] == $Article['category']){ echo "s
 
 <div class="col-sm-12 col-md-12">
 <div class="form-group">
+<<<<<<< HEAD
+<textarea name='content' rows="10" class="ckeditor form-control" ><?php echo $Article['info']; ?></textarea>
+=======
 <textarea name='content' rows="300" class="ckeditor form-control" ><?php echo $Article['info']; ?></textarea>
+>>>>>>> origin/master
 </div></div>
 
 
@@ -90,7 +103,11 @@ echo "<option value='$row[id]'"; if($row['id'] == $Article['category']){ echo "s
 <div class="header"><h3>Gallery</h3>
 </div></div>
 <div class="row">
+<<<<<<< HEAD
+<div class="col-sm-12 col-md-6">
+=======
 <div class="col-sm-6 col-md-6">
+>>>>>>> origin/master
 <div class="content">
 <div class="form-group">
 <label class="col-sm-3 control-label">Main Image</label>
@@ -103,6 +120,9 @@ echo "<option value='$row[id]'"; if($row['id'] == $Article['category']){ echo "s
 <input type="file" name="profilepic[]"></span>
 <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Remove</a>
 </div></div></div></div></div>
+<<<<<<< HEAD
+</div>
+=======
 <div class="col-sm-6 col-md-6">
 <div class="content">
 <div class="form-group">
@@ -114,6 +134,7 @@ echo "<option value='$row[id]'"; if($row['id'] == $Article['category']){ echo "s
 <span class="fileinput-exists">Change</span><input type="file" multiple="" name="gallery[]"></span>
 <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">&times;</a>
 </div></div></div></div></div></div>
+>>>>>>> origin/master
 <div class="row">
 <div class="col-md-12">
 <div class="header"><h3>Extra Images</h3></div>
@@ -125,23 +146,107 @@ echo "<option value='$row[id]'"; if($row['id'] == $Article['category']){ echo "s
 <th style="width:30%;"><strong>Image</strong></th>
 <th style="width:30%;"><strong>Order</strong></th>
 <th style="width:30%;"><strong>Url</strong></th>
+<<<<<<< HEAD
+<th style="width:30%;"><strong>Delete</strong></th>
+</tr></thead>
+<tbody class="no-border-y">
+<?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND type='image' AND trash='0' AND active='1' ORDER BY list";
+$result = mysql_query($query) or die(mysql_error());
+while($row = mysql_fetch_array($result)){ 
+if($Article['id'] == ""){
+    #exit;
+} ?>
+=======
 <th style="width:15%;" class="text-center"><strong>Action</strong></th>
 </tr></thead>
 <tbody class="no-border-y">
 <?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND trash='0' AND active='1' ORDER BY list";
 $result = mysql_query($query) or die(mysql_error());
 while($row = mysql_fetch_array($result)){ ?>
+>>>>>>> origin/master
 <tr>
 <td><img src='<?php echo $row['img']; ?>' height="200" width="200"></td>
 <td style="width:30%;"><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="1" value='<?php echo $row["list"]; ?>'></td>
 <td style="width:30%;"><input type='text' name="ImageUrl[<?php echo $row['id']; ?>]" size="1" value='<?php echo $row["url"]; ?>'></td>
+<<<<<<< HEAD
+<td><input type="checkbox" name="removegal[]" value="<?php echo $row['id']; ?>"></td>
+=======
 <td class="text-center">
 <a class="label label-danger" href="/Process/Delete/Images/<?php echo OtarEncrypt($key,$row['id']); ?>"><i class="fa"></i></a></td>
+>>>>>>> origin/master
 </tr><?php } ?>
 </tbody></table>
 </div></div></div></div>
 </div>
 
+<<<<<<< HEAD
+
+
+<div class="tab-pane cont" id="tracks">
+<div class="row">
+<div class="col-md-12">
+<div class="header"><h3>Album Tracks</h3></div><br><br>
+<div class="content">
+<div class="table-responsive">
+<table class="table no-border hover">
+<thead class="no-border">
+<tr>
+<th style="width:20%;"><strong>Image</strong></th>
+<th style="width:20%;"><strong>Name</strong></th>
+<th style="width:10%;"><strong>Order</strong></th>
+<!--<th style="width:30%;"><strong>Url</strong></th>-->
+<?php if($Cw_Preview_Songs['active'] == "1"){ ?>
+<th style="width:30%;"><strong>Controls</strong></th>
+<?php } ?>
+<th style="width:10%;"><strong>Delete</strong></th>
+</tr></thead>
+<tbody class="no-border-y">
+<?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND trash='0' ANd type='track' AND active='1' ORDER BY list";
+$result = mysql_query($query) or die(mysql_error());
+while($row = mysql_fetch_array($result)){ 
+    $Count = $Count + 1;
+    if($row['name'] == ""){
+        $row['name'] = "Track $Count";
+    }
+    if($row['img'] == ""){
+        $row['img'] = "http://icons.iconseeker.com/ico/rhor-v2-part-3/audio-cd-3.ico";
+    }
+    if($Article['id'] == ""){
+        exit;
+    }
+ ?>
+<tr>
+<td><img src='<?php echo $row['img']; ?>' height="100" width="100"></td>
+<td><input type='text' name="TrackName[<?php echo $row['id']; ?>]" value='<?php echo $row['name']; ?>'></td>
+<td><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="1" value='<?php echo $row["list"]; ?>'></td>
+<!--<td style="width:70%;"><input type='text' name="ImageUrl[<?php echo $row['id']; ?>]" size="60" value='<?php echo $row["url"]; ?>' disabled></td>-->
+<?php if($Cw_Preview_Songs['active'] == "1"){ ?>
+<td style="width:70%;">
+<audio id="audio<?php echo $row['id']; ?>" src="<?php echo $row['url']; ?>"></audio><div style="width:120px; height:50px;">
+<a onclick="document.getElementById('audio<?php echo $row['id']; ?>').play()"><img src="/uploads/play.png" height="50" width="50"></a>
+<a onclick="document.getElementById('audio<?php echo $row['id']; ?>').pause()"><img src="/uploads/pause.png" height="50" width="50"></a>
+</div>
+</td><?php } ?>
+<td><input type="checkbox" name="removegal[]" value="<?php echo $row['id']; ?>"></td>
+</tr><?php } ?>
+</tbody></table>
+</div></div></div></div>
+</div>
+
+
+<div class="tab-pane cont" id="uploads">
+<div class="col-sm-12 col-md-12">
+<div class="header"><h3>Media Uploader</h3>
+</div></div>
+<div class="row">
+<div class="col-sm-12 col-md-12">
+<?php if($Article['id'] == ""){
+    $Rand = rand("999","9999999");
+}
+?>
+<iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $Rand; ?>&id=<?php echo $Article['id']; ?>' scrolling='no' frameborder="0" height="600" width="720" ></iframe>
+</div></div>
+=======
 <div class="tab-pane" id="social">
 <div class="row">
 <div class="col-sm-12 col-md-12">
@@ -189,6 +294,7 @@ $Social = $Article['other']['social']; ?>
 </div></div><br><br><br>
 <?php } echo "</div></div>"; ?>
 </div></div></div>
+>>>>>>> origin/master
 </div>
 
 
@@ -196,8 +302,11 @@ $Social = $Article['other']['social']; ?>
 
 		
 		
+<<<<<<< HEAD
+=======
 		
 		
+>>>>>>> origin/master
 	
 </div></div>
 </div>
@@ -293,6 +402,10 @@ foreach($ThemeArray['structure']["$PageType"] as $Layout=>$x_value){
 <div class="col-sm-6">
 <select class="form-control" name='codetype'>
 <option value='' <?php if($Article['content']['codetype'] == ""){ echo "selected='selected'"; } ?>>Select Video Format</option>
+<<<<<<< HEAD
+<option value='soundcloud' <?php if($Article['content']['codetype'] == "soundcloud"){ echo "selected='selected'"; } ?>>Sound Cloud</option>
+=======
+>>>>>>> origin/master
 <option value='youtube' <?php if($Article['content']['codetype'] == "youtube"){ echo "selected='selected'"; } ?>>Youtube</option>
 <option value='vimeo' <?php if($Article['content']['codetype'] == "vimeo"){ echo "selected='selected'"; } ?>>Vimeo</option>
 <option value='code' <?php if($Article['content']['codetype'] == "code"){ echo "selected='selected'"; } ?>>Embed Code</option>
@@ -301,8 +414,13 @@ foreach($ThemeArray['structure']["$PageType"] as $Layout=>$x_value){
 </select></div></div><br><br>
 <div class="form-group">
 EmbedCode
+<<<<<<< HEAD
+<center><textarea name='code' rows="7"><?php echo $Article['content']['code']; ?></textarea><br>
+*(Add any embedded code or selected video URL in the box above.)</center>
+=======
 <textarea elastic name='code' rows='7'  id='editor'><?php echo $Article['content']['code']; ?></textarea>
 <center>*(Add any embedded code or selected video URL in the box above.)</center>
+>>>>>>> origin/master
 </div>
 <div class="form-group">
 <label class="col-sm-3 control-label">Upload(*)</label>
@@ -328,6 +446,10 @@ EmbedCode
 
 
 <input type="hidden" name="redirect" value="admin/Audio">
+<<<<<<< HEAD
+<input type="hidden" name="randvalue" value="<?php echo $Rand; ?>">
+=======
+>>>>>>> origin/master
 <input type="hidden" name="imgtype" value="album">
 <input type="hidden" name="userid" value="<?php echo $Array['userinfo']['id']; ?>">
 <input type="hidden" name="img" value="<?php echo $Article['content']['img']; ?>">
@@ -361,7 +483,11 @@ function formSubmitter(formTag, messageTag){
 
 
 
+<<<<<<< HEAD
+<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jasny.bootstrap/extend/js/jasny-bootstrap.min.js"></script>
+=======
  </script> <script type="text/javascript" src="http://condorthemes.com/flatdream/js/jasny.bootstrap/extend/js/jasny-bootstrap.min.js"></script>
+>>>>>>> origin/master
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/moment.min.js"></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/daterangepicker.js"></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.touchspin/bootstrap-touchspin/bootstrap.touchspin.js"></script>
@@ -374,4 +500,8 @@ function formSubmitter(formTag, messageTag){
 
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.summernote/dist/summernote.min.js"></script>
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
+<<<<<<< HEAD
 <script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/src/bootstrap-wysihtml5.js"></script>
+=======
+<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/src/bootstrap-wysihtml5.js"></script>
+>>>>>>> origin/master
