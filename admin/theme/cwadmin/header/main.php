@@ -6,14 +6,13 @@
 <meta name="description" content="">
 <meta name="author" content="Coldwebs V2.0">
 <link rel="shortcut icon" href="/uploads/icon.png">
-<?php PageTitle($Array); ?>
-	
+<title><?php echo $PageInfo['name']; ?> | <?php echo $SiteInfo['name']; ?> Admin</title>	
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,400italic,700,800' rel='stylesheet' type='text/css'>
 <link href='http://fonts.googleapis.com/css?family=Raleway:300,200,100' rel='stylesheet' type='text/css'>
 <!-- Bootstrap core CSS -->
-<link rel="stylesheet" href="http://parallelmagz.com/api/bootstrap/css/bootstrap.min.css" media="all" />
+<link rel="stylesheet" href="/api/bootstrap/css/bootstrap.min.css" media="all" />
 <link rel="stylesheet" type="text/css" href="/admin/theme/cwadmin/header/css/jquery.gritter.css" />
-<link rel="stylesheet" href="http://parallelmagz.com/api/font-awesome/css/font-awesome.css" media="all" />
+<link rel="stylesheet" href="/api/font-awesome/css/font-awesome.css" media="all" />
 <link rel="stylesheet" type="text/css" href="/admin/theme/cwadmin/header/css/nanoscroller.css" />
 <link rel="stylesheet" type="text/css" href="/admin/theme/cwadmin/header/css/coremirror.css">
 <link rel="stylesheet" type="text/css" href="/admin/theme/cwadmin/header/css/ambiance.css">
@@ -40,23 +39,19 @@
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery-ui.js" ></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.gritter.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/core.js"></script>
-<<<<<<< HEAD
-<script type="text/javascript" src="/admin/theme/cwadmin/header/js/cw.js"></script>
-=======
 
->>>>>>> origin/master
 
 <script type="text/javascript">
 var auto_refresh = setInterval(
 function(){
-$('#load_page_function').load('<?php echo $Array['siteinfo']['domain']; ?>/admin/config/loadfunction.php').fadeIn("slow");
+$('#load_page_function').load('http://parallelmagz.com/admin/config/loadfunction.php').fadeIn("slow");
 }, 1000); // refresh every 10000 milliseconds
 </script>
 
 <script type="text/javascript">
 var auto_refresh = setInterval(
 function(){
-$('Cw_Session_refresh').load('<?php echo $Array['siteinfo']['domain']; ?>/config/sesionrefresh.php').fadeIn("slow");
+$('Cw_Session_refresh').load('http://parallelmagz.com/config/sesionrefresh.php').fadeIn("slow");
 }, 2000);
 </script>
 
@@ -82,5 +77,123 @@ $('Cw_Session_refresh').load('<?php echo $Array['siteinfo']['domain']; ?>/config
 <link rel="stylesheet" type="text/css" href="/admin/theme/cwadmin/header/css/typeahead.js-bootstrap.css" /> 
 <link rel="stylesheet" type="text/css" href="/admin/theme/cwadmin/header/css/blue.css">
 <link rel="stylesheet" type="text/css" href="/admin/theme/cwadmin/header/css/magnific-popup.css" />
+<link rel="stylesheet" type="text/css" href="/admin/theme/cwadmin/header/css/modal.css" /> 
 
 
+
+
+
+
+
+
+<script>
+function showUser(str) {
+ if (str == "") {
+        document.getElementById("txtHint").innerHTML = "";
+        return;
+    } else { 
+        if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                document.getElementById("txtHint").innerHTML = xmlhttp.responseText;
+            }
+        };
+        xmlhttp.open("GET","/admin/theme/cwadmin/structure/html/"+str+".php",true);
+        xmlhttp.send();
+    }
+}
+
+function showTeam(str) {
+ if (str == "") {
+        document.getElementById("sportTeam").innerHTML = "";
+        return;
+    } else { 
+        if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                document.getElementById("sportTeam").innerHTML = xmlhttp.responseText;
+            }
+        };
+        xmlhttp.open("GET","/admin/scripts/listteam.php?compare=<?php echo $_GET['compare']; ?>&id="+str,true);
+        xmlhttp.send();
+    }
+}
+
+function showTeamChance(str) {
+ if (str == "") {
+        document.getElementById("sportTeamChance").innerHTML = "";
+        return;
+    } else { 
+        if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                document.getElementById("sportTeamChance").innerHTML = xmlhttp.responseText;
+            }
+        };
+        xmlhttp.open("GET","/admin/scripts/listteam.php?compare=<?php echo $_GET['compare']; ?>&id="+str,true);
+        xmlhttp.send();
+    }
+}
+
+function showTeamCompare(str) {
+ if (str == "") {
+        document.getElementById("sportTeamCompare").innerHTML = "";
+        return;
+    } else { 
+        if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                document.getElementById("sportTeamCompare").innerHTML = xmlhttp.responseText;
+            }
+        };
+        xmlhttp.open("GET","/admin/scripts/listteam.php?compare=<?php echo $_GET['compare']; ?>&id="+str,true);
+        xmlhttp.send();
+    }
+}
+
+function catType(str) {
+ if (str == "") {
+        document.getElementById("showCatType").innerHTML = "";
+        return;
+    } else { 
+        if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                document.getElementById("showCatType").innerHTML = xmlhttp.responseText;
+            }
+        };
+        xmlhttp.open("GET","/admin/scripts/catType.php?compare=<?php echo $_GET['compare']; ?>&catid="+str,true);
+        xmlhttp.send();
+    }
+}
+</script>
