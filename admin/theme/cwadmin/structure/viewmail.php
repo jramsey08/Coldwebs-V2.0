@@ -350,14 +350,15 @@
   </div>
 </nav>
   
-	<script src="js/jquery.js"></script>
-	<script src="js/jquery.cookie/jquery.cookie.js"></script>
-  <script src="js/jquery.pushmenu/js/jPushMenu.js"></script>
-	<script type="text/javascript" src="js/jquery.nanoscroller/jquery.nanoscroller.js"></script>
-	<script type="text/javascript" src="js/jquery.sparkline/jquery.sparkline.min.js"></script>
-  <script type="text/javascript" src="js/jquery.ui/jquery-ui.js" ></script>
-	<script type="text/javascript" src="js/jquery.gritter/js/jquery.gritter.js"></script>
-	<script type="text/javascript" src="js/behaviour/core.js"></script>
+
+<script src="/admin/theme/cwadmin/header/js/jquery.js"></script>
+<script src="/admin/theme/cwadmin/header/js/jquery.cookie.js"></script>
+<script src="/admin/theme/cwadmin/header/js/jPushMenu.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.nanoscroller.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.sparkline.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery-ui.js" ></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.gritter.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/core.js"></script>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
@@ -447,7 +448,7 @@
         });
       });
     });
-  </script> <script type="text/javascript" src="js/jquery.icheck/icheck.min.js"></script>
+  </script> <script type="text/javascript" src="/admin/theme/cwadmin/header/js/icheck.min.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){
@@ -470,9 +471,9 @@
 </script>
   
   
-<script type="text/javascript" src="js/jquery.flot/jquery.flot.js"></script>
-<script type="text/javascript" src="js/jquery.flot/jquery.flot.pie.js"></script>
-<script type="text/javascript" src="js/jquery.flot/jquery.flot.resize.js"></script>
-<script type="text/javascript" src="js/jquery.flot/jquery.flot.labels.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.flot.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.flot.pie.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.flot.resize.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.flot.labels.js"></script>
 </body>
 </html>
