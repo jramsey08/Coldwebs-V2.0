@@ -2,8 +2,8 @@
 
 $Username = $_POST['username'];
 $Email = $_POST['email'];
-$Password = $_POST['passwd'];
-$Password = PbEncrypt($key, $Password);
+$Password = PbEncrypt($key, $_POST['passwd']);
+$Password_Confirm = PbEncrypt($key, $_POST['passwd_confirm']);
 
 $Info['access'] = $_POST['access'];
 $Info['phone'] = $_POST['phone'];
@@ -27,7 +27,11 @@ $Other['optin'] = $_POST['optin'];
 $Other['newsletter'] = $_POST['newsletter'];
 $Other = serialize($Other);
 
-$query = "SELECT * FROM users WHERE email='$Email'"; 
+$Redirect = $_POST['redirect'];
+$Name = $_POST['firstname'] . " " . $_POST['lastname'];
+
+
+$query = "SELECT * FROM users WHERE email='$Email' OR username='$Username'";
 $result = mysql_query($query) or die(mysql_error());
 $row = mysql_fetch_array($result);
 if($row['id'] == ""){
@@ -36,21 +40,35 @@ if($row['id'] == ""){
     $Ar = "1";
 }
 
+
+if(array_key_exists("passwd_confirm", $_POST)){
+    if($Password != $Password_Confirm ){
+        $Password = "";
+        $error = "match";
+    }
+}
+
 if($Email == "" OR $Password == ""){
-    $Redirect = "Register";
+    $Redirect = "Register?redir=$Redirect&error=$error";
 }else{
     if($Ar == "1"){
-        $Redirect = "Login?error=ar";
+        if(strtolower($Redirect) == "checkout"){
+            $Redirect = "Checkout?error=ar&redir=$Redirect";
+        }else{
+            $Redirect = "Login?error=ar&redir=$Redirect";
+        }
     }else{
         mysql_query("INSERT INTO users
-        (username, email, password, other, info) VALUES('$Username', '$Email', '$Password', '$Other', '$Info' ) ") 
+        (username, email, password, other, info, webid, name) VALUES('$Username', '$Email', '$Password', '$Other', '$Info', '$WebId', '$Name' ) ") 
         or die(mysql_error());
-        $Redirect = "Login";
+        if($Redirect == ""){
+            $Redirect = "Login";
+        }
     }
 }
 ?>
 <script type="text/javascript">
 <!--
-window.location = "<?php echo "$Site_Domain/$Redirect"; ?>"
+window.location = "<?php echo "http://$Website_Url_Auth/$Redirect"; ?>"
 //-->
 </script>

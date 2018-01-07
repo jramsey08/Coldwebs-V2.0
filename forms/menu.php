@@ -8,18 +8,17 @@ if($Login == "1"){
 	$Article_Search = $_POST["search"];
 	$Article_Feat = $_POST["feat"];
 	$Article_Category = $_POST["category"];
+	$Article_Shortcode = $_POST["shortcode"];
 	$Article_Trash = $_POST["trash"];
 	$Image_Order = $_POST["ImageOrder"];
 	$ArticleTheme = $_POST["maintheme"];
 	$Article_Active = $_POST["active"];
 	$Article_Url = $_POST["url"];
-	$Article_List = $_POST["order"];
+	$Article_List = $_POST["list"];
+	$Article_Name = $_POST["name"];
 	$Article_Date = strtotime("now");
-	$Rand = rand(100,100000000);
-	$TransferId = $_POST["transferid"];
-	$Tags = $_POST["tags"];
-
-	$Article_Content["name"] = $_POST["name"];
+	$Article_Id = $_POST["id"];
+	
 	$Article_Content["external"] = $_POST["external"];
 	$Article_Content["img"] = $_POST["img"];
 	$Article_Content["revised"] = strtotime("now");
@@ -55,13 +54,15 @@ if($Login == "1"){
 	$TemplateId = $PageIds["template"];
 	$FunctionId = $PageIds["funct"];
 	$DynamicId = $PageIds["dynamic"];
-	$Article_Id = $PageIds["article"];
 	$PageInfo = $_POST["pageinfo"];
 	$PageInfo = OtarDecrypt($key, $PageInfo);
 	$StructureArticle = $Pageinfo[pagestructure][article];
 	$StructureImgSizes = OtarDecrypt($key,$_POST[imgsizes]);
 	$files = new UploadedFiles($_FILES);
-
+	$Rand = rand(100,100000000);
+	$TransferId = $_POST["transferid"];
+	$Tags = $_POST["tags"];
+	$GalRand = $_POST['galrand'];
 
 /////////////////////////////////////// PROCESSES ALL MEDIA UPLOADS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	$Array["profilepic"]["img"] = $Article_Content["img"];
@@ -73,12 +74,12 @@ if($Login == "1"){
 			$ImgName = $file["name"];
 		}
 		$ImgSrc = $ImgArray["loc"];
-		$PostImages = Cw_Img_Resize($Array,$ImgSrc,$StructureImgSizes,$ImgName);
-		$PostImages = serialize($PostImages);
+		if(is_array($StructureImgSizes)){
+		    $PostImages = Cw_Img_Resize($Array,$ImgSrc,$StructureImgSizes,$ImgName);
+		}
 	}
 	$Array["mediafile"]["code"] = $Article_Content["code"];
 	$Article_Content["code"] = CwMediaFile($Array,$files,$Rand);
-
 
 ////////////////////////////////// PULL 3RD-PARTY CONTENT INFORMATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	if($Article_Content['codetype'] == "youtube"){
@@ -113,13 +114,10 @@ if($Login == "1"){
 		$Article_Category = "1";
 	}
 	if($Article_Url == ""){
-		$Article_Url = $Article_Content["name"];
+		$Article_Url = $Article_Name;
 	}
 	if($Article_Content['code'] == ""){
 		$Article_Content["code"] = $Article_Content["embedcode"]; 
-	}
-	if($Article_Date == ""){
-		$Article_Date = strtotime("now");
 	}
 	if($Article_Type == ""){
 		$Article_Category = "post";
@@ -127,7 +125,7 @@ if($Login == "1"){
 
 	// REMOVES ALL AND ANY ILLEGAL CHARACTERS \\
 	$Article_Url = CharacterRemoval($Article_Url);
-	$Article_Content['name'] = CommaRemoval($Article_Content['name']);
+	$Article_Name = CommaRemoval($Article_Name);
 
 
 //////////////////////////////////////// SOCIAL/3RD PARTY PLATFORMS INTEGRATION \\\\\\\\\\\\\\\\\\\\\\\
@@ -137,46 +135,50 @@ if($Login == "1"){
 
 
 	///////////////////// FINALIZE ALL ARRAYS FOR UPLOAD TO DATABASE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-	$Article_Content = serialize($Article_Content); 
+    $Article_Content = Cw_Filter_Array($Article_Content);
+    $Article_Other = Cw_Filter_Array($Article_Other);
+    $Article_Content = serialize($Article_Content); 
 	$Article_Other = serialize($Article_Other);
 
 
-
 	if($Article_Id == ""){
-
-
-
-		mysql_query("INSERT INTO articles(url, active, category, type, other, rand, date, feat, content, info,img,list) VALUES('$Article_Url', '$Article_Active',  '$Article_Category', '$Article_Type', '$Article_Other', '$Rand','$Article_Date', '$Article_Feat', '$Article_Content', '$Article_Info', '$PostImages','$Article_List') ")or die(mysql_error());
+	    $Manual_Message = "Cresated Message";
+        $PostImages = serialize($PostImages);
+		mysql_query("INSERT INTO articles(name, url, active, category, type, other, rand, date, feat, content, info, img, list, webid) 
+		VALUES('$Article_Name', '$Article_Url', '$Article_Active',  '$Article_Category', '$Article_Type', '$Article_Other', '$GalRand','$Article_Date', '$Article_Feat', '$Article_Content', '$Article_Info', '$PostImages','$Article_List', '$WebId') ")or die(mysql_error());
 
 // PROCESS GALLERY IMAGE UPLOADS \\
-		$query = "SELECT * FROM articles WHERE trash='0' AND rand='$Rand'";
+		$query = "SELECT * FROM articles WHERE trash='0' AND rand='$Rand' AND webid='$WebId'";
 		$result = mysql_query($query) or die(mysql_error());
 		$row = mysql_fetch_array($result);
 		$Album = $row[id];
-		$Array["galleryupload"]["id"] = $row["id"];
-		$Upload = $files["gallery"];
-		CwGallery($Array,$files);
-		$result = mysql_query("UPDATE articles SET rand='' WHERE id='$Album'") 
+		$result = mysql_query("UPDATE images SET album='$Album' WHERE album='$GalRand' AND webid='$WebId'") 
+        or die(mysql_error());
+		$result = mysql_query("UPDATE articles SET rand='' WHERE id='$Album' AND webid='$WebId'") 
 		or die(mysql_error());
 
 // UPDATE ALL TRANSFERRED ARTICLE INFORMATION \\
-		$result = mysql_query("UPDATE transfer SET trash='1' WHERE id='$TransferId'") 
+		$result = mysql_query("UPDATE transfer SET trash='1' WHERE id='$TransferId' AND webid='$WebId'") 
 		or die(mysql_error());
-		$result = mysql_query("UPDATE transfer SET trash='1' WHERE url='$Article_Url'") 
+		$result = mysql_query("UPDATE transfer SET trash='1' WHERE url='$Article_Url' AND webid='$WebId'") 
 		or die(mysql_error());
 
 
 
 	}else{
 
-
+        $query = "SELECT * FROM articles WHERE id='$Article_Id'";
+    	$result = mysql_query($query) or die(mysql_error());
+    	$Article = mysql_fetch_array($result);
+    	$Article = CwOrganize($Article,$Array);
+        $Article = Cw_Filter_Array($Article);
 
 // UN-LINK OLD TAGS FROM ARTICLE \\
 		$UnlinkTag =  explode(",", $Tags);
-		$query = "SELECT * FROM articles WHERE id='$Article_Id'";
+		$query = "SELECT * FROM articles WHERE id='$Article_Id' AND webid='$WebId'";
 		$result = mysql_query($query) or die(mysql_error());
 		$row = mysql_fetch_array($result);
-		$row = PbUnSerial($row);
+		$row = CwOrganize($row,$Array);
 		$SRTags = $row["other"]["tags"];
 		if($SRTags == ""){
 		}else{
@@ -184,53 +186,56 @@ if($Login == "1"){
 			$TagRemove = array_delete($UnlinkTag, $SRTags);
 			$Count = "0";
 			foreach($TagRemove as $value){
-				$Query = "SELECT * FROM cw_tags WHERE name='$value'";
+				$Query = "SELECT * FROM cw_tags WHERE name='$value' AND webid='$WebId'";
 				$Result = mysql_query($Query) or die(mysql_error());
 				$Row = mysql_fetch_array($Result);
 				$ListTagId = $Row["id"];
-				$ListTag = OtarDecrypt($key,$Row[content]);
-				$Tag_Key = array_search($Article_Id, $ListTag);
-				unset($ListTag[$Tag_Key]);
-				$NewTagArray = OtarEncrypt($key,$ListTag);
-				$result = mysql_query("UPDATE cw_tags SET content='$NewTagArray' WHERE id='$ListTagId'")
+				$ListTag = unserialize($Row["content"]);
+				$Tag_key = array_search($Article_Id, $ListTag);
+				unset($ListTag[$Tag_key]);
+				$NewTagArray = serialize($ListTag);
+				$result = mysql_query("UPDATE cw_tags SET content='$NewTagArray' WHERE id='$ListTagId' AND webid='$WebId'")
 				or die(mysql_error());
 		   }
 		}
 
 // PROCESS GALLERY IMAGE UPLOADS \\
-		$Array["galleryupload"]["id"] = $Article_Id;
-		CwGallery($Array,$files);
 		if($Image_Order == ""){ 
 		}else{
 			foreach($Image_Order as $ImageO){
 				$ImageId = key($Image_Order);
-				$result = mysql_query("UPDATE images SET list='$ImageO' WHERE id='$ImageId'") 
+				$result = mysql_query("UPDATE images SET list='$ImageO' WHERE id='$ImageId' AND webid='$WebId'") 
 				or die(mysql_error());
 				next($Image_Order);
 			}
 		}
 
 // UPDATE THE DATABASE WITH ANY NEW/OLD INFORMATION \\
-		$result = mysql_query("UPDATE articles SET url='$Article_Url' WHERE id='$Article_Id'") 
+		$result = mysql_query("UPDATE articles SET url='$Article_Url' WHERE id='$Article_Id' AND webid='$WebId'") 
 		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET active='$Article_Active' WHERE id='$Article_Id'") 
+		$result = mysql_query("UPDATE articles SET active='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'") 
 		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET info='$Article_Info' WHERE id='$Article_Id'") 
+		$result = mysql_query("UPDATE articles SET info='$Article_Info' WHERE id='$Article_Id' AND webid='$WebId'") 
 		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET category='$Article_Category' WHERE id='$Article_Id'") 
+		$result = mysql_query("UPDATE articles SET category='$Article_Category' WHERE id='$Article_Id' AND webid='$WebId'") 
 		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET other='$Article_Other' WHERE id='$Article_Id'") 
+		$result = mysql_query("UPDATE articles SET other='$Article_Other' WHERE id='$Article_Id' AND webid='$WebId'") 
 		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET feat='$Article_Feat' WHERE id='$Article_Id'") 
+		$result = mysql_query("UPDATE articles SET feat='$Article_Feat' WHERE id='$Article_Id' AND webid='$WebId'") 
 		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET content='$Article_Content' WHERE id='$Article_Id'") 
+		$result = mysql_query("UPDATE articles SET shortcode='$Article_Shortcode' WHERE id='$Article_Id' AND webid='$WebId'") 
 		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET list='$Article_List' WHERE id='$Article_Id'") 
+		$result = mysql_query("UPDATE articles SET content='$Article_Content' WHERE id='$Article_Id' AND webid='$WebId'") 
 		or die(mysql_error());
-		if($PostImages == ""){ }else{
-			$result = mysql_query("UPDATE articles SET img='$PostImages' WHERE id='$Article_Id'") 
-			or die(mysql_error());
-		}
+		$result = mysql_query("UPDATE articles SET list='$Article_List' WHERE id='$Article_Id' AND webid='$WebId'") 
+		or die(mysql_error());
+		$result = mysql_query("UPDATE articles SET name='$Article_Name' WHERE id='$Article_Id' AND webid='$WebId'") 
+		or die(mysql_error());
+        if(is_array($PostImages)){
+            $PostImages = serialize($PostImages);
+		    $result = mysql_query("UPDATE articles SET img='$PostImages' WHERE id='$Article_Id' AND webid='$WebId'") 
+		    or die(mysql_error());
+        }
 
 
 	}
@@ -241,35 +246,46 @@ if($Login == "1"){
 	$TagArticle = $Article_Id;
 	$Tags =  explode(",", $Tags);
 	foreach($Tags as $value){
-		$query = "SELECT * FROM cw_tags WHERE name='$value'"; 
+		$query = "SELECT * FROM cw_tags WHERE name='$value' AND webid='$WebId'"; 
 		$result = mysql_query($query) or die(mysql_error());
 		$row = mysql_fetch_array($result);
 		$TagSearchId = $row["id"];
 		if($TagSearchId == ""){
 			$TagId = array("$TagArticle");
-			$TagId = OtarEncrypt($key,$TagId);
+			$TagId = serialize($TagId);
 			if($value == ""){
 			}else{
 				mysql_query("INSERT INTO cw_tags
-				(name, content) VALUES('$value', '$TagId') ")or die(mysql_error());
+				(name, content, webid) VALUES('$value', '$TagId', '$WebId') ")or die(mysql_error());
 			}
 		}else{
 			$TagId = $row["content"];
-			$TagId = OtarDecrypt($key,$TagId);
-			if(in_array($TagArticle, $TagId)){
-			}else{
-				array_push($TagId, $TagArticle);
-				$NewTagArray = OtarEncrypt($key,$TagId);
-				$result = mysql_query("UPDATE cw_tags SET content='$NewTagArray' WHERE id='$TagSearchId'")
-				or die(mysql_error());
+			$TagId = unserialize($TagId);
+			if(is_array($TagId)){
+    			if(!in_array($TagArticle, $TagId)){
+    				array_push($TagId, $TagArticle);
+    				$NewTagArray = serialize($TagId);
+    				$result = mysql_query("UPDATE cw_tags SET content='$NewTagArray' WHERE id='$TagSearchId' AND webid='$WebId'")
+    				or die(mysql_error());
+    			}
 			}
 		}
 	}
 
+// TRACKS CHANGES MADE FROM USERS \\
+    $Info = array();
+    $Info["webid"] = $WebId;
+    $Info["user"] = $Current_Admin_Id;
+    $Info["error"] = $error;
+    $Info["tracker"] = $Load_Sess;
+    $Info["manual_message"] = $Manual_Message;
+    $Info["id"] = $Article_Id;
+    $Info["type"] = "articles";
+    Cw_Changes($Info, $Article, $Array);
+/////////////////////////////////////////
 
-	$REDIRECT = "admin/Menu";
-	$Domain = $Array["siteinfo"]["domain"];
-	header("Location: $Domain/$REDIRECT");
+
+	header("Location: http://$Website_Url_Auth/admin/Menu");
 
 }
 ?>

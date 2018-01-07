@@ -8,7 +8,7 @@ $Content = $_GET['info'];
 $Id = $_GET['id'];
 
 
-#$result = mysql_query("UPDATE articles SET info='$Content' WHERE id='$Id'") 
+#$result = mysql_query("UPDATE articles SET info='$Content' WHERE id='$Id' AND webid='$WebId'") 
 #or die(mysql_error());
 
 

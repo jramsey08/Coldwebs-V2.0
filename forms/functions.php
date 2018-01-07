@@ -27,14 +27,13 @@ if($Login == "1"){
 	$Image_Url = $_POST["ImageUrl"];
 	$files = new UploadedFiles($_FILES);
 
+
+/////////////////////////////////// SETS DEFAULT VARIABLE VALUES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	$ArticleContents = OtarDecrypt($key,$_POST['article']);
 	$Article = $ArticleContents['article'];
 	$Double = $Article_Other['double'];
 	$Structure = $ArticleContents['structure'];
 	$Function_Content = $Article_Other;
-	$Article_Other = serialize($Article_Other);
-	$Article_Content = serialize($Article_Content);
-
 
 	#if($ArticleId == ""){
 	#    $Article_Other['double'] = Array("article","type","category","id","video","url","name","feat","gallery","code","img");
@@ -86,14 +85,15 @@ if($Login == "1"){
 	#}
 	$Function_Content = serialize($Function_Content);
 
-// PROCESS GALLERY IMAGE UPLOADS \\
+
+/////////////////////////////////////// PROCESSES ALL MEDIA UPLOADS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	$Array["galleryupload"]["id"] = $ArticleId;
 	CwGallery($Array,$files);
 	if($Image_Order == ""){ 
 	}else{
 		foreach($Image_Order as $ImageO){
 			$ImageId = key($Image_Order);
-			$result = mysql_query("UPDATE images SET list='$ImageO' WHERE id='$ImageId'") 
+			$result = mysql_query("UPDATE images SET list='$ImageO' WHERE id='$ImageId' AND webid='$WebId'") 
 			or die(mysql_error());
 			next($Image_Order);
 		}
@@ -103,80 +103,119 @@ if($Login == "1"){
 	}else{
 		foreach($Image_Url as $ImageU){
 			$ImageUId = key($Image_Order);
-			$result = mysql_query("UPDATE images SET url='$ImageU' WHERE id='$ImageUId'") 
+			$result = mysql_query("UPDATE images SET url='$ImageU' WHERE id='$ImageUId' AND webid='$WebId'") 
 			or die(mysql_error());
 			next($Image_Url);
 		}
 	}
+	
+	
+/////////////////////////// FINALIZE ALL ARRAYS FOR UPLOAD TO DATABASE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    $Article_Content = Cw_Filter_Array($Article_Content);
+    $Article_Other = Cw_Filter_Array($Article_Other);
+    $Article_Content = serialize($Article_Content); 
+    $Article_Other = serialize($Article_Other);
+
 
 
 	if($ArticleId == ""){
 
-		mysql_query("INSERT INTO articles (content,info,date,type,url,category,other,rand,feat,list)
+        $Manual_Message = "Created Page Funtion";
+        
+		mysql_query("INSERT INTO articles (content,info,date,type,url,category,other,rand,feat,list,webid)
 		VALUES('$Article_Content', '$Function_Info', '$Date', '$ArticleType', '$Url', '$ArticleCategory', '$Article_Other', 
-		'$Function_Rand', '$Function_Feat', '$Function_List') ") or die(mysql_error());
+		'$Function_Rand', '$Function_Feat', '$Function_List', '$WebId') ") or die(mysql_error());
 
-		$query = "SELECT * FROM articles WHERE rand='$Function_Rand'";
+		$query = "SELECT * FROM articles WHERE rand='$Function_Rand' AND webid='$WebId'";
 		$result = mysql_query($query) or die(mysql_error());
 		$row = mysql_fetch_array($result);
 		$Main_Function = $row['id'];
 
-		mysql_query("INSERT INTO page_function (name,function,template,page,active,list,contents,rand,article,shortcode)
-		VALUES('$Function_Name', '$Function_Type', '$Article_Theme', '$Function_Article', '$Function_Active', '$Function_List', '$Function_Content', '$Function_Rand', '$Main_Function', '$Shortcode' 
-		) ") or die(mysql_error());
+		mysql_query("INSERT INTO page_function (name,function,template,page,active,list,contents,rand,article,shortcode,webid)
+		VALUES('$Function_Name', '$Function_Type', '$Article_Theme', '$Function_Article', '$Function_Active', '$Function_List', '$Function_Content', '$Function_Rand', '$Main_Function',   
+                '$Shortcode','$WebId') ") or die(mysql_error());
 
-		$query = "SELECT * FROM page_function WHERE rand='$Function_Rand'";
+		$query = "SELECT * FROM page_function WHERE rand='$Function_Rand' AND webid='$WebId'";
 		$result = mysql_query($query) or die(mysql_error());
 		$row = mysql_fetch_array($result);
 		$Function_Id = $row['id'];
 
-		$result = mysql_query("UPDATE articles SET shortcode='$Function_Id' WHERE id='$Main_Function'") 
+		$result = mysql_query("UPDATE articles SET shortcode='$Function_Id' WHERE id='$Main_Function' AND webid='$WebId'") 
 		or die(mysql_error());
 
 	}else{
-
-		$result = mysql_query("UPDATE articles SET active='$ArticleActive' WHERE id='$ArticleId'") 
+	    
+	    $query = "SELECT * FROM articles WHERE id='$Article_Id'";
+    	$result = mysql_query($query) or die(mysql_error());
+    	$Article = mysql_fetch_array($result);
+    	$Article = CwOrganize($Article,$Array);
+        $Article = Cw_Filter_Array($Article);
+        $Function_Id = $Article['shortcode'];
+        
+		$result = mysql_query("UPDATE articles SET active='$ArticleActive' WHERE id='$ArticleId' AND webid='$WebId'") 
 		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET list='$Article_List' WHERE id='$ArticleId'") 
+		$result = mysql_query("UPDATE articles SET list='$Article_List' WHERE id='$ArticleId' AND webid='$WebId'") 
 		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET content='$Article_Content' WHERE id='$ArticleId'") 
+		$result = mysql_query("UPDATE articles SET content='$Article_Content' WHERE id='$ArticleId' AND webid='$WebId'") 
 		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET other='$Article_Other' WHERE id='$ArticleId'") 
+		$result = mysql_query("UPDATE articles SET other='$Article_Other' WHERE id='$ArticleId' AND webid='$WebId'") 
 		or die(mysql_error());    
-		$result = mysql_query("UPDATE articles SET feat='$ArticleFeat' WHERE id='$ArticleId'") 
+		$result = mysql_query("UPDATE articles SET feat='$ArticleFeat' WHERE id='$ArticleId' AND webid='$WebId'") 
 		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET type='$ArticleType' WHERE id='$ArticleId'") 
+		$result = mysql_query("UPDATE articles SET type='$ArticleType' WHERE id='$ArticleId' AND webid='$WebId'") 
 		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET info='$ArticleInfo' WHERE id='$ArticleId'") 
+		$result = mysql_query("UPDATE articles SET info='$ArticleInfo' WHERE id='$ArticleId' AND webid='$WebId'") 
 		or die(mysql_error());
 
-		$query = "SELECT * FROM articles WHERE id='$ArticleId'";
+		$query = "SELECT * FROM page_function WHERE id='$Function_Id' AND webid='$WebId'";
 		$result = mysql_query($query) or die(mysql_error());
-		$row = mysql_fetch_array($result);
-		$Function_Id = $row['shortcode'];
-
-	   $result = mysql_query("UPDATE page_function SET name='$Function_Name' WHERE id='$Function_Id'") 
-	   or die(mysql_error());
-	   $result = mysql_query("UPDATE page_function SET function='$Function_Type' WHERE id='$Function_Id'") 
-	   or die(mysql_error());
-	   $result = mysql_query("UPDATE page_function SET active='$Function_Active' WHERE id='$Function_Id'") 
-	   or die(mysql_error());
-	   $result = mysql_query("UPDATE page_function SET list='$Function_List' WHERE id='$Function_Id'") 
-	   or die(mysql_error());
-	   $result = mysql_query("UPDATE page_function SET contents='$Function_Content' WHERE id='$Function_Id'")     
-	   or die(mysql_error());
-	   $result = mysql_query("UPDATE page_function SET rand='$Function_Rand' WHERE id='$Function_Id'") 
-	   or die(mysql_error());
-	   $result = mysql_query("UPDATE page_function SET template='$Article_Theme' WHERE id='$Function_Id'") 
-	   or die(mysql_error());
-
+		$Function = mysql_fetch_array($result);
+    	$Function = CwOrganize($Function,$Array);
+        $Function = Cw_Filter_Array($Function);
+        
+        $result = mysql_query("UPDATE page_function SET name='$Function_Name' WHERE id='$Function_Id' AND webid='$WebId'") 
+        or die(mysql_error());
+        $result = mysql_query("UPDATE page_function SET function='$Function_Type' WHERE id='$Function_Id' AND webid='$WebId'") 
+        or die(mysql_error());
+        $result = mysql_query("UPDATE page_function SET active='$Function_Active' WHERE id='$Function_Id' AND webid='$WebId'") 
+        or die(mysql_error());
+        $result = mysql_query("UPDATE page_function SET list='$Function_List' WHERE id='$Function_Id' AND webid='$WebId'") 
+        or die(mysql_error());
+        $result = mysql_query("UPDATE page_function SET contents='$Function_Content' WHERE id='$Function_Id' AND webid='$WebId'")     
+        or die(mysql_error());
+        $result = mysql_query("UPDATE page_function SET rand='$Function_Rand' WHERE id='$Function_Id' AND webid='$WebId'") 
+        or die(mysql_error());
+        $result = mysql_query("UPDATE page_function SET template='$Article_Theme' WHERE id='$Function_Id' AND webid='$WebId'") 
+        or die(mysql_error());
 	}
 
 
+// TRACKS CHANGES MADE FROM USERS \\
+    $Info = array();
+    $Info["webid"] = $WebId;
+    $Info["user"] = $Current_Admin_Id;
+    $Info["error"] = $error;
+    $Info["tracker"] = $Load_Sess;
+    $Info["id"] = $ArticleId;
+    $Info["manual_message"] = $Manual_Message;
+    $Info["child"]["id"] = $Function_Id;
+    $Info["child"]["type"] = "page_function";
+    $Info["type"] = "articles";
+    Cw_Changes($Info, $Article, $Array);
+    $Info = array();
+    $Info["webid"] = $WebId;
+    $Info["user"] = $Current_Admin_Id;
+    $Info["error"] = $error;
+    $Info["manual_message"] = $Manual_Message;
+    $Info["child"]["id"] = $ArticleId;
+    $Info["child"]["type"] = "articles";
+    $Info["tracker"] = $Load_Sess;
+    $Info["id"] = $Function_Id;
+    $Info["type"] = "page_function";
+    Cw_Changes($Info, $Function, $Array);
+/////////////////////////////////////////
 
-
-	$Redirect = $Array["siteinfo"]["domain"]; . "/admin/design/" . $ThemeUrl . "/Functions";
-		
+	$Redirect = "http://$Website_Url_Auth/admin/design/$ThemeUrl/Functions";
 		
 
 	if($Exit == "close"){ ?>

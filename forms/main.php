@@ -1,132 +1,172 @@
 <?php
 include("api/pblast/include.php");
 
-
 $Get_Type = strtolower($_GET['type']);
 $Get_Id = strtolower($_GET['id']);
 $Get_Url = strtolower($_GET['url']);
 $Get_End = strtolower($_GET['end']);
 
 
-if($Get_Type == "login"){
-    include("forms/login.php");
-}
-
-if($Get_Type == "deletearticle"){
-    include("forms/deletearticle.php");
-}
-
-if($Get_Type == "logout"){
-    include("forms/logout.php");
-}
-
-if($Get_Type == "editarticle"){
-    include("forms/editarticle.php");
-}
-
-if($Get_Type == "editaccess"){
-    include("forms/editaccess.php");
-}
-
-if($Get_Type == "cwaccess"){
-    include("forms/cwaccess.php");
-}
-
-if($Get_Type == "edituser"){
-    include("forms/edituser.php");
-}
-
-if($Get_Type == "editad"){
-    include("forms/editad.php");
-}
-
-if($Get_Type == "editpage"){
-    include("forms/editpage.php");
-}
-
-if($Get_Type == "offline"){
-    include("forms/offline.php");
-}
-
-if($Get_Type == "articles"){ 
-    include("forms/article.php"); 
-}
-
-if($Get_Type == "attributes"){ 
-    include("forms/attributes.php"); 
-}
-
-if($Get_Type == "subscribe"){ 
-    include("forms/subscribe.php"); 
-}
-
-if($Get_Type == "category"){ 
-    include("forms/category.php"); 
-}
-
-<<<<<<< HEAD
-if($Get_Type == "order"){ 
-    include("forms/order.php"); 
-}
-
-=======
->>>>>>> origin/master
-if($Get_Type == "menu"){ 
-    include("forms/menu.php"); 
-}
-
-if($Get_Type == "pages"){ 
-    include("forms/pages.php"); 
-}
-
-if($Get_Type == "functions"){
-    include("forms/functions.php");
+switch ($Get_Type) {
+    case "admin":
+        include("forms/admin/main.php");
+        break;
+    case "login":
+        include("forms/login.php");
+        break;
+    case "wishlist":
+        include("forms/wishlist.php");
+        break;
+    case "deletearticle":
+        include("forms/delete/deletearticle.php");
+        break;        
+    case "ecommerce":
+        include("forms/ecommerce/main.php");
+        break;               
+    case "useraccess":
+        include("forms/useraccess.php");
+        break;               
+    case "logout":
+        include("forms/logout.php");
+        break;               
+    case "editarticle":
+        include("forms/edit/editarticle.php");
+        break;               
+    case "cwaccess":
+        include("forms/cwaccess.php");
+        break;               
+    case "editaccess":
+        include("forms/edit/editaccess.php");
+        break;               
+    case "edituser":
+        include("forms/edit/edituser.php");
+        break;               
+    case "editad":
+        include("forms/edit/editad.php");
+        break; 
+    case "siteswitch":
+        include("forms/siteswitch.php");
+        break;               
+    case "hostedsites":
+        include("forms/hostedsites.php");
+        break;               
+    case "tickets":
+        include("forms/tickets.php");
+        break;               
+    case "payment":
+        include("forms/payment.php");
+        break;               
+    case "register":
+        include("forms/register.php");
+        break;               
+    case "cart":
+        include("forms/cart.php");
+        break;               
+    case "reset":
+        include("forms/reset.php");
+        break;               
+    case "social":
+        include("forms/social.php");
+        break;               
+    case "cwfile":
+        include("forms/cwfile.php");
+        break;               
+    case "editsocial":
+        include("forms/edit/editarticle.php");
+        break;               
+    case "inbox":
+        include("forms/inbox.php");
+        break;               
+    case "socialmedia":
+        include("forms/socialmedia.php");
+        break;               
+    case "edituseraccess":
+        include("forms/edit/edituseraccess.php");
+        break;               
+    case "edittrans":
+        include("forms/edit/edittrans.php");
+        break;               
+    case "advertisement":
+        include("forms/ads.php");
+        break;               
+    case "my-info":
+        include("forms/myinfo.php");
+        break;               
+    case "order":
+        include("forms/order.php");
+        break;               
+    case "comment":
+        include("forms/comment.php");
+        break;               
+    case "paypal":
+        include("api/paypal/main.php"); 
+        break;               
+    case "users":
+        include("forms/user.php");
+        break;               
+    case "products":
+        include("forms/product.php");
+        break;               
+    case "x-editable":
+        include("api/X-editable/post.php"); 
+        break;               
+    case "pblast":
+        include("api/pblast/connect.php");
+        break;               
+    case "contact":
+        include("forms/contact.php");
+        break;               
+    case "client":
+        include("forms/client.php");
+        break;               
+    case "settings":
+        include("forms/settings.php");
+        break;               
+    case "functions":
+        include("forms/functions.php");
+        break;               
+    case "pages":
+        include("forms/pages.php");
+        break;               
+    case "menu":
+        include("forms/menu.php");
+        break;               
+    case "category":
+        include("forms/category.php");
+        break;               
+    case "subscribe":
+        include("forms/subscribe.php");
+        break;               
+    case "attributes":
+        include("forms/attributes.php");
+        break;               
+    case "articles":
+        include("forms/article.php");
+        break;               
+    case "blog":
+        include("forms/article.php");
+        break;               
+    case "offline":
+        include("forms/offline.php");
+        break;               
+    case "editpage":
+        include("forms/edit/editpage.php");
+        break;
+    case "editadmin":
+        include("forms/edit/editadmin.php");
+        break; 
+    case "":
+        header("Location: http://$Website_Url_Auth/");
+        break;
 }
 
 if($Get_Type == "delete"){ 
-    include("forms/delete.php"); 
+    if($Get_Id == "cart"){
+        include("forms/delete/deletecart.php"); 
+    }else{
+        include("forms/delete/delete.php"); 
+    }
 }
-
-if($Get_Type == "settings"){ 
-    include("forms/settings.php"); 
-}
-
-if($Get_Type == "client"){ 
-    include("forms/client.php"); 
-}
-
-if($Get_Type == "contact"){ 
-    include("forms/contact.php"); 
-}
-
-if($Get_Type == "pblast"){ 
-    include("api/pblast/connect.php"); 
-}
-
-if($Get_Type == "X-editable"){ 
-    include("api/X-editable/post.php"); 
-}
-
-if($Get_Type == "products"){ 
-    include("forms/product.php"); 
-}
-
-if($Get_Type == "users"){ 
-    include("forms/user.php"); 
-}
-
-if($Get_Type == "paypal"){ 
-    include("api/paypal/main.php"); 
-}
-
-if($Get_Type == "comment"){ 
-    include("forms/comment.php"); 
-}
-
-if($Get_Type == "advertisement"){ 
-    include("forms/ads.php"); 
-}
-
 if($Get_Type == "copy"){
     if($Get_Id == "product"){
         include("forms/copyproduct.php");
@@ -135,20 +175,5 @@ if($Get_Type == "copy"){
         include("forms/copyarticle.php");
     }
 }
-
-
-<<<<<<< HEAD
-if($Get_Type == "my-info"){ include("forms/myinfo.php"); }
-
-if($Get_Type == "cwfile"){ include("forms/cwfile.php"); }
-if($Get_Type == "reset"){ include("forms/reset.php"); }
-=======
-
-if($Get_Type == "cwfile"){ include("forms/cwfile.php"); }
->>>>>>> origin/master
-if($Get_Type == "cart"){ include("forms/cart.php"); }
-if($Get_Type == "register"){ include("forms/register.php"); }
-if($Get_Type == "payment"){ include("forms/payment.php"); }
-if($Get_Type == "tickets"){ include("forms/tickets.php"); }
 
 ?>

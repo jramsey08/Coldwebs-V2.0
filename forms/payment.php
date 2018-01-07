@@ -34,7 +34,7 @@ if($Prev_Trans == "1"){
 }else{
 // CREATE TRANSACTION INFO \\
     mysql_query("INSERT INTO trans
-    (user, id, status, method, type, price, typeid, cart, delivery_option, other) VALUES('$Current_Admin_Id', '$TransId', 'Pending', '$Method', '$Type', '$CartTotal', '$Id', '$Cart', '$Delivery', '$Other') ") 
+    (user, id, status, method, type, price, typeid, cart, delivery_option, other, webid) VALUES('$Current_Admin_Id', '$TransId', 'Pending', '$Method', '$Type', '$CartTotal', '$Id', '$Cart', '$Delivery', '$Other', '$WebId') ") 
     or die(mysql_error());
 }
 $TransId = OtarEncrypt($key,$TransId);
