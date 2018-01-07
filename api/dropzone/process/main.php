@@ -2,9 +2,10 @@
 include("../ref/config.php");
 $Rand = $_POST['rand'];
 $Article = $_POST['id'];
-if($Rand != ""){
+if($Article == ""){
     $Article = $Rand;
 }
+
 $RanD = rand(999, 9999999999);
 $files = new UploadedFiles($_FILES);
 foreach($files as $Media){
@@ -44,7 +45,7 @@ foreach($files as $Media){
 #echo "4";
             if($Media['name'] != ""){
                 $Gallery_Img = "../../../uploads/$Folder/$RanD" . $Media['name'];
-                $Images = $SiteInfo['domain'] . "/uploads/$Folder/$RanD" . $Media['name'];
+                $Images = "http://$_SERVER[HTTP_HOST]/uploads/$Folder/$RanD" . $Media['name'];
                 $Name = explode(".", $Media['name']);
                 $Name = $Name['0'];
 #echo $Images;
@@ -62,7 +63,7 @@ foreach($files as $Media){
                         if($width/$height > $ratio_orig){
                             $width = $height*$ratio_orig;
                         }else{
-                            $height = $width/$ratio_orig;
+                            $height = $width/$ratio_orig; 
                         }
                         $image_p = imagecreatetruecolor($width,$height);
                         $image = imagecreatefromjpeg($filename);
@@ -84,10 +85,10 @@ foreach($files as $Media){
                         imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
                         imagejpeg($image_p, $filename, 100);
                     }
-                    mysql_query("INSERT INTO images(img,album,type) VALUES('$Images', '$Article', '$Type' ) ") or die(mysql_error());
+                    mysql_query("INSERT INTO images(img, album, type, webid) VALUES('$Images', '$Article', '$Type', '$WebId' ) ") or die(mysql_error());
                 }else{
                     move_uploaded_file($Media['tmp_name'], $Gallery_Img);
-                    mysql_query("INSERT INTO images(url,album,type,name) VALUES('$Images', '$Article', '$Type', '$Name' ) ") or die(mysql_error());
+                    mysql_query("INSERT INTO images(url, album, type, name, webid) VALUES('$Images', '$Article', '$Type', '$Name', '$WebId' ) ") or die(mysql_error());
                 }
             }
         }
