@@ -1,153 +1,147 @@
 <?php
-
-<<<<<<< HEAD
 $Cart_Session = $Session['cart'];
 $SearchCart = OtarDecrypt($key,$_GET['type']);
 $Trans = $_SESSION['trans'];
 
-$Cw_Shipping = "10";
+$TransData = CwTransInfo($Trans,$Array);
+$Cw_Shipping = $TransData["shipping"]; 
 
-if($Get_Url == "my-orders" AND $Get_Type !=""){
-    $query = "SELECT * FROM trans WHERE active='1' AND trash='0' AND id='$SearchCart'";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
-    $Cart_Session = $row['cart'];
+if($Cw_Shipping == ""){
+    $Cw_Shipping = $Default_Shipping;
 }
-
-$query = "SELECT * FROM cw_coupon WHERE cart='$Cart_Session'";
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
-if($row['type'] == "percent"){
-    $Discount = $row['amount'] / "100";
-    $Cw_Discount = $row['amount'] * $Discount;
-}else{
-    $Cw_Discount = $row['amount'];
-}
-
 
 $Cart_Info = CwCartTotal($Cart_Session);
 $CartCount = $Cart_Info['count'];
 $CwCartSubTotal = $Cart_Info['total'];
 
+$query = "SELECT * FROM cw_coupon WHERE cart='$Cart_Session' AND webid='$WebId'";
+$result = mysql_query($query) or die(mysql_error());
+$row = mysql_fetch_array($result);
+$row = CwOrganize($row,$Array);
+if($row['type'] == "percent"){
+    $Discount = $row['amount'] / "100";
+    $Cw_Discount = $CwCartSubTotal * $Discount;
+}else{
+    $Cw_Discount = $row['amount'];
+}
+
 if($Cw_Discount == ""){
     $Cw_Discount = "0";
 }
+$Cw_Discount = number_format($Cw_Discount, "2");
 if($Cw_Tax == ""){
     $Cw_Tax = "0";
+}
+if($CwCartTotal == ""){
+    $CwCartTotal = "0";
+}
+if($Cw_Shipping == ""){
+    $Cw_Shipping = "0";
 }
 
 $Cw_Tax = $CwCartSubTotal * $Cw_Tax;
 $CwCartTotal = $CwCartSubTotal + $Cw_Tax;
 $CwCartTotal = $CwCartTotal + $Cw_Shipping;
 $CwCartTotal = $CwCartTotal - $Cw_Discount;
-
+$CwCartTotal = number_format("$CwCartTotal", 2);
 if($CartCount <= "0" OR $CartCount == ""){
     $CwCartTotal = "0";
     $CartCount == "0";
 }
-
-if($Get_Url == "my-orders" AND $Get_Type !=""){
-    $query = "SELECT * FROM trans WHERE active='1' AND trash='0' AND id='$SearchCart'";
-}else{
-    $query = "SELECT * FROM trans WHERE active='1' AND trash='0' AND id='$Trans'";
-}
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-    $row = PbUnSerial($row);
-    $TransInfo = $row;
-    if($TransInfo['date'] == ""){
-        $TransInfo['date'] = strtotime("now");
-    } 
-
-=======
-$Cart_Session = $_SESSION['COOKIEPHPSESSID'];
-$Cart_Session = "123";
-$SearchCart = OtarDecrypt($key,$_GET['type']);
-$Trans = OtarDecrypt($key,$_POST['trans']);
-
-
-$query = "SELECT * FROM cw_cart WHERE active='1' AND trash='0' AND session='$Cart_Session'"; 
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-    $CwCart['id'] = $row['id'];
-    $CwCart['session'] = $row['session'];
-    $CwCart['cart'] = $row['cart'];
-    $CwCart['item'] = $row['item'];
-    $CwCart['user'] = $row['user'];
-    $CwCart['qty'] = $row['qty'];
-    $CwCart['active'] = $row['active'];
-    $CwCart['trash'] = $row['trash'];
-    $CwCart['other'] = $row['other'];
-    $CwCart['price'] = $row['price'];
-    $CwCart['other'] = unserialize($CwCart['other']);
-    $CwTotal = $row['price'] * $row['qty'];
-    $CwCartTotal = $CwCartTotal + $CwTotal;
+if($Cw_Shipping == "0"){
+    $Cw_Shipping = "Free";
 }
 
-$Cw_Tax = $CwCartTotal * $Cw_Tax;
-$CwCartTotal = $CwCartTotal + $Cw_Tax;
-$CwCartTotal = $CwCartTotal + $Cw_Shipping;
-$CwCartTotal = $CwCartTotal - $Cw_Discount;
-
-if($Get_Url == "orders"){
-    $query = "SELECT * FROM trans WHERE active='1' AND trash='0' AND cart='$SearchCart'";
-}else{
-    $query = "SELECT * FROM trans WHERE active='1' AND trash='0' AND id='$Trans'";
-}
-$result = mysql_query($query) or die(mysql_error()); while($row = mysql_fetch_array($result)){
-    $TransInfo['id'] = $row['id'];
-    $TransInfo['method'] = $row['method'];
-    $TransInfo['type'] = $row['type'];
-    $TransInfo['user'] = $row['user'];
-    $TransInfo['status'] = $row['status'];
-    $TransInfo['price'] = $row['price'];
-    $TransInfo['active'] = $row['active'];
-    $TransInfo['trash'] = $row['trash'];
-    $TransInfo['session'] = $row['session'];
-    $TransInfo['typeid'] = $row['typeid'];
-    $TransInfo['other'] = $row['other'];
-    $TransInfo['notes'] = $row['notes'];
-    $TransInfo['attend'] = $row['attend'];
-    $TransInfo['guest'] = $row['guest'];
-    $TransInfo['cart'] = $row['cart'];
-    $TransInfo['delivery_option'] = $row['delivery_option'];
-
-    $TransInfo['other'] = unserialize($TransInfo['other']);
->>>>>>> origin/master
-    $query = "SELECT * FROM cw_cart WHERE active='1' AND trash='0' AND session='$Cart_Session'"; 
-    $result = mysql_query($query) or die(mysql_error());
-    while($row = mysql_fetch_array($result)){
-        $CartInfo['id'] = $row['id'];
-        $CartInfo['session'] = $row['session'];
-        $CartInfo['cart'] = $row['cart'];
-        $CartInfo['item'] = $row['item'];
-        $CartInfo['user'] = $row['user'];
-        $CartInfo['qty'] = $row['qty'];
-        $CartInfo['active'] = $row['active'];
-        $CartInfo['trash'] = $row['trash'];
-        $CartInfo['other'] = $row['other'];
-        $CartInfo['price'] = $row['price'];
-        $CartInfo['other'] = unserialize($CartInfo['other']);
+if($Get_Url == "checkout"){
+    $TransInfo = Cw_Quick_Info("trans",$WebId,$Trans,$Array);
+    $Billing = $TransInfo["other"]["billing"];
+    $CheckOTher = $TransInfo["other"];
+    if($Billing["firstname"] != ""){
+        $CurrentUser["info"]["firstname"] = $Billing["firstname"];
+    }
+    if($Billing["lastname"] != ""){
+        $CurrentUser["info"]["lastname"] = $Billing["lastname"];;
+    }
+    if($Billing["company"] != ""){
+        $CurrentUser["info"]["address"]["company"] = $Billing["company"];
+    }
+    if($CheckOTher["address"]["1"] != ""){
+        $CurrentUser["info"]["address"]["1"] = $CheckOTher["address"]["1"];
+    }
+    if($CheckOTher["address"]["2"] != ""){
+        $CurrentUser["info"]["address"]["2"] = $CheckOTher["address"]["2"];
+    }   
+    if($CheckOTher["address"]["3"] != ""){
+        $CurrentUser["info"]["address"]["3"] = $CheckOTher["address"]["3"];
+    }        
+    if($CheckOTher["address"]["4"] != ""){
+        $CurrentUser["info"]["address"]["4"] = $CheckOTher["address"]["4"];
+    }        
+    if($CheckOTher["address"]["5"] != ""){
+        $CurrentUser["info"]["address"]["5"] = $CheckOTher["address"]["5"];
+    }        
+    if($CheckOTher["address"]["6"] != ""){
+        $CurrentUser["info"]["address"]["6"] = $CheckOTher["address"]["6"];
+    }    
+    if($Billing["telephone"] != ""){
+        $CurrentUser["info"]["address"]["telephone"]= $Billing["telephone"];
+    }     
+    if($Billing["fax"] != ""){
+        $CurrentUser["info"]["address"]["fax"]= $Billing["fax"];
     }
 }
 
 
-<<<<<<< HEAD
+if($Get_Url == "my-orders" AND $Get_Type !=""){
+    $OrderId = OtarDecrypt($key,$_GET["type"]);
+    $query = "SELECT * FROM trans WHERE active='1' AND trash='0' AND user='$Current_Admin_Id' AND id='$OrderId' AND webid='$WebId'";
+    $result = mysql_query($query) or die(mysql_error());
+    $OrderInfo = $row = mysql_fetch_array($result);
+    $OrderInfo = CwOrganize($OrderInfo,$Array);
+    $OrderOther = $OrderInfo["other"];
+    $BillingInfo = $OrderOther["billing"];
+    $ShipingMethod = Cw_Quick_Info("cwoptions",$WebId,$OrderInfo["delivery_option"],$Array);
+    $PaymentMethod = Cw_Quick_Info("cwoptions",$WebId,$OrderInfo["method"],$Array);
+    $Trans_Cart = CwCartTotal($OrderInfo["cart"]);
+    $Trans_Delivery = $OrderInfo["other"]["delivery"];
+}
+
+$query = "SELECT * FROM trans WHERE active='1' AND trash='0' AND id='$Trans' AND webid='$WebId'";
+$result = mysql_query($query) or die(mysql_error());
+while($row = mysql_fetch_array($result)){
+    $TransInfo = CwTransInfo($TransInfo,$Array);
+    if($TransInfo['date'] == ""){
+        $TransInfo['date'] = strtotime("yesterday");
+    }
+    $query = "SELECT * FROM cw_cart WHERE active='1' AND trash='0' AND session='$Cart_Session' AND webid='$WebId'";
+    $result = mysql_query($query) or die(mysql_error());
+    while($row = mysql_fetch_array($result)){
+        $row = CwOrganize($row,$Array);
+        $Ccount = $Ccount + 1;
+        $CartInfo["$Ccount"]['id'] = $row['id'];
+        $CartInfo["$Ccount"]['session'] = $row['session'];
+        $CartInfo["$Ccount"]['cart'] = $row['cart'];
+        $CartInfo["$Ccount"]['item'] = $row['item'];
+        $CartInfo["$Ccount"]['user'] = $row['user'];
+        $CartInfo["$Ccount"]['qty'] = $row['qty'];
+        $CartInfo["$Ccount"]['active'] = $row['active'];
+        $CartInfo["$Ccount"]['trash'] = $row['trash'];
+        $CartInfo["$Ccount"]['other'] = $row['other'];
+        $CartInfo["$Ccount"]['price'] = $row['price'];
+        $CartInfo["$Ccount"]['other'] = unserialize($CartInfo['other']);
+    }
+}
+
 
 if($_GET['cwedit'] != ""){
     $Cart_Item['id'] = OtarDecrypt($key,$_GET['cwedit']);
-    $query = "SELECT * FROM cw_cart WHERE active='1' AND trash='0' AND id='$Cart_Item[id]'"; 
+    $query = "SELECT * FROM cw_cart WHERE active='1' AND trash='0' AND id='$Cart_Item[id]' AND webid='$WebId'"; 
     $result = mysql_query($query) or die(mysql_error());
     $row = mysql_fetch_array($result);
-    $row = PbUnSerial($row);
+    $row = CwOrganize($row,$Array);
     $Cart_Item['color'] = $row['content']['color'];
     $Cart_Item['size'] = $row['content']['size'];
     $Cart_Item['price'] = $row['price'];
     $Cart_Item['qty'] = $row['qty'];
 }
-
-
-
-=======
->>>>>>> origin/master
 ?>

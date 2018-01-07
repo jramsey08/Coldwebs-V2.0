@@ -1,28 +1,54 @@
 <?php
 if($Get_Url == "register"){
+    $OfflineByPass = "1";
+    if($Current_Admin_Id != ""){
+        header("Location: $Domain/");
+    }
     if($CustomerLogin == "1"){
-    }else{
-        $OverRight['theme'] = "admin/theme/cwadmin";
+        $OverRight['theme'] = "default";
         $OverRight['file'] = "register";
+    }else{
+        $AdminTheme = CwAdminVerify("register");
+        $OverRight['theme'] = $AdminTheme["theme"];
+        $OverRight['file'] = $AdminTheme["file"];
     }
 }
 
 if($Get_Url == "login"){
+    $OfflineByPass = "1";
+    if($Current_Admin_Id != ""){
+        header("Location: $Domain/");
+    }
     if($CustomerLogin == "1"){
-<<<<<<< HEAD
         $OverRight['theme'] = "default";
         $OverRight['file'] = "login";
-=======
->>>>>>> origin/master
     }else{
-        $OverRight['theme'] = "admin/theme/cwadmin";
+        $AdminTheme = CwAdminVerify("login");
+        $OverRight['theme'] = $AdminTheme["theme"];
+        $OverRight['file'] = $AdminTheme["file"];
+    }
+}
+
+if($Get_Url == "password-recovery"){
+    $OfflineByPass = "1";
+    if($Current_Admin_Id != ""){
+        header("Location: $Domain/");
+    }
+    if($CustomerLogin == "1"){
+        $OverRight['theme'] = "default";
         $OverRight['file'] = "login";
+    }else{
+        $AdminTheme = CwAdminVerify("reset");
+        $OverRight['theme'] = $AdminTheme["theme"];
+        $OverRight['file'] = $AdminTheme["file"];
     }
 }
 
 if($Get_Url == "logout"){
     $OverRight['root'] = "1";
     $OverRight['file'] = "forms/logout.php";
+    $Url_Redirect = "http://$Website_Url_Auth/Login/?redirect=" . $_GET['redirect']  . "&error=$_GET[error]";
+    header("Location: $Url_Redirect");
 }
 
 if($Get_Url == "author"){
@@ -32,7 +58,7 @@ if($Get_Url == "author"){
 
 if($Get_Url == "cwpreview"){
     $OverRight['theme'] = "default";
-    $OverRight['file'] = "rightsidebar";
+    $OverRight['file'] = "default";
     $OverRight['preview'] = "1";
 }
 
@@ -66,14 +92,11 @@ if($Get_Url == "search"){
     $OverRight['file'] = "search";
 }
 
-<<<<<<< HEAD
 if($Get_Url == "reset_pw"){
     $OverRight['theme'] = "default";
     $OverRight['file'] = "resetpw";
 }
 
-=======
->>>>>>> origin/master
 if($Get_Url == "archive"){
     $OverRight['theme'] = "default";
     $OverRight['file'] = "archive";
@@ -93,17 +116,6 @@ if($Get_Url == "cwamedia"){
     $OverRight['cwmediatype'] = "audio";
 }
 
-if($Get_Url == "portfolio"){
-    if($Get_Type == ""){
-    }else{
-        $cwdefault = "1";
-        $OverRight['theme'] = "default";
-        $OverRight['file'] = "portfolio";
-        $OverRight['cwmedia'] = "1";
-        $OverRight['cwdefaultype'] = "portfolio";
-    }
-}
-
 if($Get_Url == "services"){
     if($Get_Type == ""){
     }else{
@@ -117,10 +129,7 @@ if($Get_Url == "services"){
 
 if($Get_Url == "shop"){
     if($Get_Type == ""){
-<<<<<<< HEAD
         $Get_Url = "shop";
-=======
->>>>>>> origin/master
     }else{
         $cwdefault = "1";
         $OverRight['theme'] = "default";
@@ -153,7 +162,6 @@ if($Get_Url == "dashboard"){
     }
 }
 
-<<<<<<< HEAD
 $E_Commerce = "1";
 
 
@@ -162,32 +170,50 @@ if($E_Commerce == "1"){
 
     if($Get_Url == "my-account"){
         $OverRight['theme'] = "default";
-        $OverRight['file'] = "account";
+        $OverRight['file'] = "myaccount";
+        $OverRight['secure'] = "1";
     }
 
     if($Get_Url == "my-orders"){
         if($Get_Type == ""){
             $OverRight['theme'] = "default";
-            $OverRight['file'] = "orders";
+            $OverRight['file'] = "myorders";
+            $OverRight['secure'] = "1";
         }else{
             $OverRight['theme'] = "default";
             $OverRight['file'] = "listorder";
+            $OverRight['secure'] = "1";
         }
     }
+    
+    if($Get_Url == "my-reviews"){
+        if($Get_Type == ""){
+            $OverRight['theme'] = "default";
+            $OverRight['file'] = "myreview";
+            $OverRight['secure'] = "1";
+        }else{
+            $OverRight['theme'] = "default";
+            $OverRight['file'] = "listewview";
+            $OverRight['secure'] = "1";
+        }
+    }    
 
     if($Get_Url == "my-info"){
         $OverRight['theme'] = "default";
         $OverRight['file'] = "myinfo";
+        $OverRight['secure'] = "1";
     }
 
     if($Get_Url == "my-address"){
         $OverRight['theme'] = "default";
         $OverRight['file'] = "myaddress";
+        $OverRight['secure'] = "1";
     }
 
     if($Get_Url == "my-wishlist"){
         $OverRight['theme'] = "default";
         $OverRight['file'] = "mywishlist";
+        $OverRight['secure'] = "1";
     }
 
     if($Get_Url == "order-confirm"){
@@ -195,7 +221,7 @@ if($E_Commerce == "1"){
             header("Location: $Domain/My-Account");
         }else{
             $Trans_Id = OtarDecrypt($key,$_GET['type']);
-            $query = "SELECT * FROM trans WHERE id='$Trans_Id'";
+            $query = "SELECT * FROM trans WHERE id='$Trans_Id' AND webid='$WebId'";
             $result = mysql_query($query) or die(mysql_error());
             $Trans_Confirm = mysql_fetch_array($result);
             $Trans_Confirm = PbUnSerial($Trans_Confirm);
@@ -214,17 +240,20 @@ if($E_Commerce == "1"){
         $OverRight['file'] = "forms/cwpayment.php";
     }
 
-
+    
+    if($Get_Url == "cwcheckoutframepayment"){
+        $OverRight['theme'] = "default";
+        $OverRight['file'] = "frame";
+    }
+    
+    if($Get_Url == "cwcontact"){
+        $query = "SELECT * FROM articles WHERE url='contact' AND webid='$WebId' AND active='1' AND type='page' AND trash='0' OR url='contact-us' AND webid='$WebId' AND active='1' AND trash='0' AND type='page'";
+        $result = mysql_query($query) or die(mysql_error());
+        $row = mysql_fetch_array($result);
+        $row = PbUnSerial($row);
+        $OverRight['theme'] = "default";
+        $OverRight['file'] = "contact";
+    }
 
 }
-=======
-
-
-
-
-
-
-
-
->>>>>>> origin/master
 ?>

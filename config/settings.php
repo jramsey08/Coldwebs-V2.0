@@ -8,31 +8,27 @@
 // FILE VERSION 2.2 LAST UPDATED ON 2014-12-7                                                                        //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
+ 
 
 if($Website_Db_Setup == "" OR $Website_Db_Setup == "0" OR $Website_Offline == "1"){
 }else{
 
 // LOAD USER ACCOUNT INFORMATION \\
-    include("config/userinfo.php");
+    include(ROOTPATH . "/userinfo.php");
 
 // INCLUDES THE ADMIN ACCESS \\
     $GeneralSite = "1";
-    include("config/access.php");
+    include(ROOTPATH . "/access.php");
 
 // INCLUDE PROMOTERBLAST API INFORMATION \\ 
-    require_once("api/pblast/config.php");
+    require_once(CWROOT . "/api/pblast/config.php");
 
 // STORES ALL SESSION INFORMATION \\
     $Array['fullsession'] = $_SESSION;
-
-// GET ALL DEFAULT URL LOCATIONS \\
-    include("config/url.php");
-
+    
 // COLD WEB MODULE TAKEOVER \\
     $CwPack = 0;
-    include("api/cwads/config/functions.php");
+    include(CWROOT . "/api/coldwebs/cwads/config/functions.php");
 
 // OBTAIN CURRENT SHOPPING CART TOTAL \\
     #$Cw_Cart = CwCartTotal($Array);
@@ -49,27 +45,27 @@ if($Website_Db_Setup == "" OR $Website_Db_Setup == "0" OR $Website_Offline == "1
     $Browser_Pattern = $ua['pattern'];
 
 // DETECT ANY ACTIVE CWPACK APPLICATION \\
-    require_once("config/loadcwpack.php");
+    require_once(ROOTPATH . "/loadcwpack.php");
 
 // LOAD ALL PBLAST SETTINGS \\
-   require_once("api/pblast/include.php");
-   
+   require_once(CWROOT . "/api/pblast/include.php");
+
 // Total Article Count \\
-   require_once("config/totalCount.php");
+   require_once(ROOTPATH . "/totalCount.php");
 
 // DETECT ANY ERROR LOGS \\
-    #require_once("error_log.php");
+    #require_once(CWROOT . "error_log.php");
 
 // PULL SHOPPING CART INFORMATION \\
-    #include("config/cart.php");
+    #include(ROOTPATH . "/cart.php");
 
 // WEBSITE SUBSCRIPTION WINDOW \\
-    include("config/subscribe.php");
-<<<<<<< HEAD
+    include(ROOTPATH . "/subscribe.php");
 
+// WEBSITE SOCIAL PROFILE INFO \\
+    include(ROOTPATH . "/social.php");
 
 // WEBSITE E-COMMERCE SETTINGS \\
-    include("config/ecommerce.php");
-=======
->>>>>>> origin/master
+    include(ROOTPATH . "/ecommerce.php");
+
 }

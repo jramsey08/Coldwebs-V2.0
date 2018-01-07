@@ -1,154 +1,26 @@
 <?php
 
-
-class session { 
-    // session-lifetime 
-    var $lifeTime; 
-    // mysql-handle 
-    var $dbHandle; 
-    function open($savePath, $sessName) { 
-       // get session-lifetime 
-       $this->lifeTime = get_cfg_var("session.gc_maxlifetime"); 
-       // open database-connection 
-       $dbHandle = @mysql_connect("localhost","parallel_coldweb","Lo8rHu}_dCGc"); 
-       $dbSel = @mysql_select_db("parallel_coldweb",$dbHandle); 
-       // return success 
-       if(!$dbHandle || !$dbSel) 
-           return false; 
-       $this->dbHandle = $dbHandle; 
-       return true; 
-    } 
-    function close() { 
-        $this->gc(ini_get('session.gc_maxlifetime')); 
-        // close database-connection 
-        return @mysql_close($this->dbHandle); 
-    } 
-    function read($sessID) { 
-        // fetch session-data 
-        $res = mysql_query("SELECT session_data AS d FROM ws_sessions 
-                            WHERE session_id = '$sessID' 
-                            AND session_expires > ".time(),$this->dbHandle); 
-        // return data or an empty string at failure 
-        if($row = mysql_fetch_assoc($res)) 
-            return $row['d']; 
-        return ""; 
-    } 
-    function write($sessID,$sessData) { 
-        // new session-expire-time 
-        $newExp = time() + $this->lifeTime; 
-        // is a session with this id in the database? 
-        $res = mysql_query("SELECT * FROM ws_sessions 
-                            WHERE session_id = '$sessID'",$this->dbHandle); 
-        // if yes, 
-        if(mysql_num_rows($res)) { 
-            // ...update session-data 
-            mysql_query("UPDATE ws_sessions 
-                         SET session_expires = '$newExp', 
-                         session_data = '$sessData' 
-                         WHERE session_id = '$sessID'",$this->dbHandle); 
-            // if something happened, return true 
-            if(mysql_affected_rows($this->dbHandle)) 
-                return true; 
-        } 
-        // if no session-data was found, 
-        else { 
-            // create a new row 
-            mysql_query("INSERT INTO ws_sessions ( 
-                         session_id, 
-                         session_expires, 
-                         session_data) 
-                         VALUES( 
-                         '$sessID', 
-                         '$newExp', 
-                         '$sessData')",$this->dbHandle); 
-            // if row was created, return true 
-            if(mysql_affected_rows($this->dbHandle)) 
-                return true; 
-        } 
-        // an unknown error occured 
-        return false; 
-    } 
-    function destroy($sessID) { 
-        // delete session-data 
-        mysql_query("DELETE FROM ws_sessions WHERE session_id = '$sessID'",$this->dbHandle); 
-        // if session was deleted, return true, 
-        if(mysql_affected_rows($this->dbHandle)) 
-            return true; 
-        // ...else return false 
-        return false; 
-    } 
-    function gc($sessMaxLifeTime) { 
-        // delete old sessions 
-        mysql_query("DELETE FROM ws_sessions WHERE session_expires < ".time(),$this->dbHandle); 
-        // return affected rows 
-        return mysql_affected_rows($this->dbHandle); 
-    } 
-} 
-
-
-
-
-
-
-function Cw_Ads($width,$height,$Location,$Array){
-    #$Session_Id = $_SESSION['sessionid'];
-    #$TrackerPage = $_SESSION['trackerpage'];
-    $Website_Id = $Array['websiteid'];
+function Cw_Ads($width,$height,$Location,$Ad_Arr){
+    $WebId = $Ad_Arr['webid'];
+    $Session_Id = $_SESSION['sessionid'];
+    $TrackerPage = $_SESSION['trackerpage'];
+    $Website_Id = $Ad_Arr['websiteid'];
     $Website = WebsiteUrlAuth();
-	if($Array['cwadsextrainfo'] == "1"){
-		if($Array['cwadsextrainfolocation'] == $Location){
-			$Extra = "1";
-			$Other['cwadsbg'] = $Array['cwadsbg'];
-			$Other['cwadsraw'] = $Array['cwadsraw'];
-			$Other = serialize($Other);
-		}
-	}
-
-    if($Cw_Ads_Remote == "1"){
-        $body ="?location=$Location&width=$width&height=$height&user=$Website_Id&session=$Session_Id&url=$TrackerPage&website=$Website&extra=$Extra&other=$Other";
-        $url = 'http://www.pblast.in/ads.php';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url . $body);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, '3');
-        $content = trim(curl_exec($ch));
-        $content_array = trim(curl_exec($ch));
-        curl_close($ch);
-	if($Extra == "1"){
-            if($Array['cwadsraw'] == "1"){
-	        echo $content;
-	    }else{
-		$content = unserialize($content);
-		$query = "SELECT * FROM cw_ads WHERE id='$content[id]'";
-		$result = mysql_query($query) or die(mysql_error());
-		$row = mysql_fetch_array($result);
-		$Other = unserialize($row['other']);
-		$querY = "SELECT * FROM images WHERE album='$row[id]' and gallery='ads' AND trash='0' ORDER BY list";
-		$resulT = mysql_query($querY) or die(mysql_error());
-		while($roW = mysql_fetch_array($resulT)){
-	            $Count = $Count + 1;
-		    $Images["$Count"] = $roW;
-		}
-		if($Other['usetitle'] == "1"){
-		    $content['name'] = $content['name'];
-		}else{
-		    $content['name'] = "";
-		}
-		$content['images'] = $Images;
-		return $content;
-	   }
-	}else{
-	   echo $content;
-	}
-    }else{
-        include("api/cwads/fetch.php");
-        return $Ads_Extra;
-        
+    if($Ad_Arr['cwadsextrainfo'] == "1"){
+        if($Ad_Arr['cwadsextrainfolocation'] == $Location){
+            $Extra = "1";
+	    $Other['cwadsbg'] = $Ad_Arr['cwadsbg'];
+	    $Other['cwadsraw'] = $Ad_Arr['cwadsraw'];
+            $Other = serialize($Other);
+        }
     }
+    include("api/coldwebs/cwads/fetch.php");
+    return $Request;
 }
 
-function TotalVisitors(){
-    $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker";
+function TotalVisitors($Array){
+    $WebId = $Array['webid'];
+    $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker AND webid='$WebId'";
     $result = mysql_query($query) or die(mysql_error());
     $row = mysql_fetch_array($result);
     $row['COUNT(ipaddress)'];
@@ -156,34 +28,38 @@ function TotalVisitors(){
     echo number_format("$row[1]");
 }
 
-function MonthlyVisitors(){
+function MonthlyVisitors($Array){
+    $WebId = $Array['webid'];
     $Date = date("m.y");
-    $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker WHERE date3='$Date'";
+    $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker WHERE date3='$Date' AND webid='$WebId'";
     $result = mysql_query($query) or die(mysql_error());
     $row = mysql_fetch_array($result);
     $row['COUNT(ipaddress)'];
     echo number_format("$row[1]");
 }
 
-function TodayVisitors(){
+function TodayVisitors($Array){
+    $WebId = $Array['webid'];
     $Date = date("m-d-y");
-    $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker WHERE date2='$Date'";
+    $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker WHERE date2='$Date' AND webid='$WebId'";
     $result = mysql_query($query) or die(mysql_error());
     $row = mysql_fetch_array($result);
     $row['COUNT(ipaddress)'];
     echo number_format("$row[1]");
 }
 
-function TotalCountry(){
-    $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker GROUP BY country";
+function TotalCountry($Array){
+    $WebId = $Array['webid'];
+    $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker GROUP BY country AND webid='$WebId'";
     $result = mysql_query($query) or die(mysql_error());
     $row = mysql_fetch_array($result);
     $row['COUNT(country)'];
     echo number_format("$row[1]");
 }
 
-function PostsCount(){
-    $query = "SELECT type, COUNT(id) FROM articles WHERE type='post' AND trash='0'";
+function PostsCount($Array){
+    $WebId = $Array['webid'];
+    $query = "SELECT type, COUNT(id) FROM articles WHERE type='post' AND trash='0' AND webid='$WebId'";
     $result = mysql_query($query) or die(mysql_error());
     $row = mysql_fetch_array($result);
     $row['COUNT(country)'];
@@ -204,15 +80,16 @@ function RandomCode($Amount){
         $newcode = $newcode.$code_part;
     } return $newcode; 
 }
-    
-function CwCategory($Article){
-    $query = "SELECT * FROM articles WHERE id='$Article[category]' AND active='1' AND trash='0'"; 
+
+function CwCategory($Article,$Array){
+    $WebId = $Array['webid'];
+    $query = "SELECT * FROM articles WHERE id='$Article[category]' AND active='1' AND trash='0' AND webid='$WebId'"; 
     $result = mysql_query($query) or die(mysql_error());
     $row = mysql_fetch_array($result);
     $row = PbUnSerial($row);
 return $row; 
 }
-    
+
 function Product_Ad($width, $height){
     $Session_Id = $_SESSION['sessionid'];
     $TrackerPage = $_SESSION['trackerpage'];
@@ -242,7 +119,7 @@ function Product_Ad($width, $height){
     $content_Url = trim(curl_exec($ch));
     curl_close($ch);
     echo "<img src='$content_Img' height='$height' width='$width' alt='' /><a right:    25px; bottom:15px; class='readmore' href='$content_Url'>Shop Now</a>";
-    }
+}
 
 function PbEncrypt($key, $Value){
     $Encrypted = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $Value    , MCRYPT_MODE_CBC, md5(md5($key))));
@@ -250,8 +127,9 @@ function PbEncrypt($key, $Value){
 
 function PbDecrypt($key, $Value){
     $Decrypted =  rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode    ($Value), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
-    return $Decrypted; }
-    
+    return $Decrypted;
+}
+
 function curPageURL() {
     $pageURL = 'http';
     if($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
@@ -290,7 +168,8 @@ function WebsiteUrlAuth(){
     $pos = strpos($_SERVER[SERVER_NAME], $findme);
     if ($pos === false) { $Website_Url_Auth = $Website_Url_Auth; }else { 
         $Website_Url_Auth = substr("$Website_Url_Auth", 4); }
-    return $Website_Url_Auth; }
+    return $Website_Url_Auth;
+}
 
 function SiteOffline($Array){ 
     $SiteStatus = $Array['sitestatus']; ?>
@@ -300,8 +179,9 @@ function SiteOffline($Array){
     html, body, div, iframe {margin: 0px; padding: 0px; height: 100%; border: none;} 
     iframe {display: block; width: 100%; border: none; overflow-y: auto; overflow-x: hidden;} 
     </style></head><body>
-    <iframe id="tree" name="tree" src="http://www.pblast.in/offline/?id=<?php echo $SiteStatus[websiteid]; ?>&blockie=<?php echo $SiteStatus[blockie]; ?>&noip=<?php echo $SiteStatus[noip]; ?>" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" scrolling="auto"></iframe>
-    <?php }
+    <iframe id="tree" name="tree" src="http://www.pblast.in/offline/?id=<?php echo $SiteStatus[websiteid]; ?>&blockie=<?php echo $SiteStatus[blockie]; ?>&error=<?php echo $Array['error']; ?>&noip=<?php echo $SiteStatus[noip]; ?>" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" scrolling="auto"></iframe>
+    <?php
+}
 
 function OtarDecrypt($key, $Otar){
     $Otar = str_replace("))))==((((", "+", "$Otar");
@@ -309,7 +189,7 @@ function OtarDecrypt($key, $Otar){
     $Otar = PbDecrypt($key, $Otar);
     $Otar = unserialize($Otar);
     return $Otar;
-    }
+}
 
 function OtarEncrypt($key, $Otar){
     $Otar = serialize($Otar);
@@ -317,7 +197,7 @@ function OtarEncrypt($key, $Otar){
     $Otar = str_replace("+", "))))==((((", "$Otar");
     $Otar = str_replace("/", "((=))", "$Otar");
     return $Otar;
-    }
+}
 
 function Pulltheme($ThemePath,$ThemeAdmin){
     $ThemePath = $ThemePath . $name[0];
@@ -343,52 +223,41 @@ function Pulltheme($ThemePath,$ThemeAdmin){
 }
 
 function PullPageInfo($Array){
+    $WebId = $Array['webid'];
     $Url = $Array['urlinfo']['type'];
     $Id = OtarDecrypt($key,$Url);
-    $qUEry = "SELECT * FROM page_template WHERE id='$Id' AND active='1' AND trash='0'"; 
+    $qUEry = "SELECT * FROM page_template WHERE id='$Id' AND active='1' AND trash='0' AND webid='$WebId'"; 
     $reSUlt = mysql_query($qUEry) or die(mysql_error());
     $row = mysql_fetch_array($reSUlt);
     $UrlUrl = $row['url'];
     $UrlType = $row['urltype'];
     $UrlId = $row['urlid'];
     $End = $row['end'];
-<<<<<<< HEAD
     $SettId = $row['setting'];
-=======
->>>>>>> origin/master
     $Template = $row['template'];
     if($row['active'] == ""){
         $row['active'] = "0";
     }
-<<<<<<< HEAD
-    $query = "SELECT * FROM page_settings WHERE id='$SettId'"; 
-=======
-    $query = "SELECT * FROM page_settings WHERE url='$UrlUrl' AND urltype='$UrlType' AND end='$End' AND urlid='$UrlId'"; 
->>>>>>> origin/master
+    $query = "SELECT * FROM page_settings WHERE tempid='$Id' AND template='$Template' AND webid='$WebId'"; 
     $result = mysql_query($query) or die(mysql_error());
     $RoW = mysql_fetch_array($result);
     $row['pagesettings'] = $RoW;
-    $qUery = "SELECT * FROM page_structure WHERE url='$UrlUrl' AND urltype='$UrlType' AND end='$End' AND urlid='$UrlId' AND template='$Template'"; 
-    $rEsult = mysql_query($qUery) or die(mysql_error());
-    $rOw = mysql_fetch_array($rEsult);
-    $Article = $rOw[article];
+    $Article = $row['article'];
     $row['pagestructure'] = $rOw;
-    $qUeRY = "SELECT * FROM page_dynamic WHERE url='$UrlUrl' AND urltype='$UrlType' AND end='$End' AND urlid='$UrlId' AND theme='$Template'"; 
-    $rESUlt = mysql_query($qUeRY) or die(mysql_error());
-    $ROW = mysql_fetch_array($rESUlt);
-    $row['pagedynamic'] = $ROW;
-    $QUeRy = "SELECT * FROM page_function WHERE url='$UrlUrl' AND type='$UrlType' AND end='$End' AND urlid='$UrlId' AND template='$Template' AND dynamic='0'"; 
+    $QUeRy = "SELECT * FROM page_function WHERE url='$UrlUrl' AND type='$UrlType' AND end='$End' AND urlid='$UrlId' AND template='$Template' AND webid='$WebId'"; 
     $rEsULT = mysql_query($QUeRy) or die(mysql_error());
     $rOL = mysql_fetch_array($rEsULT);
     $row['pagefunction'] = $rOL;
-    $qUerY = "SELECT * FROM articles WHERE id='$Article'";
+    $qUerY = "SELECT * FROM articles WHERE id='$Article' AND webid='$WebId'";
     $rEsulT = mysql_query($qUerY) or die(mysql_error());
     $rOW = mysql_fetch_array($rEsulT);
     $row['pagearticle'] = $rOW;
     return $row;
 }
 
+
 function SessionUser($Array){
+    $WebId = $Array['webid'];
     $AccountId = $_SESSION['accountid'];
     $Log_Session = $_SESSION['sessionid'];
     $Session_Generate = $_SESSION['sessiongenerate'];
@@ -396,7 +265,7 @@ function SessionUser($Array){
         $User = 0;
     }else{
         $User = 1;
-        $query = "SELECT * FROM login_session WHERE userid='$AccountId' AND active='1' AND session='$Log_Session' AND session_generate='$Session_Generate'";
+        $query = "SELECT * FROM login_session WHERE userid='$AccountId' AND active='1' AND session='$Log_Session' AND session_generate='$Session_Generate' AND webid='$WebId'";
         $result = mysql_query($query) or die(mysql_error());
         $row = mysql_fetch_array($result);
         $Find_Account = $row['userid'];
@@ -409,11 +278,12 @@ function SessionUser($Array){
     return $User;
 }
 
-function youtube_id_last_chance($link) {
-     $video_id = explode("?v=", $link); // For videos like http://www.youtube.com/watch?v=...
-     if(empty($video_id[1]))
-         $video_id = explode("/v/", $link); // For videos like http://www.youtube.com/watch/v/..
-     $video_id = explode("&", $video_id[1]); // Deleting any other params
+function youtube_id_last_chance($link){
+     $video_id = explode("?v=", $link);
+     if(empty($video_id[1])){
+         $video_id = explode("/v/", $link);
+     }
+     $video_id = explode("&", $video_id[1]);
      $video_id = $video_id['0'];
      return $video_id;
 }
@@ -449,7 +319,8 @@ function CharacterRemoval($Content){
     $Content = str_replace('"', '-', "$Content");
     $Content = str_replace("&", "-", "$Content");
     $Content = str_replace("#", "-", "$Content");
-    $Content = str_replace("@", "-", "$Content");    
+    $Content = str_replace("@", "-", "$Content");
+    $Content = str_replace("?", "", "$Content");
     $Content = str_replace("--", "-", "$Content");
     $Content = str_replace("---", "-", "$Content");
     $Content = str_replace("----", "-", "$Content");
@@ -475,38 +346,41 @@ function PbMaxCount($Content, $Max){
     } 
     return $Content;
 }
+function fetch_data($url){
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+    $result = curl_exec($ch);
+    curl_close($ch);
+return $result;
+}
 
-
-function InstagramLatest($Array,$count){
+function InstagramLatest($Array){
+    $WebId = $Array['webid'];
     $InstagramInfo = $Array['InstagramInfo'];
-    $access_token = $InstagramInfo['access_token'];
-    $display_size = $InstagramInfo['size'];
-    function fetch_data($url){
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 20);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        return $result;
-    }
-    if($count == ""){
-        $count = 5;
-    }
-    if($access_token == ""){
-        $access_token = $Pb_Access_Token['instagram'];
-    }
+    $Social_Url = $Array['siteinfo']['other']['socialauth']['instagram'];
+    $Social_Type = "instagram";
+    include("api/pblast/socialfetch.php");
+    $query = "SELECT * FROM articles WHERE type='social' AND active='1' AND trash='0' AND url='$Social_Url' AND category='instagram' AND webid='$WebId'";
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    $row = PbUnSerial($row);
+    $count = $row['other']['socialqty'];
     if($display_size == ""){
         $display_size = "thumbnail"; // you can choose between "low_resolution", "thumbnail" and "standard_resolution"
     }
-    $result = fetch_data("https://api.instagram.com/v1/users/self/media/recent?count={$count}&access_token={$access_token}");
+    $result = fetch_data("https://api.instagram.com/v1/users/self/media/recent?count=$count&access_token=$access_token");
     $result = json_decode($result);
+    #print_r($result);
     $Count = "0"; 
-    foreach ($result->data as $photo) {
-        $img = $photo->images->{$display_size};
-        $InstaPhoto[$Count]['src'] = $img->url;
-        $InstaPhoto[$Count]['url'] = $photo->link;
-        $Count = $Count + 1;
+    if(is_array($result->data)){
+        foreach ($result->data as $photo) {
+            $img = $photo->images->{$display_size};
+            $InstaPhoto[$Count]['src'] = $img->url;
+            $InstaPhoto[$Count]['url'] = $photo->link;
+            $Count = $Count + 1;
+        }
     }
 return $InstaPhoto;
 }
@@ -522,6 +396,95 @@ function PbSerialCheck($Serial){
 return $Return;
 }
 
+function CwOrganize($Content,$Array){
+    $Content = PbUnSerial($Content);
+    $Content = PbFilter($Content);
+    #$Content = CwFilterImg($Content,$Array);
+    if($Content["type"] == "post-product"){
+        $Content = Cw_Ecommerce_Default($Content,$Array);
+    }
+return $Content;
+}
+
+function CwFilterImg($Content,$Array){
+    $Sizes = $Array["postimagessizes"];
+    if($Content["type"] == "post-product"){
+        $Sizes = $Array["productimages"];
+    }
+    $Count = count($Sizes);
+    $Count = $Count - "1";
+    $ncount = "0";
+    if(is_array($Content["img"])){
+        $ActualCount = count($Content["img"]);
+        $ActualCount = $ActualCount - "1";
+        foreach($Content as $key => $value){
+            if($value == ""){
+                $Content["key"] = $Content["content"]["img"];
+            }
+            if($Count != $ActualCount){
+                while($ncount <= $Sizes){
+                    if($Content["img"]["$ncount"] == ""){
+                        $NewImg["$ncount"] = $Content["content"]["img"];
+                    }else{
+                        $NewImg["$ncount"] = $Content["img"]["$ncount"];
+                    }
+                    $ncount = $ncount + 1;
+                }
+            }
+        }
+    }else{
+        while($ncount <= $Sizes){
+            $NewImg["$ncount"] = $Content["content"]["img"];
+            $ncount = $ncount + 1;
+        }
+    }
+    $Content["img"] = $NewImg;
+return $Content;
+}
+
+function CwFilerAddress($Type,$Content){
+    if(is_array($Content["$Type"])){
+        if($Get_Url != "process"){
+            if(is_array($Content["$Type"]["address"])){
+                $State = $Content["$Type"]["address"]["3"]; 
+                $query = "SELECT * FROM cwoptions WHERE active='1' AND trash='0' AND id='$State'";
+                $result = mysql_query($query) or die(mysql_error());
+                $row = mysql_fetch_array($result);
+                $Content["$Type"]["address"]["3"] = $row["name"];
+                $Country = $Content["$Type"]["address"]["5"];
+                $query = "SELECT * FROM cwoptions WHERE active='1' AND trash='0' AND id='$Country'";
+                $result = mysql_query($query) or die(mysql_error());
+                $row = mysql_fetch_array($result);
+                $Content["$Type"]["address"]["5"] = $row["name"];
+                if($Content["$Type"]["address"]["6"] == ""){
+                    $Content["$Type"]["address"]["6"] = "N/A";
+                }
+                if($Content["$Type"]["address"]["company"] == ""){
+                    $Content["$Type"]["address"]["company"] = $Content["$Type"]["company"];
+                }
+            }
+        }
+    }
+return $Content;
+}
+
+function PbFilter($Content){
+    $Content = CwFilerAddress("other",$Content);
+    $Content = CwFilerAddress("info",$Content);
+    if($Content["type"] == "post-event"){
+        if($Content["content"]["external"] == ""){
+            $Content["content"]["tickets"] = "/$_GET[url]/$Content[url]";
+        }else{
+            $Content["content"]["tickets"] = $Content["content"]["external"];
+        }
+    }
+    if($Content["other"]["artist"] != ""){
+        $Content["other"]["artist"] = str_replace('%-', '', $Content["other"]["artist"]);
+        $Content["other"]["artist"] = str_replace('-%', '', $Content["other"]["artist"]);
+    }
+return $Content;
+}
+
 function PbUnSerial($Content){
     if($Content != ""){
         foreach($Content as $key => $Value){
@@ -532,10 +495,10 @@ function PbUnSerial($Content){
 return $Content;
 }
 
+
 function isset_get($array, $key, $default = null) {
     return isset($array["$key"]) ? $array["$key"] : $default;
 }
-
 // PULLS INFORMATION FOR GALLERY IMAGES \\
 /**
  * A class that takes the pain out of the $_FILES array
@@ -594,13 +557,12 @@ function CwLimitBrowser($Array){
             $Browser_Block = "";
         }
     }
-$BrowserStatus = array();
-$BrowserStatus['View_site'] = $View_site;
-$BrowserStatus['status'] = $OfflineError;
+    $BrowserStatus = array();
+    $BrowserStatus['View_site'] = $View_site;
+    $BrowserStatus['status'] = $OfflineError;
 return $BrowserStatus;
 }
 
-<<<<<<< HEAD
 function CwCartTotal($Cart){
     $query = "SELECT * FROM cw_cart WHERE active='1' AND trash='0' AND session='$Cart'";
     $result = mysql_query($query) or die(mysql_error());
@@ -622,31 +584,26 @@ function CwCartTotal($Cart){
     }
     $Shopping['total'] = $CwCartSubTotal;
     $Shopping['count'] = $CartCount;
-=======
-function CwCartTotal($Array){
-    $Site_Ecommerce = $Array['shopping']['active'];
-    $Cart_Session = $_SESSION['COOKIEPHPSESSID'];
-    if($Site_Ecommerce == 1){
-        $query = "SELECT * FROM cw_cart WHERE active='1' AND trash='0' AND session='$Cart_Session'"; 
-        $result = mysql_query($query) or die(mysql_error());
-        $row = mysql_fetch_array($result);
-        $Cart_Status = $row['id'];
-        if($Cart_Status == ""){
-            $Shopping_Cart_Empty = 1;
-        }else{
-            $Shopping_Cart_Empty = 0;
-        }
-        $Default_Shipping_Rate = "15";
-        $Shopping['cartempty'] = $Shopping_Cart_Empty;
-        $Shopping['cartsession'] = $_SESSION['COOKIEPHPSESSID'];
-        if($Shipping_Rate == ""){
-            $Shopping['shippingrate'] = $Default_Shipping_Rate;
-        }else{
-            $Shopping['shippingrate'] = $Shipping_Rate;
-        }
-    }
->>>>>>> origin/master
 return $Shopping;
+}
+
+function CwTransInfo($Trans,$Array){
+    $Data = array();
+    $WebId = $Array['webid'];
+    $query = "SELECT * FROM trans WHERE active='1' AND trash='0' AND id='$Trans' AND webid='$WebId'";
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    $row = CwOrganize($row,$Array);
+    $Query = "SELECT * FROM cwoptions WHERE type='shipping' AND trash='0' AND id='$row[delivery_option]' AND webid='$WebId'";
+    $Result = mysql_query($Query) or die(mysql_error());
+    $Row = mysql_fetch_array($Result);
+    $Row = CwOrganize($Row,$Array);
+    if($Data['date'] == ""){
+        $Data['date'] = strtotime("now");
+    }
+    $Data["shipping"] = $Row["content"]["price"];
+    $Data["cart"] = $row['cart'];
+return $Data;
 }
 
 function CwMobileDetect($Array){
@@ -764,6 +721,7 @@ return $destination_url;
 }
 
 function CwGallery($Array,$files){
+    $WebId = $Array['webid'];
     $Article_Id = $Array['galleryupload']['id'];
     $Rand = rand(999, 9999999999);
     if($files['gallery']){
@@ -778,7 +736,7 @@ function CwGallery($Array,$files){
 	        ($file["type"] == "image/png") ||
 	        ($file["type"] == "image/jpg")){
                     $Gallery_Img = "./uploads/images/$Rand" . $file['name'];
-                    $Images = $Array['siteinfo']['domain'] . "/uploads/images/$Rand" . $file['name'];
+                    $Images = $Array['siteactual']['domain'] . "/uploads/images/$Rand" . $file['name'];
                     if($file['name'] != ""){
                         $filename = compress_image($file['tmp_name'], $Gallery_Img, 90);
                         $resizedFile = $Gallery_Img;
@@ -815,7 +773,7 @@ function CwGallery($Array,$files){
                             imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
                             imagejpeg($image_p, $filename, 100);
                         }
-                        mysql_query("INSERT INTO images (img, album) VALUES('$Images', '$Article_Id' ) ") or die(mysql_error());
+                        mysql_query("INSERT INTO images (img, album, webid) VALUES('$Images', '$Article_Id', '$WebId' ) ") or die(mysql_error());
                     }
                 }
             }
@@ -824,6 +782,7 @@ function CwGallery($Array,$files){
 }
 
 function CwFileUpload($Array,$files){
+    $WebId = $Array['webid']; 
     $Article_Id = $Array['galleryupload']['id'];
     if($files['file']){
         foreach($files['file'] as $file){
@@ -837,10 +796,10 @@ function CwFileUpload($Array,$files){
 	        ($file['type'] == "image/png") || 
 	        ($file['type'] == "image/jpg")){
                     $Gallery_Img = "./uploads/images/$Rand" . $file['name'];
-                    $Images = $Array['siteinfo']['domain'] . "/uploads/images/$Rand" . $file['name'];
+                    $Images = $Array['siteactual']['domain'] . "/uploads/images/$Rand" . $file['name'];
                     if($file['name'] == ""){ }else{ 
                         $filename = compress_image($file['tmp_name'], $Gallery_Img, 90);
-                        mysql_query("INSERT INTO images (img, album) VALUES('$Images', '$Article_Id' ) ") or die(mysql_error());
+                        mysql_query("INSERT INTO images (img, album, webid) VALUES('$Images', '$Article_Id', '$WebId' ) ") or die(mysql_error());
                     }
                 }
             }
@@ -869,7 +828,7 @@ function CwProfilePic($Array,$files,$Rand){
                     if($file['name'] == ""){ 
                         $Article_Img = $Article_Img;
                     }else{
-                        $Article_Img = $Array['siteinfo']['domain'] . "/uploads/images/$Rand" . $file['name'];
+                        $Article_Img = "http://$_SERVER[HTTP_HOST]/uploads/images/$Rand" . $file['name'];
                         $filename = compress_image($file['tmp_name'], $Gallery_Img, 90);
                         $Img["loc"] = "uploads/images/$Rand" . $file['name'];
                     }
@@ -892,7 +851,7 @@ function CwMediaFile($Array,$files,$Rand){
             if($file['name'] == ""){
                 $Article_Code = $Article_Code;
             }else{
-                $Article_Code = $Array['siteinfo']['domain'] . "/uploads/media/$Rand" . $file['name'];
+                $Article_Code = $Array['siteactual']['domain'] . "/uploads/media/$Rand" . $file['name'];
             }
             move_uploaded_file($file['tmp_name'], $Media);
         }
@@ -911,7 +870,6 @@ function smart_resize_image($file,
                               $use_linux_commands = false,
   							  $quality = 100
   		 ) {
-      
     if ( $height <= 0 && $width <= 0 ) return false;
     if ( $file === null && $string === null ) return false;
     # Setting defaults and meta
@@ -935,16 +893,6 @@ function smart_resize_image($file,
 	  $widthX = $width_old / $width;
 	  $heightX = $height_old / $height;
 	  $x = min($widthX, $heightX);
-          // MY CORRECTIONS \\
-          if($width_old == $height_old){
-              $height_old = $height_old / 2;
-          }
-          if($width_old > $height_old){
-          }
-          if($width_old < $height_old){
-              $height_old = $height_old / 2;
-          }
-          // END CORRECTIONS \\
 	  $cropWidth = ($width_old - $width * $x) / 2;
 	  $cropHeight = ($height_old - $height * $x) / 2;
     }
@@ -1009,17 +957,17 @@ function smart_resize_image($file,
 }
 
 function Cw_Img_Resize($Array,$file,$Sizes,$Name){
-    foreach($Sizes as $key => $value){
-        $New_Img_Count = $New_Img_Count + 1;
-        $resizedFile = "uploads/images/" . $Name . "-" . $value . ".png";
-        $Size = $pieces = explode("-", $value);
-        $Width = $Size["0"];
-        $Height = $Size["1"];
-		#$file['name'] = $resizedFile = str_replace(" ","_",$file['name']);
-		#$file['tmp_name'] = $resizedFile = str_replace(" ","_",$file['tmp_name']);
-        smart_resize_image($file , null, $Width, $Height, false , $resizedFile , false , false ,100);
-        $File_Name = $Array["siteinfo"]["domain"] . "/" . $resizedFile;
-        $Img["$New_Img_Count"] = $File_Name;
+    if(is_array($Sizes)){
+        foreach($Sizes as $key => $value){
+            $New_Img_Count = $New_Img_Count + 1;
+            $resizedFile = "uploads/images/" . $Name . "-" . $value . ".png";
+            $Size = $pieces = explode("-", $value);
+            $Width = $Size["0"];
+            $Height = $Size["1"];
+            smart_resize_image($file , null, $Width, $Height, false , $resizedFile , false , false ,100);
+            $File_Name = $Array["siteactual"]["domain"] . "/" . $resizedFile;
+            $Img["$New_Img_Count"] = $File_Name;
+        }
     }
 return $Img;
 }
@@ -1054,10 +1002,47 @@ function CwCheckFunctionType($Type,$Row){
 return $FunctionUrl;
 }
 
-function Cw_Ecommerce_Default($Array,$Article){
+
+function Cw_Ecommerce_Default($Article,$Array){
+    if($Array['multi_cat']['active'] == "1"){
+        if(is_array($Article['category'])){
+            $Cat_Value = array_rand($Article['category']);
+            $Article['category'] = $Article["category"]["$Cat_Value"];
+            $Article['category'] = str_replace("-","",$Row['category']);
+        }
+    }
     if($Article['content']['newprice'] == ""){
         $Article['content']['newprice'] = $Article['content']['prodprice'];
     }
+    if($Article["content"]["img"] == ""){
+       $Article["content"]["img"] = "http://www.foxy-press.com/wp-content/plugins/foxypress/img/default-product-image.jpg";
+    }
+    if($Article["content"]["Imglayout"]["front"] == ""){
+        $Article["content"]["Imglayout"]["front"] = $Article["content"]["img"];
+    }
+    if($Article["content"]["Imglayout"]["back"] == ""){
+        $Article["content"]["Imglayout"]["back"] = $Article["content"]["img"];
+    }
+    if($Article["content"]["img2"] == ""){
+        $Article["content"]["img2"] = $Article["content"]["img"]; 
+    }
+    if($Array["userinfo"]["other"]["wholesale"] == "1"){
+        $Article['content']['prodprice'] = $Article['content']['newprice'];
+        $Article['content']['newprice'] = $Content['other']['resell']['price'];
+    }
+///////////////// FETCH BRAND INFO \\\\\\\\\\\\\\\
+    $Brand = $Article["content"]["brand"];
+    $query = "SELECT * FROM cwoptions WHERE id='$Brand'";
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    $Article["content"]["brand"] = $row["name"];
+////////// FETCH SUPPLIER RETURN POLICY \\\\\\\\\\\
+    $Supplier = $Article["other"]["supplier"];
+    $query = "SELECT * FROM cwoptions WHERE id='$Supplier'";
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    $row = CwOrganize($row,$Array);
+    $Article["returnpolicy"] = $row["content"]["returns"];
 return $Article;
 }
 
@@ -1068,107 +1053,77 @@ function Cw_Ecommerce_Img($Article,$Img){
 echo $Img;
 }
 
-function Cw_Ecommerce_Attribute($Value){
-    $query = "SELECT * FROM cwoptions WHERE id='$Value'";
+function Cw_Ecommerce_Attribute($Value, $Array){
+    $WebId = $Array['webid'];
+    $query = "SELECT * FROM cwoptions WHERE id='$Value' AND webid='$WebId'";
     $result = mysql_query($query) or die(mysql_error());
     $row = mysql_fetch_array($result);
     $Name = $row['name'];
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master
 return $Name;
 }
 
+function getRealIp() {
+   if (!empty($_SERVER['HTTP_CLIENT_IP'])) {  //check ip from share internet
+     $ip=$_SERVER['HTTP_CLIENT_IP'];
+   } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {  //to check ip is pass from proxy
+     $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+   } else {
+     $ip=$_SERVER['REMOTE_ADDR'];
+   }
+   return $ip;
+}
 
-
-
-
-
-
-
-
-    function getRealIp() {
-       if (!empty($_SERVER['HTTP_CLIENT_IP'])) {  //check ip from share internet
-         $ip=$_SERVER['HTTP_CLIENT_IP'];
-       } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {  //to check ip is pass from proxy
-         $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
-       } else {
-         $ip=$_SERVER['REMOTE_ADDR'];
-       }
-       return $ip;
-    }
-
-    function writeLog($where) {
-    
-    	$ip = getRealIp(); // Get the IP from superglobal
-    	$host = gethostbyaddr($ip);    // Try to locate the host of the attack
-    	$date = date("d M Y");
-    	
-    	// create a logging message with php heredoc syntax
-    	$logging = <<<LOG
-    		\n
-    		<< Start of Message >>
-    		There was a hacking attempt on your form. \n 
-    		Date of Attack: {$date}
-    		IP-Adress: {$ip} \n
-    		Host of Attacker: {$host}
-    		Point of Attack: {$where}
-    		<< End of Message >>
+function writeLog($where) {
+	$ip = getRealIp(); // Get the IP from superglobal
+	$host = gethostbyaddr($ip);    // Try to locate the host of the attack
+	$date = date("d M Y");
+	// create a logging message with php heredoc syntax
+	$logging = <<<LOG
+		\n
+		<< Start of Message >>
+		There was a hacking attempt on your form. \n 
+		Date of Attack: {$date}
+		IP-Adress: {$ip} \n
+		Host of Attacker: {$host}
+		Point of Attack: {$where}
+		<< End of Message >>
 LOG;
 // Awkward but LOG must be flush left
-    
-            // open log file
-    		if($handle = fopen('hacklog.log', 'a')) {
-    		
-    			fputs($handle, $logging);  // write the Data to file
-    			fclose($handle);           // close the file
-    			
-    		} else {  // if first method is not working, for example because of wrong file permissions, email the data
-    		
-    			$to = 'ADMIN@gmail.com';  
-            	$subject = 'HACK ATTEMPT';
-            	$header = 'From: ADMIN@gmail.com';
-            	if (mail($to, $subject, $logging, $header)) {
-            		echo "Sent notice to admin.";
-            	}
-    
-    		}
+        // open log file
+		if($handle = fopen('hacklog.log', 'a')) {
+			fputs($handle, $logging);  // write the Data to file
+			fclose($handle);           // close the file
+		} else {  // if first method is not working, for example because of wrong file permissions, email the data
+			$to = 'ADMIN@gmail.com';  
+        	$subject = 'HACK ATTEMPT';
+        	$header = 'From: ADMIN@gmail.com';
+        	if (mail($to, $subject, $logging, $header)) {
+        		echo "Sent notice to admin.";
+        	}
+		}
+}
+function verifyFormToken($form) {
+    // check if a session is started and a token is transmitted, if not return an error
+	if(!isset($_SESSION[$form.'_token'])) { 
+		return false;
     }
-
-    function verifyFormToken($form) {
-        
-        // check if a session is started and a token is transmitted, if not return an error
-    	if(!isset($_SESSION[$form.'_token'])) { 
-    		return false;
-        }
-    	
-    	// check if the form is sent with token in it
-    	if(!isset($_POST['token'])) {
-    		return false;
-        }
-    	
-    	// compare the tokens against each other if they are still the same
-    	if ($_SESSION[$form.'_token'] !== $_POST['token']) {
-    		return false;
-        }
-    	
-    	return true;
+	// check if the form is sent with token in it
+	if(!isset($_POST['token'])) {
+		return false;
     }
-    
-    function generateFormToken($form) {
-    
-        // generate a token from an unique value, took from microtime, you can also use salt-values, other crypting methods...
-    	$token = md5(uniqid(microtime(), true));  
-    	
-    	// Write the generated token to the session variable to check it against the hidden field when the form is sent
-    	$_SESSION[$form.'_token'] = $token; 
-    	
-    	return $token;
+	// compare the tokens against each other if they are still the same
+	if ($_SESSION[$form.'_token'] !== $_POST['token']) {
+		return false;
     }
-
-
-
+	return true;
+}
+function generateFormToken($form) {
+    // generate a token from an unique value, took from microtime, you can also use salt-values, other crypting methods...
+	$token = md5(uniqid(microtime(), true));  
+	// Write the generated token to the session variable to check it against the hidden field when the form is sent
+	$_SESSION[$form.'_token'] = $token; 
+	return $token;
+}
 
 function CwFileCode($WebsiteId){
     $Rand = rand("1000", "9999");
@@ -1176,10 +1131,9 @@ function CwFileCode($WebsiteId){
 return $Code;
 }
 
-
-
-function Cw_Settings($Search){
-    $Query = "SELECT * FROM cwoptions WHERE type='settings' AND name='$Search' AND trash='0'";
+function Cw_Settings($Search,$Array){
+    $WebId = $Array['webid'];
+    $Query = "SELECT * FROM cwoptions WHERE type='settings' AND name='$Search' AND trash='0' AND webid='$WebId'";
     $Result = mysql_query($Query) or die(mysql_error());
     $Row = mysql_fetch_array($Result);
 return $Row;
@@ -1212,23 +1166,17 @@ function Cw_Update_Ad($Info,$Array){
 	unset($content);
 }
 
-
 function Cw_Tweet($Array,$Cw_List){
     include_once('api/twitter/twitteroauth/twitteroauth.php');
-
-    $twitter_customer_key           = 'lW17T4icJVJgLY4lLO6LfQ';
-    $twitter_customer_secret        = 'GjFDMYKKQSpKEn3qaToXM0AdyNv9uBQx0dzxdQHo';
+    $twitter_customer_key           = '';
+    $twitter_customer_secret        = '';
     $twitter_access_token           = "";
     $twitter_access_token_secret    = "";
-
     $Cw_UserName = "parallelmagz";
-
     $connection = new TwitterOAuth($twitter_customer_key, $twitter_customer_secret, $twitter_access_token, $twitter_access_token_secret);
     $my_tweets = $connection->get('statuses/user_timeline', array('screen_name' => "$Cw_UserName", 'count' => $Cw_List));
-
 return $my_tweets;
 }
-
 
 function microtime_float()
 {
@@ -1262,16 +1210,204 @@ function Cw_Tracker_Validate($Value){
 return $Validate;
 }
 
-<<<<<<< HEAD
 function CwOrderStatus($Value){
     if($Value == "0"){ $Value = "Awaiting Payment"; }
     if($Value == "1"){ $Value = "Processing Order"; }
     if($Value == "2"){ $Value = "Preparing Shipment"; }
     if($Value == "3"){ $Value = "Shipped"; }
     if($Value == "4"){ $Value = "Delivered"; }
+    if($Value == "5"){ $Value = "Customer Response Needed"; }
+    if($Value == "6"){ $Value = "Order Canceled"; }
+    if($Value == "7"){ $Value = "Refund Issued"; }
 return $Value;
 }
 
-=======
->>>>>>> origin/master
+function CwProdCatType($Value){
+    if($Value == "0"){ $Value = "Women"; }
+    if($Value == "1"){ $Value = "Men"; }
+    if($Value == "2"){ $Value = "Kids"; }
+    if($Value == "3"){ $Value = "Other"; }
+return $Value;
+}
+
+function Cw_Address($Address){
+    $Street = $Address['1'];
+    $City = $Address['2'];
+    $State = $Address['3'];
+    $Zip = $Address['4'];
+    $Country = $Address['5'];
+    $Query = "SELECT * FROM cwoptions WHERE id='$State' AND active='1' AND trash='0'";
+    $Result = mysql_query($Query) or die(mysql_error());
+    $row = mysql_fetch_array($Result);
+    $State = $row['name'];
+    $Query = "SELECT * FROM cwoptions WHERE id='$Country' AND active='1' AND trash='0'";
+    $Result = mysql_query($Query) or die(mysql_error());
+    $row = mysql_fetch_array($Result);
+    $Country = $row['name'];
+    $Address['1'] = $Street;
+    $Address['2'] = $City;
+    $Address['3'] = $State;
+    $Address['4'] = $Zip;
+    $Address['5'] = $Country;
+return $Address;
+}
+
+function CwAdminVerify($File){
+    $DefaultAdmin = "admin/theme/cwadmin/";
+    $Website = $_SERVER['HTTP_HOST'];
+    $query = "SELECT * FROM info WHERE domain LIKE '%$Website%'";
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    $row = PbUnSerial($row);
+    $CurrentAdmin = $row['other']['admin_theme'];
+    $CurrentAdmin = "admin/theme/" . $CurrentAdmin . "/";
+    $Path = $CurrentAdmin . "structure/" . $File . ".php";
+    if(file_exists($Path)){
+        $Request['theme'] = $CurrentAdmin;
+    }else{
+        $Request['theme'] = $DefaultAdmin;
+    }
+    $Request['file'] = $File;  
+return $Request;
+}
+
+function CwShortcode($Content){
+    $Content = explode("{cwnl}",$ActiveArticle['info']);
+    foreach($Content as $Segment){
+        preg_match_all("/{shortcode.id=..../", $Segment, $matches);
+        if($matches['0']['0'] == ""){
+            echo $Segment;
+            echo "<div class='cwnl'></div>";
+        }else{
+            foreach($matches['0'] as $value){
+                $value2 = $value . "}";
+                $ActiveArticle['info'] = str_replace($value2, "",$ActiveArticle['info']);
+                $SCFilter = explode(" ",$value);
+                $SCFilter = explode("=",$SCFilter['1']);
+                $SCId = $SCFilter['1'];
+                unset($SCFilter);
+                $query = "SELECT * FROM page_function WHERE active='1' AND trash='0' AND shortcode='$SCId'";
+                $result = mysql_query($query) or die(mysql_error());
+                $row = mysql_fetch_array($result);
+                $row = PbUnSerial($row);
+                $Function_Type = $row['function'];
+                $Function_Array = $row['contents'];
+                $Array['function'] = $Function_Array;
+                if(function_exists("$Function_Type")){
+                    $Function_Type($Array);
+                    echo "<div class='cwnl'></div>";
+                }else{
+                    echo "dont exist";
+                }
+            }
+        }
+    }
+}
+
+function arrayRecursiveDiff($aArray1, $aArray2){
+    $aReturn = array();
+    if(is_array($aArray1)){
+        foreach ($aArray1 as $mKey => $mValue){
+            if(is_array($aArray2)){
+                if(array_key_exists($mKey, $aArray2)){
+                    if(is_array($mValue)){
+                        $aRecursiveDiff = arrayRecursiveDiff($mValue, $aArray2[$mKey]);
+                        if(count($aRecursiveDiff)){
+                            $aReturn[$mKey] = $aRecursiveDiff;
+                        }
+                    }else{
+                        if($mValue != $aArray2[$mKey]){ 
+                            $aReturn[$mKey] = $mValue; 
+                        }
+                    }
+                }else{
+                    $aReturn[$mKey] = $mValue; 
+                }
+            }
+        }
+    }
+    return $aReturn; 
+}
+
+function Cw_Filter_Array($Content){
+    if(is_array($Content)){
+        foreach($Content as $key => $value){
+            if(is_numeric($key)) {
+                unset($Content[$key]);  
+            }
+        }
+    }
+    return $Content;
+}
+
+function Cw_Changes($Info, $Content, $Array){
+    $Db_Type = $Info["type"];
+    $Db_Id = $Info["id"];
+        $Query = "SELECT * FROM $Db_Type WHERE id='$Db_Id'";
+        $Result = mysql_query($Query) or die(mysql_error());
+        $New = mysql_fetch_array($Result);
+        $New = CwOrganize($New,$Array);
+        $New = Cw_Filter_Array($New);
+    $Name = $New["name"];
+    $Type = $New["type"];
+    $WebId = $Info["webid"];
+    $User = $Info["user"];
+    $Date = strtotime("now");
+    $Other = array();
+    if($Info["manual_message"] !=""){
+        $Other["message"] = $Info["manual_message"];
+    }else{
+        $Other["message"] = "User updated $Db_Type table.";
+    }
+    $Other["id"] = $New["id"];
+    $Other["error"] = $Info["error"];
+    $Other["tracker"] = $Info["tracker"];
+    $Other["images"] = $Info["images"];
+    $Other["child"] = $Info["child"];
+    $Add = arrayRecursiveDiff($New,$Content);
+    $Del = arrayRecursiveDiff($Content,$New);
+// PROCESS FOR DB UPLOAD \\
+    $Other = serialize($Other);
+    $Add = serialize($Add);
+    $Del = serialize($Del);
+    mysql_query("INSERT INTO cw_alerts(name, other, webid, type, user, date, new, old, post) VALUES('$Name', '$Other', '$WebId', '$Type', '$User', '$Date', '$Add', '$Del', '$Info[id]') ")or die(mysql_error());
+}
+
+function Cw_Quick_Info($Type,$WebId,$Id,$Array){
+    $query = "SELECT * FROM $Type WHERE id='$Id' AND webid='$WebId'";
+	$result = mysql_query($query) or die(mysql_error());
+	$row = mysql_fetch_array($result);
+	$row = CwOrganize($row,$Array);
+return $row;
+}
+
+function Cw_Pull_Post_Images($Album,$WebId,$Array){
+    $query = "SELECT * FROM images WHERE album='$Album' AND webid='$WebId'";
+	$result = mysql_query($query) or die(mysql_error());
+	while($row = mysql_fetch_array($result)){
+	    $row = CwOrganize($row,$Array);
+	    $Count = $Count + 1;
+	    $Request["$Count"] = $row;
+	}
+return $Request;
+}
+
+function CwGetWebId(){
+    $Domain = $_SERVER['HTTP_HOST'];
+    $query = "SELECT * FROM info WHERE domain LIKE '%$Domain%'";
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    if($_COOKIE["manual_webid"] == ""){
+        $WebId = $row['id'];
+    }else{
+        $WebId = $_COOKIE["manual_webid"];
+    }
+    $query = "SELECT * FROM info WHERE id='$WebId'";
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    $row = PbUnSerial($row);
+    $Request["domain"] = $Domain;
+    $Request["id"] = $WebId;
+return $Request;
+}
 ?>

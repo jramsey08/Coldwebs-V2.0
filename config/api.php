@@ -1,6 +1,6 @@
 <?php
 
-include("api/google/ref/config.php");
+include(CWROOT . "/api/google/ref/config.php");
 
 
 

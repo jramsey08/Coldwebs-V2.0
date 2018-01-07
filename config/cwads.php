@@ -1,5 +1,5 @@
 <?php
-include("api/cwads/config/style.css");
+include(CWROOT . "/api/cwads/config/style.css");
 
 
 ?>

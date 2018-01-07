@@ -12,8 +12,14 @@ if($theme == ""){
 
 
 // PULLS THE INFORMATION FROM THE THEME'S SETTINGS.PHP FILE \\
+if(!file_exists("$THEME/settings.php")){
+     $THEME = "theme/cwdefault";
+}
+
 include("$THEME/settings.php");
 
+$Array["postimagessizes"] = $StructureImgSizes;
+$Array["productimages"] = $ProductImgSizes;
 $THEMESTRUCTURE['category'] = $ThemeCategoryStructure;
 $THEMESTRUCTURE['page'] = $ThemePageStructure;
 $THEMESTRUCTURE['post'] = $ThemePostStructure;

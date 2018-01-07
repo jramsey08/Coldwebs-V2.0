@@ -1,13 +1,12 @@
 <?php
-include("config/cart.php");
 
 if($Get_Url == "product"){
     if($Get_Type != ""){
-        $query = "SELECT * FROM articles WHERE type='product' AND active='1' AND trash='0' AND url='$Get_Type' OR type='product' AND 
-        active='1' AND trash='0' AND id='$Get_Type'";
+        $query = "SELECT * FROM articles WHERE type='product' AND active='1' AND trash='0' AND url='$Get_Type'  AND webid='$WebId' OR type='product' AND 
+        active='1' AND trash='0' AND id='$Get_Type' AND webid='$WebId'";
         $result = mysql_query($query) or die(mysql_error());
         $row = mysql_fetch_array($result);
-        $row = PbUnSerial($row);
+        $row = CwOrganize($row,$Array);
         $ActiveArticle = $row;
         if($row['id'] != ""){
             $OverRight['theme'] = "default";
@@ -47,4 +46,36 @@ if($Get_Url == "dashboard"){
     $Domain = $Array["siteinfo"]["domain"] . "/My-Account";
     header("Location: $Domain/$REDIRECT");
 }
+
+////////////////////////////// SET DEFAULT SHIPPING METHOD \\\\\\\\\\\\\\\\\\\\\\\\\\\
+$query = "SELECT * FROM settings WHERE type='shipping' AND def='1' AND webid='$WebId'";
+$result = mysql_query($query) or die(mysql_error());
+$row = mysql_fetch_array($result);
+$row = CwOrganize($row,$Array);
+$Default_Shipping_Id = $row["content"]["post"];
+$query = "SELECT * FROM cwoptions WHERE id='$Default_Shipping_Id' AND webid='$WebId'";
+$result = mysql_query($query) or die(mysql_error());
+$row = mysql_fetch_array($result);
+$row = CwOrganize($row,$Array);
+$Default_Shipping = $row["content"]["price"];
+/////////////////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////// SET DEFAULT PAYMENT METHOD \\\\\\\\\\\\\\\\\\\\\\\\\\\
+$query = "SELECT * FROM settings WHERE type='payment' AND def='1' AND webid='$WebId'";
+$result = mysql_query($query) or die(mysql_error());
+$row = mysql_fetch_array($result);
+$row = CwOrganize($row,$Array);
+$Default_Payment_Id = $row["content"]["post"];
+$query = "SELECT * FROM cwoptions WHERE id='$Default_Payment_Id' AND webid='$WebId'";
+$result = mysql_query($query) or die(mysql_error());
+$row = mysql_fetch_array($result);
+$row = CwOrganize($row,$Array);
+$Default_Shipping = $row["content"]["price"];
+/////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+include(CWROOT . "/config/cart.php");
 ?>

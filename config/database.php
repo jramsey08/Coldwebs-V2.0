@@ -4,21 +4,23 @@
 // WEBSITE AND ANY CHANGES SHOULD ONLY BE MADE BY THOSE WHO ARE FAMILIAR TO THE COLDWEBS CONTENT MANAGEMENT SYSTEM   //
 // CODING STRUCTURE. TO ENSURE YOUR SITE IS FULLY SAFE PLEASE ENROLL YOUR SITE AT COLDWEBS.COM TO ENSURE YOUR        //
 // WEBSITE IN MONITORED DAILY AGAINST ALL THREATS AND ARE RECEIVING ALL NEEDED UPDATES.                              //
-// AUTHOR: CEO, JUBAR D. RAMSEY     "VISIT COLDWEBS.COM TO BECOME A COLDWEBS CMS PLATFORM DEVELOPER."                //
-// FILE VERSION 2.0 LAST UPDATED ON 2014-11-21                                                                       //
+// AUTHOR: CEO, JUBAR D. RAMSEY     'VISIT COLDWEBS.COM TO BECOME A COLDWEBS CMS PLATFORM DEVELOPER.'                //
+// FILE VERSION 2.0 LAST UPDATED ON 2016-04-05                                                                       //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+
+
 $Website_Url_Auth = WebsiteUrlAuth();
 
-// UNCOMMENT VARIABLES TO MANUALLY SET THE DATABASE INFORMATION. ALL COMMENTED VARIABLES WILL BE SET VIA COLDWEBS.COM \\
-$Website_Host = "localhost";
-$Website_Database = "";
-$Website_Username = "";
-$Website_Password = "";
-$Website_Domain = $Website_Url_Auth;
-$Website_Id = "";
 
-$Website_Db_Setup = "1";
+// UNCOMMENT VARIABLES TO MANUALLY SET THE DATABASE INFORMATION. ALL COMMENTED VARIABLES WILL BE SET VIA COLDWEBS.COM \
+$Website_Host = 'localhost'; 
+$Website_Database = '';  
+$Website_Username = ''; 
+$Website_Password = ''; 
+
+
+///////////////////////////////////////////////////////  DO NOT EDIT ANYTHING BEYOND THIS LINE   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
 
 // AUTO ASSIGN DATABASE INFORMATION \\
 $link = mysql_connect("$Website_Host", "$Website_Username", "$Website_Password");
@@ -28,8 +30,6 @@ if(!$link){
 }else{
     $AutoAssign = "0";
 }
-
-///////////////////////////////////////////////////////  DO NOT EDIT ANYTHING BEYOND THIS LINE   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 // DATABASE INFORMATION WILL BE GIVEN BY COLDILLUSIONS.COM \\
 $body ="?appid=$Website_App_Id&url=$Website_Url_Auth&autoassign=$AutoAssign";
@@ -44,11 +44,10 @@ $content = str_replace("))))==((((", "+", "$content");
 $content = str_replace("((=))", "/", "$content");
 $content = PbDecrypt($key,$content);
 $content = unserialize($content);
-
 if($content['dbcontrol'] == "1"){
     $Website_Host = mysql_real_escape_string($content['host']);
     $Website_Db_Setup = mysql_real_escape_string($content['dbsetup']);
-    $Website_Database = mysql_real_escape_string($content['db']);
+    $Website_Database = mysql_real_escape_string($content['database']);
     $Website_Username = mysql_real_escape_string($content['username']);
     $Website_Password = mysql_real_escape_string($content['password']);
     $Website_Domain = mysql_real_escape_string($content['domain']);
@@ -58,7 +57,7 @@ if($content['dbcontrol'] == "1"){
 }else{
     if(!isset($Website_Host)){$Website_Host = mysql_real_escape_string($content['host']); }
     if(!isset($Website_Db_Setup)){$Website_Db_Setup = mysql_real_escape_string($content['dbsetup']); }
-    if(!isset($Website_Database)){$Website_Database = mysql_real_escape_string($content['db']); }
+    if(!isset($Website_Database)){$Website_Database = mysql_real_escape_string($content['database']); }
     if(!isset($Website_Username)){$Website_Username = mysql_real_escape_string($content['username']); }
     if(!isset($Website_Password)){$Website_Password = mysql_real_escape_string($content['password']); }
     if(!isset($Website_Domain)){$Website_Domain = mysql_real_escape_string($content['domain']); }
@@ -78,5 +77,6 @@ if($Website_Offline == ""){
     $View_site = 0;
     $ColdWeb_Control = "1";
 }
+$Website_Db_Setup = "1";
 
 ?>
