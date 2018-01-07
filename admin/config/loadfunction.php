@@ -5,7 +5,7 @@ $ArticleId = OtarDecrypt($key,"");
 
 
 $Id = $Article['id'];
-$Query = "SELECT * FROM page_function WHERE template='$PageInfo[template]' AND page='$PageArticleId' AND trash='0' ORDER BY list"; 
+$Query = "SELECT * FROM page_function WHERE template='$PageInfo[template]' AND page='$PageArticleId' AND trash='0' AND webid='$WebId' ORDER BY list"; 
 $Result = mysql_query($Query) or die(mysql_error());
 while($Row = mysql_fetch_array($Result)){
 if($Row['contents'] == ""){ }else{ $Row['contents'] = unserialize($Row['contents']); }

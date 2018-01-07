@@ -1,17 +1,15 @@
 <?php
+$Uri = $_SERVER["REQUEST_URI"];
+$Admin_Use = "1";
 require_once("config/settings.php");
+
+
 if($UserSiteAccess["backend"] == "1"){
-<<<<<<< HEAD
     include("config/admin.php");
     include("template.php");
 }else{
     $Domain = $Array["siteinfo"]["domain"];
-    header("Location: $Domain/Process/Logout?redirect=login&error=na");
-=======
-    include("template.php");
-}else{
-    $Domain = $Array["siteinfo"]["domain"];
-    header("Location: $Domain/Logout?redirect=login&error=na");
->>>>>>> origin/master
+    header("Location: $DomainProcess/Logout?redirect=$Uri&error=log");
 }
+
 ?>

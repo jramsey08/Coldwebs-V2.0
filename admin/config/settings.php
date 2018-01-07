@@ -17,26 +17,18 @@ if($Website_Db_Setup == "" OR $Website_Db_Setup == "0"){
 
 // INCLUDE PROMOTERBLAST API INFORMATION \\
     require_once("../api/pblast/config.php");
-    
+
 // INCLUDE ALL SOCIAL MEDIA INFORMATION \\
     require_once("../config/social.php");
-        
+
 // SHOWS THE ADMIN SECURED PAGES DURING SITE OFFLINE MODE
     $AdminSession = SessionUser($Array);
-<<<<<<< HEAD
-    include("config/info.php");
-=======
->>>>>>> origin/master
     if($WBOFF == "1"){
         if($AdminSession == "1"){
             $View_site = "1";
         }
     }
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> origin/master
 // THE FOLLOWING CODE IS FOR GENERAL SITE VARIABLE DEFINITIONS \\
     $Array['urlinfo'] = $_GET;
     $Get_End = strtolower($_GET['end']);
@@ -54,10 +46,10 @@ if($Website_Db_Setup == "" OR $Website_Db_Setup == "0"){
     $Prev_Page = $getpagenumber - 1;
     $Date = strtotime("now");
     $Random = rand(1000,100000);
-    
+
 // PATH LOCATIONS
     $ThemePath = "theme";
-    
+
 // SESSION VARIABLES
     $AccountId = $_SESSION['accountid'];
     $Log_Session = $_COOKIE['__cfduid'];
@@ -85,26 +77,11 @@ if($Website_Db_Setup == "" OR $Website_Db_Setup == "0"){
         $newcode_length = $newcode_length + 1;
         $newcode = $newcode.$code_part;
     }
-    
-// WEBSITE GENERAL INFORMATION \\
-    $query = "SELECT * FROM info";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
-    if($row['other'] == ""){ }else{ $row['other'] = unserialize($row['other']); }
-    if($row['status'] == ""){ }else{ $row['status'] = unserialize($row['status']); }
-    $Array['siteinfo'] = $row;
-    $Array['sitetheme'] = $row['theme'];
-    $Site_Domain = $row['domain'];
-    
-    $Array['key'] = $key;
-    $Array['sitestatus'] = $SiteStatus;
-    $Array['fullsession'] = $_SESSION;
 
 // HOSTING INFORMATION
-    $Maxsize = "100";
+    $Maxsize = "10";
     $Array['hosting']['max'] = $Maxsize;
     $HostingInfo = Hosting_Size($Array);
-
     include("config/url.php");
 
 // VERIFY IF CURRENT BROWSER IS ALLOWED \\
@@ -125,7 +102,6 @@ if($Website_Db_Setup == "" OR $Website_Db_Setup == "0"){
     $Browser_Pattern = $ua['pattern'];
 
 // LOG ALL WEBSITE TRAFFIC \\
-    #include("../config/online.php");
     #include("config/tracker.php");
 
 // DETECT ANY ACTIVE CWPACK APPLICATION \\
@@ -133,9 +109,8 @@ if($Website_Db_Setup == "" OR $Website_Db_Setup == "0"){
 
 // DETECT ANY ERROR LOGS \\
     #require_once("../error_log.php");
-<<<<<<< HEAD
+    
+// LOAD TRANSACTION INFORMATION \\
+    include("config/cart.php");
+}
 
-}
-=======
-}
->>>>>>> origin/master

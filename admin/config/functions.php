@@ -1,93 +1,10 @@
 <?php
-
-class session { 
-    // session-lifetime 
-    var $lifeTime; 
-    // mysql-handle 
-    var $dbHandle; 
-    function open($savePath, $sessName) { 
-       // get session-lifetime 
-       $this->lifeTime = get_cfg_var("session.gc_maxlifetime"); 
-       // open database-connection 
-       $dbHandle = @mysql_connect("localhost","parallel_coldweb","Lo8rHu}_dCGc"); 
-       $dbSel = @mysql_select_db("parallel_coldweb",$dbHandle); 
-       // return success 
-       if(!$dbHandle || !$dbSel) 
-           return false; 
-       $this->dbHandle = $dbHandle; 
-       return true; 
-    } 
-    function close() { 
-        $this->gc(ini_get('session.gc_maxlifetime')); 
-        // close database-connection 
-        return @mysql_close($this->dbHandle); 
-    } 
-    function read($sessID) { 
-        // fetch session-data 
-        $res = mysql_query("SELECT session_data AS d FROM ws_sessions 
-                            WHERE session_id = '$sessID' 
-                            AND session_expires > ".time(),$this->dbHandle); 
-        // return data or an empty string at failure 
-        if($row = mysql_fetch_assoc($res)) 
-            return $row['d']; 
-        return ""; 
-    } 
-    function write($sessID,$sessData) { 
-        // new session-expire-time 
-        $newExp = time() + $this->lifeTime; 
-        // is a session with this id in the database? 
-        $res = mysql_query("SELECT * FROM ws_sessions 
-                            WHERE session_id = '$sessID'",$this->dbHandle); 
-        // if yes, 
-        if(mysql_num_rows($res)) { 
-            // ...update session-data 
-            mysql_query("UPDATE ws_sessions 
-                         SET session_expires = '$newExp', 
-                         session_data = '$sessData' 
-                         WHERE session_id = '$sessID'",$this->dbHandle); 
-            // if something happened, return true 
-            if(mysql_affected_rows($this->dbHandle)) 
-                return true; 
-        } 
-        // if no session-data was found, 
-        else { 
-            // create a new row 
-            mysql_query("INSERT INTO ws_sessions ( 
-                         session_id, 
-                         session_expires, 
-                         session_data) 
-                         VALUES( 
-                         '$sessID', 
-                         '$newExp', 
-                         '$sessData')",$this->dbHandle); 
-            // if row was created, return true 
-            if(mysql_affected_rows($this->dbHandle)) 
-                return true; 
-        } 
-        // an unknown error occured 
-        return false; 
-    } 
-    function destroy($sessID) { 
-        // delete session-data 
-        mysql_query("DELETE FROM ws_sessions WHERE session_id = '$sessID'",$this->dbHandle); 
-        // if session was deleted, return true, 
-        if(mysql_affected_rows($this->dbHandle)) 
-            return true; 
-        // ...else return false 
-        return false; 
-    } 
-    function gc($sessMaxLifeTime) { 
-        // delete old sessions 
-        mysql_query("DELETE FROM ws_sessions WHERE session_expires < ".time(),$this->dbHandle); 
-        // return affected rows 
-        return mysql_affected_rows($this->dbHandle); 
-    } 
-} 
-
-
-
-
-function Advertisement($width, $height){
+function Advertisement($width, $height, $Array){
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
     $Session_Id = $_SESSION['sessionid'];
     $TrackerPage = $_SESSION['trackerpage'];
     $Website_Id = $_SESSION['websiteid'];
@@ -99,62 +16,108 @@ function Advertisement($width, $height){
     curl_setopt($ch, CURLOPT_TIMEOUT, '3');
     $content = trim(curl_exec($ch));
     curl_close($ch);
-    echo $content; }
+    echo $content;
+}
 
-function TotalVisitors(){
-    $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker WHERE admin!='1'"; 
+function TotalVisitors($Array){
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
+    $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker WHERE admin!='1' AND webid='$WebId'"; 
     $result = mysql_query($query) or die(mysql_error());
     $row = mysql_fetch_array($result);
     $row['COUNT(ipaddress)'];
     echo number_format("$row[1]");
 }
 
-<<<<<<< HEAD
-function OrderTotal(){
-    $query = "SELECT id, COUNT(id) FROM trans WHERE active='1' AND trash='0'"; 
+function OrderTotal($Array){
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
+    $query = "SELECT id, COUNT(id) FROM trans WHERE active='1' AND trash='0' AND webid='$WebId'"; 
     $result = mysql_query($query) or die(mysql_error());
     $row = mysql_fetch_array($result);
     $row['COUNT(id)'];
     echo number_format("$row[1]");
 }
 
-=======
->>>>>>> origin/master
-function MonthlyVisitors(){
-$Date = date("m.y");
-$query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker WHERE date3='$Date' AND admin!='1'";
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
-$row['COUNT(ipaddress)'];
-echo number_format("$row[1]");
+function MonthlyVisitors($Array){
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
+    $Date = date("m.y");
+    $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker WHERE date3='$Date' AND admin!='1' AND webid='$WebId'";
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    $row['COUNT(ipaddress)'];
+    echo number_format("$row[1]");
 }
 
-function TodayVisitors(){
-$Date = date("m-d-y");
-$query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker WHERE date2='$Date' AND admin!='1'";
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
-$row['COUNT(ipaddress)'];
-echo number_format("$row[1]");
+function TodayVisitors($Array){
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
+    $Date = date("m-d-y");
+    $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker WHERE date2='$Date' AND admin!='1' AND webid='$WebId'";
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    $row['COUNT(ipaddress)'];
+    echo number_format("$row[1]");
 }
 
-function TotalCountry(){
-$query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker GROUP BY country WHERE admin!='1'";
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
-$row['COUNT(country)'];
-echo number_format("$row[1]");
+function LiveVisitor($Array){
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
+    $query = "SELECT id, COUNT(id) FROM ws_sessions WHERE active='1' AND webid='$WebId'";
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    $row['COUNT(id)'];
+    echo number_format("$row[1]");
 }
 
-function PostsCount(){
-$query = "SELECT type, COUNT(id) FROM articles WHERE type!='category' AND type!='menu' AND type='post' AND type!='comment' AND type!='message' AND trash='0'";
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
-$row['COUNT(country)'];
-echo number_format("$row[1]");
+function TotalCountry($Array){
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
+    $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker GROUP BY country WHERE admin!='1' AND webid='$WebId'";
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    $row['COUNT(country)'];
+    echo number_format("$row[1]");
+}
+
+function PostsCount($Array){
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
+    $query = "SELECT type, COUNT(id) FROM articles WHERE type='post' AND trash='0' AND webid='$WebId'";
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    $row['COUNT(country)'];
+    echo number_format("$row[1]");
 }
 
 function RandomCode($Amount){
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
     $codelenght = $Amount;
     while($newcode_length < $codelenght) {
         $x=1;
@@ -168,16 +131,26 @@ function RandomCode($Amount){
         $newcode = $newcode.$code_part;
     } return $newcode; 
 }
-    
+
 function Category($Array){
-    $Article = $Array[dynamicarticle];
-    $query = "SELECT * FROM articles WHERE id='$Article[category]' AND active='1' AND trash='0'"; 
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
+    $Article = $Array['dynamicarticle'];
+    $query = "SELECT * FROM articles WHERE id='$Article[category]' AND active='1' AND trash='0' AND webid='$WebId'"; 
     $result = mysql_query($query) or die(mysql_error());
     $row = mysql_fetch_array($result);
     return $row; 
 }
-    
-function Product_Ad($width, $height){
+
+function Product_Ad($width, $height, $Array){
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
     $Session_Id = $_SESSION['sessionid'];
     $TrackerPage = $_SESSION['trackerpage'];
     $Website_Id = $_SESSION['websiteid'];
@@ -206,17 +179,17 @@ function Product_Ad($width, $height){
     $content_Url = trim(curl_exec($ch));
     curl_close($ch);
     echo "<img src='$content_Img' height='$height' width='$width' alt='' /><a right:    25px; bottom:15px; class='readmore' href='$content_Url'>Shop Now</a>";
-    }
+}
 
 function PbEncrypt($key, $Value){
     $Encrypted = base64_encode(mcrypt_encrypt(MCRYPT_RIJNDAEL_256, md5($key), $Value    , MCRYPT_MODE_CBC, md5(md5($key))));
-    return $Encrypted; }
-
+    return $Encrypted;
+}
 function PbDecrypt($key, $Value){
     $Decrypted =  rtrim(mcrypt_decrypt(MCRYPT_RIJNDAEL_256, md5($key), base64_decode    ($Value), MCRYPT_MODE_CBC, md5(md5($key))), "\0");
-    return $Decrypted; }
-
-function curPageURL() {
+    return $Decrypted;
+}
+function curPageURL(){
     $pageURL = 'http';
     if ($_SERVER["HTTPS"] == "on") {$pageURL .= "s";}
     $pageURL .= "://";
@@ -252,11 +225,20 @@ function WebsiteUrlAuth(){
     $Website_Url_Auth = $_SERVER["SERVER_NAME"];
     $findme   = 'www.';
     $pos = strpos($_SERVER[SERVER_NAME], $findme);
-    if ($pos === false) { $Website_Url_Auth = $Website_Url_Auth; }else { 
-        $Website_Url_Auth = substr("$Website_Url_Auth", 4); }
-    return $Website_Url_Auth; }
+    if($pos === false){
+        $Website_Url_Auth = $Website_Url_Auth;
+    }else{ 
+        $Website_Url_Auth = substr("$Website_Url_Auth", 4);
+    }
+return $Website_Url_Auth;
+}
 
-function SiteOffline($Array){ 
+function SiteOffline($Array){
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
     $SiteStatus = $Array['sitestatus']; ?>
     <html><head><title>Website Offline</title>
     <style type="text/css">
@@ -265,7 +247,8 @@ function SiteOffline($Array){
     iframe {display: block; width: 100%; border: none; overflow-y: auto; overflow-x: hidden;} 
     </style></head><body>
     <iframe id="tree" name="tree" src="http://www.pblast.in/offline/?id=<?php echo $SiteStatus[websiteid]; ?>&blockie=<?php echo $SiteStatus[blockie]; ?>&noip=<?php echo $SiteStatus[noip]; ?>" frameborder="0" marginheight="0" marginwidth="0" width="100%" height="100%" scrolling="auto"></iframe>
-    <?php }
+    <?php
+}
 
 function OtarDecrypt($key, $Otar){
     $Otar = str_replace("))))==((((", "+", "$Otar");
@@ -273,7 +256,7 @@ function OtarDecrypt($key, $Otar){
     $Otar = PbDecrypt($key, $Otar);
     $Otar = unserialize($Otar);
     return $Otar;
-    }
+}
 
 function OtarEncrypt($key, $Otar){
     $Otar = serialize($Otar);
@@ -281,15 +264,16 @@ function OtarEncrypt($key, $Otar){
     $Otar = str_replace("+", "))))==((((", "$Otar");
     $Otar = str_replace("/", "((=))", "$Otar");
     return $Otar;
-    }
+}
 
 function Pulltheme($ThemePath,$ThemeAdmin){
-    $ThemePath = "../theme/". $name[0];
+    if($ThemePath == ""){
+        $ThemePath = "../../../theme/";
+    }
     $results = scandir($ThemePath);
-    #print_r($results);
-    foreach ($results as $result) {
-        if ($result === '.' or $result === '..') continue;
-            if (is_dir($ThemePath . '/' . $result)) {
+    foreach ($results as $result){
+        if($result === '.' or $result === '..') continue;
+            if(is_dir($ThemePath . '/' . $result)) {
                 $Name = $result;
                 include("$ThemePath/$result/settings.php");
                 if($TEMPLATEADMINTHEME == $ThemeAdmin){
@@ -301,13 +285,18 @@ function Pulltheme($ThemePath,$ThemeAdmin){
                 }
         }
     }
-    return $ThemeArray;
+return $ThemeArray;
 }
 
 function PullPageInfo($Array){
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
     $Url = $Array['urlinfo']['type'];
     $Id = OtarDecrypt($Array['key'],$Url);
-    $qUEry = "SELECT * FROM page_template WHERE id='$Id' AND trash='0'"; 
+    $qUEry = "SELECT * FROM page_template WHERE id='$Id' AND trash='0' AND webid='$WebId'"; 
     $reSUlt = mysql_query($qUEry) or die(mysql_error());
     $row = mysql_fetch_array($reSUlt);
         $UrlUrl = $row['url'];
@@ -319,19 +308,15 @@ function PullPageInfo($Array){
     if($row['active'] == ""){
         $row['active'] = "0";
     }
-    $query = "SELECT * FROM page_settings WHERE article='$Article'";
+    $query = "SELECT * FROM page_settings WHERE article='$Article' AND tempid='$row[id]' AND webid='$WebId'";
     $result = mysql_query($query) or die(mysql_error());
     $RoW = mysql_fetch_array($result);
     $row['pagesettings'] = $RoW;
-    $qUery = "SELECT * FROM page_structure WHERE url='$UrlUrl' AND urltype='$UrlType' AND end='$End' AND urlid='$UrlId' AND template='$Template' OR url='$UrlUrl' AND urltype='$UrlType' AND end='$End' AND    urlid='$UrlId' AND template='default'";
-    $rEsult = mysql_query($qUery) or die(mysql_error());
-    $rOw = mysql_fetch_array($rEsult);
-    $row['pagestructure'] = $rOw;
-    $QUeRy = "SELECT * FROM page_function WHERE page='$Article' AND template='$Template' AND dynamic='0'";
-   $rEsULT = mysql_query($QUeRy) or die(mysql_error());
+    $QUeRy = "SELECT * FROM page_function WHERE page='$Article' AND template='$Template' AND webid='$WebId'";
+    $rEsULT = mysql_query($QUeRy) or die(mysql_error());
     $rOL = mysql_fetch_array($rEsULT);
     $row['pagefunction'] = $rOL;
-    $qUerY = "SELECT * FROM articles WHERE id='$Article'";
+    $qUerY = "SELECT * FROM articles WHERE id='$Article' AND webid='$WebId'";
     $rEsulT = mysql_query($qUerY) or die(mysql_error());
     $rOW = mysql_fetch_array($rEsulT);
     $row['pagearticle'] = $rOW;
@@ -339,14 +324,19 @@ return $row;
 }
 
 function SessionUser($Array){
-    $AccountId = $_SESSION[accountid];
-    $Log_Session = $_SESSION[sessionid];
-    $Session_Generate = $_SESSION[sessiongenerate];
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
+    $AccountId = $_SESSION['accountid'];
+    $Log_Session = $_SESSION['sessionid'];
+    $Session_Generate = $_SESSION['sessiongenerate'];
     if($AccountId == ""){
         $User = 0;
     }else{
         $User = 1;
-        $query = "SELECT * FROM login_session WHERE userid='$AccountId' AND active='1' AND session='$Log_Session' AND session_generate='$Session_Generate'";
+        $query = "SELECT * FROM login_session WHERE userid='$AccountId' AND active='1' AND session='$Log_Session' AND session_generate='$Session_Generate' AND webid='$WebId'";
         $result = mysql_query($query) or die(mysql_error());
         $row = mysql_fetch_array($result);
         $Find_Account = $row['userid'];
@@ -356,42 +346,46 @@ function SessionUser($Array){
             $User = 1;
         }
     }
-    return $User;
+return $User;
 }
 
 function youtube_id_last_chance($link) {
-     $video_id = explode("?v=", $link); // For videos like http://www.youtube.com/watch?v=...
-     if (empty($video_id[1]))
-         $video_id = explode("/v/", $link); // For videos like http://www.youtube.com/watch/v/..
-     $video_id = explode("&", $video_id[1]); // Deleting any other params
-     $video_id = $video_id[0];
-     return $video_id;
+    $video_id = explode("?v=", $link); // For videos like http://www.youtube.com/watch?v=...
+    if(empty($video_id[1]))
+        $video_id = explode("/v/", $link); // For videos like http://www.youtube.com/watch/v/..
+    $video_id = explode("&", $video_id[1]); // Deleting any other params
+    $video_id = $video_id[0];
+return $video_id;
 }
 
 function Hosting_Size($Array){
-$file_directory = '../';
-$output = exec('du -sk ' . $file_directory);
-$filesize = trim(str_replace($file_directory, '', $output)) * 1024;
-$q = mysql_query("SHOW TABLE STATUS");  
-$size = 0;  
-while($row = mysql_fetch_array($q)) {  
-    $DbSize += $row["Data_length"] + $row["Index_length"];  
-}
-$filesize = $filesize + $DbSize;
-$HostingInfo[sizetype] = byteFormat($filesize, "");;
-$filesize = $filesize / "1073741824";
-$filesize = number_format("$filesize",2);
-$HostingInfo[size] = $filesize;
-$HostingInfo[max] = $Array[hosting][max];
-$HostingInfo[percent] = $filesize / $Array[hosting][max];
-$HostingInfo[percent] = $HostingInfo[percent] * "100";
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
+    $file_directory = '../';
+    $output = exec('du -sk ' . $file_directory);
+    $filesize = trim(str_replace($file_directory, '', $output)) * 1024;
+    $q = mysql_query("SHOW TABLE STATUS");  
+    $size = 0;  
+    while($row = mysql_fetch_array($q)) {  
+        $DbSize += $row["Data_length"] + $row["Index_length"];  
+    }
+    $filesize = $filesize + $DbSize;
+    $HostingInfo['sizetype'] = byteFormat($filesize, "");
+    $filesize = $filesize / "1073741824";
+    $filesize = number_format("$filesize",2);
+    $HostingInfo['size'] = $filesize;
+    $HostingInfo['max'] = $Array['hosting']['max'];
+    $HostingInfo['percent'] = $filesize / $Array['hosting']['max'];
+    $HostingInfo['percent'] = $HostingInfo['percent'] * "100";
 return $HostingInfo;
 }
 
 function byteFormat($bytes, $unit = "", $decimals = 2) {
 	$units = array('B' => 0, 'KB' => 1, 'MB' => 2, 'GB' => 3, 'TB' => 4, 
 			'PB' => 5, 'EB' => 6, 'ZB' => 7, 'YB' => 8);
- 
 	$value = 0;
 	if ($bytes > 0) {
 		// Generate automatic prefix by bytes 
@@ -400,20 +394,17 @@ function byteFormat($bytes, $unit = "", $decimals = 2) {
 			$pow = floor(log($bytes)/log(1024));
 			$unit = array_search($pow, $units);
 		}
- 
 		// Calculate byte value by prefix
 		$value = ($bytes/pow(1024,floor($units[$unit])));
 	}
- 
 	// If decimals is not numeric or decimals is less than 0 
 	// then set default value
 	if (!is_numeric($decimals) || $decimals < 0) {
 		$decimals = 2;
 	}
- 
 	// Format output
 	return sprintf('%.' . $decimals . 'f <b>'.$unit . "</b>", $value);
-  }
+}
 
 function CommaRemoval($Content){
     $Content = str_replace("'", "", "$Content");
@@ -432,6 +423,80 @@ function PbSerialCheck($Serial){
 return $Return;
 }
 
+function CwOrganize($Content,$Array){
+    $Content = PbUnSerial($Content);
+    $Content = PbFilter($Content);
+    #$Content = CwFilterImg($Content,$Array);
+return $Content;
+}
+
+function CwFilterImg($Content,$Array){
+    $Sizes = $Array["postimagessizes"];
+    if($Content["type"] == "post-product"){
+        $Sizes = $Array["productimages"];
+    }
+    $Count = count($Sizes);
+    $Count = $Count - "1";
+    $ncount = "0";
+    if(is_array($Content["img"])){
+        $ActualCount = count($Content["img"]);
+        $ActualCount = $ActualCount - "1";
+        foreach($Content as $key => $value){
+            if($value == ""){
+                $Content["key"] = $Content["content"]["img"];
+            }
+            if($Count != $ActualCount){
+                while($ncount <= $Sizes){
+                    if($Content["img"]["$ncount"] == ""){
+                        $NewImg["$ncount"] = $Content["content"]["img"];
+                    }else{
+                        $NewImg["$ncount"] = $Content["img"]["$ncount"];
+                    }
+                    $ncount = $ncount + 1;
+                }
+            }
+        }
+    }else{
+        while($ncount <= $Sizes){
+            $NewImg["$ncount"] = $Content["content"]["img"];
+            $ncount = $ncount + 1;
+        }
+    }
+    $Content["img"] = $NewImg;
+return $Content;
+}
+
+function CwFilerAddress($Type,$Content){
+    if(is_array($Content["$Type"])){
+        if(is_array($Content["$Type"]["address"])){
+            if($Content["$Type"]["address"]["6"] == ""){
+                $Content["$Type"]["address"]["6"] = "N/A";
+            }
+            if($Content["$Type"]["address"]["company"] == ""){
+                $Content["$Type"]["address"]["company"] = $Content["$Type"]["company"];
+            }
+        }
+    }
+return $Content;
+}
+
+function PbFilter($Content){
+    $Content = CwFilerAddress("other",$Content);
+    $Content = CwFilerAddress("info",$Content);
+    if($Content["type"] == "post-event"){
+        if($Content["content"]["external"] == ""){
+            $Content["content"]["tickets"] = "/$_GET[url]/$Content[url]";
+        }else{
+            $Content["content"]["tickets"] = $Content["content"]["external"];
+        }
+    }
+    if($Content["other"]["artist"] != ""){
+        $Content["other"]["artist"] = str_replace('%-', '', $Content["other"]["artist"]);
+        $Content["other"]["artist"] = str_replace('-%', '', $Content["other"]["artist"]);
+    }
+return $Content;
+}
+
 function PbUnSerial($Content){
     if($Content != ""){
         foreach($Content as $key => $Value){
@@ -444,6 +509,27 @@ return $Content;
 
 function isset_get($array, $key, $default = null) {
     return isset($array['$key']) ? $array['$key'] : $default;
+}
+
+function cw_array_set($Array){
+    foreach($Array as $key){
+        if(is_array($key)){
+            foreach($key as $topk => $top){
+                if(is_array($topk)){
+                    foreach($topk as $bttmk => $bttm){
+                        $topk['$bttmk'] = isset_get($topk, $bttmk);
+                    }
+                    $key['$topk'] = isset_get($key, $topk);
+                }else{
+                    $key['$topk'] = isset_get($key, $topk);
+                }
+            }
+            $Array['$topk'] = $key;
+        }else{
+            $Array['$key'] = isset_get($Array, $key);
+        }
+    }
+return $Array;
 }
 
 // PULLS INFORMATION FOR GALLERY IMAGES \\
@@ -477,9 +563,6 @@ class UploadedFiles extends ArrayObject
     }
 }
 
-function ReportError(){
-}
-
 function CwLimitBrowser($Array){
     $BrowserLimit = $Array["browser"]["limit"];
     $Browser_Name = $Array["browser"]["current"];
@@ -496,37 +579,33 @@ function CwLimitBrowser($Array){
     }
 }
 
-function CwCartTotal($Array){
-    $Site_Ecommerce = $Array[shopping][active];
-    $Cart_Session = $_SESSION[COOKIEPHPSESSID];
-    if($Site_Ecommerce == 1){
-        $query = "SELECT * FROM shopping_cart WHERE active='1' AND trash='0' AND session='$Cart_Session'"; 
-        $result = mysql_query($query) or die(mysql_error());
-        $row = mysql_fetch_array($result);
-        $Cart_Status = $row['id'];
-        if($Cart_Status == ""){
-            $Shopping_Cart_Empty = 1;
-        }else{
-            $Shopping_Cart_Empty = 0;
-        }
-        $Default_Shipping_Rate = "15";
-        $Array[shopping][cartempty] = $Shopping_Cart_Empty;
-        $Array[shopping][cartsession] = $_SESSION[COOKIEPHPSESSID];
-        if($Shipping_Rate == ""){
-            $Array[shopping][shippingrate] = $Default_Shipping_Rate;
-        }else{
-            $Array[shopping][shippingrate] = $Shipping_Rate;
-        }
-        $query = "SELECT * FROM shopping_cart WHERE active='1' AND trash='0' AND session='$Cart_Session'"; 
-        $result = mysql_query($query) or die(mysql_error());
-        $row = mysql_fetch_array($result);
-        $Cart_Status = $row['id'];
-        if($Cart_Status == ""){
-            $Shopping_Cart_Empty = 1;
-        }else{ 
-            $Shopping_Cart_Empty = 0;
-        }
+function CwCartTotal($Cart){
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
     }
+    $query = "SELECT * FROM cw_cart WHERE active='1' AND trash='0' AND session='$Cart'";
+    $result = mysql_query($query) or die(mysql_error());
+    while($row = mysql_fetch_array($result)){
+        $CwCart['id'] = $row['id'];
+        $CwCart['session'] = $row['session'];
+        $CwCart['cart'] = $row['cart'];
+        $CwCart['item'] = $row['item'];
+        $CwCart['user'] = $row['user'];
+        $CwCart['qty'] = $row['qty'];
+        $CwCart['active'] = $row['active'];
+        $CwCart['trash'] = $row['trash'];
+        $CwCart['other'] = $row['other'];
+        $CwCart['price'] = $row['price'];
+        $CwCart['other'] = unserialize($CwCart['other']);
+        $CwTotal = $row['price'] * $row['qty'];
+        $CwCartSubTotal = $CwCartSubTotal + $CwTotal;
+        $CartCount = $CartCount + 1;
+    }
+    $Shopping['total'] = $CwCartSubTotal;
+    $Shopping['count'] = $CartCount;
+return $Shopping;
 }
 
 function CwMobileDetect($Array){
@@ -536,19 +615,19 @@ function CwMobileDetect($Array){
     $berry = strpos($_SERVER['HTTP_USER_AGENT'],"BlackBerry");
     $ipod = strpos($_SERVER['HTTP_USER_AGENT'],"iPod");
     if($iphone || $android || $palmpre || $ipod || $berry == true){
-        $Mobile[phone] = 1;
-        $Mobile[selected] = 1;
+        $Mobile['phone'] = 1;
+        $Mobile['selected'] = 1;
     }else{
-        $Mobile[phone] = 0;
+        $Mobile['phone'] = 0;
     }
-    if($Mobile[selected] == ""){ 
-        $Mobile[selected] = 0; 
+    if($Mobile['selected'] == ""){ 
+        $Mobile['selected'] = 0; 
     }
     $Select_View = $_SESSION['mobileview'];
     if($Select_View == desktop){
-        $Mobile[phone] = 0;
+        $Mobile['phone'] = 0;
     }
-    return $Mobile;
+return $Mobile;
 }
 
 function getBrowser(){
@@ -556,7 +635,6 @@ function getBrowser(){
     $bname = 'Unknown';
     $platform = 'Unknown';
     $version= "";
-
     //First get the platform?
     if (preg_match('/linux/i', $u_agent)) {
         $platform = 'linux';
@@ -567,7 +645,6 @@ function getBrowser(){
     elseif (preg_match('/windows|win32/i', $u_agent)) {
         $platform = 'windows';
     }
-   
     // Next get the name of the useragent yes seperately and for good reason
     if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent))
     {
@@ -599,7 +676,6 @@ function getBrowser(){
         $bname = 'Netscape';
         $ub = "Netscape";
     }
-   
     // finally get the correct version number
     $known = array('Version', $ub, 'other');
     $pattern = '#(?<browser>' . join('|', $known) .
@@ -607,7 +683,6 @@ function getBrowser(){
     if (!preg_match_all($pattern, $u_agent, $matches)) {
         // we have no matching number just continue
     }
-   
     // see how many we have
     $i = count($matches['browser']);
     if ($i != 1) {
@@ -623,10 +698,8 @@ function getBrowser(){
     else {
         $version= $matches['version'][0];
     }
-   
     // check if we have a number
     if ($version==null || $version=="") {$version="?";}
-   
     return array(
         'userAgent' => $u_agent,
         'name'      => $bname,
@@ -652,7 +725,6 @@ function CwUserAccess($Access){
     if($Access == "4" OR $Access == ""){
         $Access = "Registered User";
     }
-    
     return $Access;
 }
 
@@ -682,101 +754,76 @@ function StatusName($Status){
     return $Status;
 }
 
-
-
-
-
-
-
-
-
-
-    function getRealIp() {
-       if (!empty($_SERVER['HTTP_CLIENT_IP'])) {  //check ip from share internet
-         $ip=$_SERVER['HTTP_CLIENT_IP'];
-       } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {  //to check ip is pass from proxy
-         $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
-       } else {
-         $ip=$_SERVER['REMOTE_ADDR'];
-       }
-       return $ip;
+function getRealIp() {
+    if(!empty($_SERVER['HTTP_CLIENT_IP'])) {  //check ip from share internet
+        $ip=$_SERVER['HTTP_CLIENT_IP'];
+    }elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {  //to check ip is pass from proxy
+        $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+    }else{
+        $ip=$_SERVER['REMOTE_ADDR'];
     }
+return $ip;
+}
 
-    function writeLog($where) {
-    
-    	$ip = getRealIp(); // Get the IP from superglobal
-    	$host = gethostbyaddr($ip);    // Try to locate the host of the attack
-    	$date = date("d M Y");
-    	
-    	// create a logging message with php heredoc syntax
-    	$logging = <<<LOG
-    		\n
-    		<< Start of Message >>
-    		There was a hacking attempt on your form. \n 
-    		Date of Attack: {$date}
-    		IP-Adress: {$ip} \n
-    		Host of Attacker: {$host}
-    		Point of Attack: {$where}
-    		<< End of Message >>
+function writeLog($where) {
+    $ip = getRealIp(); // Get the IP from superglobal
+    $host = gethostbyaddr($ip);    // Try to locate the host of the attack
+    $date = date("d M Y");
+    // create a logging message with php heredoc syntax
+    $logging = <<<LOG
+    	\n
+    	<< Start of Message >>
+    	There was a hacking attempt on your form. \n 
+    	Date of Attack: {$date}
+    	IP-Adress: {$ip} \n
+    	Host of Attacker: {$host}
+    	Point of Attack: {$where}
+    	<< End of Message >>
 LOG;
 // Awkward but LOG must be flush left
-    
-            // open log file
-    		if($handle = fopen('hacklog.log', 'a')) {
-    		
+           // open log file
+    	if($handle = fopen('hacklog.log', 'a')) {
     			fputs($handle, $logging);  // write the Data to file
     			fclose($handle);           // close the file
-    			
     		} else {  // if first method is not working, for example because of wrong file permissions, email the data
-    		
     			$to = 'ADMIN@gmail.com';  
             	$subject = 'HACK ATTEMPT';
             	$header = 'From: ADMIN@gmail.com';
             	if (mail($to, $subject, $logging, $header)) {
             		echo "Sent notice to admin.";
             	}
-    
     		}
-    }
+}
 
-    function verifyFormToken($form) {
-        
+function verifyFormToken($form) {
         // check if a session is started and a token is transmitted, if not return an error
     	if(!isset($_SESSION[$form.'_token'])) { 
     		return false;
         }
-    	
     	// check if the form is sent with token in it
     	if(!isset($_POST['token'])) {
     		return false;
         }
-    	
     	// compare the tokens against each other if they are still the same
     	if ($_SESSION[$form.'_token'] !== $_POST['token']) {
     		return false;
         }
-    	
     	return true;
     }
-    
     function generateFormToken($form) {
-    
         // generate a token from an unique value, took from microtime, you can also use salt-values, other crypting methods...
     	$token = md5(uniqid(microtime(), true));  
-    	
     	// Write the generated token to the session variable to check it against the hidden field when the form is sent
     	$_SESSION[$form.'_token'] = $token; 
-    	
     	return $token;
+}
+
+function Cw_Settings($Search, $Array){
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
     }
-
-
-<<<<<<< HEAD
-=======
-
-
->>>>>>> origin/master
-function Cw_Settings($Search){
     $Query = "SELECT * FROM cwoptions WHERE type='settings' AND name='$Search' AND trash='0'";
     $Result = mysql_query($Query) or die(mysql_error());
     $Row = mysql_fetch_array($Result);
@@ -789,19 +836,22 @@ function Settings_Name_Filter($Name){
 	return $Name;
 }
 
-function Cw_Load_Avg($Page,$Date,$Array){
-    $Query = "SELECT * FROM tracker_load";
+function Cw_Load_Avg($Page,$Date,$Other,$Array){
+    if($Array["manual_webid"] == ""){
+        $WebId = $Array['webid'];
+    }else{
+        $WebId = $Array["manual_webid"];
+    }
+    $Query = "SELECT * FROM tracker_load WHERE webid='$WebId'";
     $Result = mysql_query($Query) or die(mysql_error());
     while($Row = mysql_fetch_array($Result)){
         $Speed = $Speed + $Row['loadtime'];
         $Count = $Count + 1;
     }
-<<<<<<< HEAD
     $Load = $Speed / $Count;
     $Load = number_format($Load,3) . " Sec";
 return $Load;
 }
-
 
 function CwOrderStatus($Value){
     if($Value == "0"){ $Value = "Awaiting Payment"; }
@@ -809,16 +859,20 @@ function CwOrderStatus($Value){
     if($Value == "2"){ $Value = "Preparing Shipment"; }
     if($Value == "3"){ $Value = "Shipped"; }
     if($Value == "4"){ $Value = "Delivered"; }
+    if($Value == "5"){ $Value = "Customer Response Needed"; }
+    if($Value == "6"){ $Value = "Order Canceled"; }
+    if($Value == "7"){ $Value = "Refund Issued"; }
 return $Value;
-=======
-
-$Load = $Speed / $Count;
-$Load = number_format($Load,3) . " Sec";
-
-
-return $Load;
-
->>>>>>> origin/master
 }
 
+function ReportError(){
+}
+
+function Cw_Quick_Info($Type,$WebId,$Id,$Array){
+    $query = "SELECT * FROM $Type WHERE id='$Id' AND webid='$WebId'";
+	$result = mysql_query($query) or die(mysql_error());
+	$row = mysql_fetch_array($result);
+	$row = CwOrganize($row,$Array);
+return $row;
+}
 ?>
