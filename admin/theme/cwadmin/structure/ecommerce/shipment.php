@@ -42,7 +42,7 @@
 <tbody>
 <?php
 $Count = "";
-$Query = "SELECT * FROM articles WHERE category='self' AND type='prodcat' AND trash='0'";
+$Query = "SELECT * FROM articles WHERE category='self' AND type='prodcat' AND trash='0' AND webid='$WebId'";
 $Result = mysql_query($Query) or die(mysql_error());
 while($Row = mysql_fetch_array($Result)){
 $Row = PbUnSerial($Row);
@@ -51,9 +51,9 @@ $ArticleCat = $Row['id'];
 $ArticleId = $Row['id'];
 $ArticleId = OtarEncrypt($key,$ArticleId);
 if($Cw_Multiple_Cat['active'] == "1"){
-    $query = "SELECT * FROM articles WHERE category LIKE '%-" . $ArticleCat. "-%' AND trash='0'";
+    $query = "SELECT * FROM articles WHERE category LIKE '%-" . $ArticleCat. "-%' AND trash='0' AND webid='$WebId'";
 }else{
-    $query = "SELECT * FROM articles WHERE category='$ArticleCat' AND trash='0'";
+    $query = "SELECT * FROM articles WHERE category='$ArticleCat' AND trash='0' AND webid='$WebId'";
 }
 $result = mysql_query($query) or die(mysql_error());
 while($row = mysql_fetch_array($result)){

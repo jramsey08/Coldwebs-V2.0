@@ -1,44 +1,40 @@
-<div class="cl-mcont">
-<div class="page-head">
-<ol class="breadcrumb">
-<li><a href="/admin">Dashboard</a></li>
-<li class="active">User Account Access</li>
-</ol></div>
-
-<div class="row">
-<div class="col-md-12">
-<div class="block-flat">
-<div class="header">							
-<h3>Default User Account Access
-<div align="right">
-<button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
-</div>
-</h3>			
-</div>
-
-
-
-
-<form name='editarticle' id='edittable' method='post'><br>
-<center>
-<button type='submit' formaction="/Process/EditUserAccess/Delete" style="background-color: red; color: white;" class="btn btn-trans"><i class="fa "></i> Delete </button>
-<button type='submit' formaction="/Process/EditUserAccess/Active" style="background-color: green; color: white;" class="btn btn-trans"><i class="fa "></i> Activate </button>
-<button type='submit' formaction="/Process/EditUserAccess/Inactive" style="background-color: grey; color: white;" class="btn btn-trans"><i class="fa "></i> In-Active </button>
-</center>
-
-<div class="content">
-<div class="table-responsive">
-<table class="table table-bordered" id="datatable" >
-<thead>
-<tr>
-<th></th>
-<th>Name</th>
-<th>Status</th>
-<th>Settings</th>
-</tr>
-</thead>
-
-<tbody>
+        <form name='editarticle' id='edittable' method='post'>
+            <div class="cl-mcont">
+                <div class="page-head">
+                    <ol class="breadcrumb">
+                        <li><a href="/admin">Dashboard</a></li>
+                        <li class="active">User Account Access</li>
+                    </ol>
+                </div>
+            
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="block-flat">
+                            <div class="header">							
+                                <h3>Default User Account Access
+                                    <div align="right">
+                                        <button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
+                                    </div>
+                                </h3>			
+                            </div>
+                            <br>
+                            <center>
+                                <button type='submit' formaction="/Process/EditUserAccess/Delete" style="background-color: red; color: white;" class="btn btn-trans"><i class="fa "></i> Delete </button>
+                                <button type='submit' formaction="/Process/EditUserAccess/Active" style="background-color: green; color: white;" class="btn btn-trans"><i class="fa "></i> Activate </button>
+                                <button type='submit' formaction="/Process/EditUserAccess/Inactive" style="background-color: grey; color: white;" class="btn btn-trans"><i class="fa "></i> In-Active </button>
+                            </center>
+                            <div class="content">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="datatable" >
+                                        <thead>
+                                            <tr>
+                                            <th></th>
+                                            <th>Name</th>
+                                            <th>Status</th>
+                                            <th>Settings</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 <?php
 $Query = "SELECT * FROM cwoptions WHERE type='useraccess' AND trash='0'";
 $Result = mysql_query($Query) or die(mysql_error());
@@ -48,36 +44,36 @@ $ArticleCat = $Row['category'];
 $ArticleId = $Row['id'];
 $ArticleId = OtarEncrypt($key,$ArticleId);
 ?>
-<tr class="odd gradeX">
-<td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
-<td><?php echo $Row['name']; ?></td>
-<td><?php echo StatusName($Row['active']); ?></td>
-<td class="center">
-<div class="btn-group">
-<button class="btn btn-default btn-xs" type="button">Actions</button>
-<button data-toggle="dropdown" class="btn btn-xs btn-primary dropdown-toggle" type="button"><span class="caret"></span>
-<span class="sr-only">Toggle Dropdown</span></button>
-<ul role="menu" class="dropdown-menu">
-<li><a href="/admin/UserAccess/<?php echo $ArticleId; ?>">Edit</a></li>
-</ul></div></td>
-</tr>
-<?php } ?>									
-</tbody>
-</table>							
-</div>
-</div>
-</div>				
-</div>
-</div>
-				      					
-
-      	</div>
-	
+                                            <tr class="odd gradeX">
+                                                <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
+                                                <td><?php echo $Row['name']; ?></td>
+                                                <td><?php echo StatusName($Row['active']); ?></td>
+                                                <td class="center">
+                                                    <div class="btn-group">
+                                                        <button class="btn btn-default btn-xs" type="button">Actions</button>
+                                                        <button data-toggle="dropdown" class="btn btn-xs btn-primary dropdown-toggle" type="button"><span class="caret"></span>
+                                                            <span class="sr-only">Toggle Dropdown</span>
+                                                        </button>
+                                                        <ul role="menu" class="dropdown-menu">
+                                                            <li><a href="/admin/UserAccess/<?php echo $ArticleId; ?>">Edit</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+<?php } ?>
+                                        </tbody>
+                                    </table>							
+                                </div>
+                            </div>
+                        </div>				
+                    </div>
+                </div>
+  	        </div>
+            <input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/UserAccess'>
+        </form> 	
 	</div> 
-	
 </div>
-<input type='hidden' name='redirect' value='<?php echo $Array["siteinfo"]["domain"]; ?>/admin/UserAccess'>
-</form>
+
 
 
 

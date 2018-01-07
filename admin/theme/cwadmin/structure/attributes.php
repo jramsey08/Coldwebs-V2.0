@@ -2,14 +2,9 @@
 <div class="page-head">
 <ol class="breadcrumb">
 <li><a href="/admin">Dashboard</a></li>
-<<<<<<< HEAD
 <li><a href="/admin/Ecommerce">E-Commerce</a></li>
-=======
-<li><a href="/Ecommerce">E-Commerce</a></li>
->>>>>>> origin/master
 <li class="active">Product Attributes</li>
 </ol></div>
-
 <div class="row">
 <div class="col-md-12">
 <div class="block-flat">
@@ -20,7 +15,6 @@
 </div>
 </h3>
 </div>
-
 <div class="content">
 <div class="table-responsive">
 <table class="table table-bordered" id="datatable" >
@@ -32,10 +26,9 @@
 <th>Settings</th>
 </tr>
 </thead>
-
 <tbody>
 <?php
-$Query = "SELECT * FROM cwoptions WHERE type='attribute' AND trash='0' ORDER BY id";
+$Query = "SELECT * FROM cwoptions WHERE type='attribute' AND trash='0'  AND webid='$WebId' ORDER BY id";
 $Result = mysql_query($Query) or die(mysql_error());
 while($Row = mysql_fetch_array($Result)){
 $Row = PbUnSerial($Row);
@@ -43,7 +36,7 @@ $Status = StatusName($Row['active']);
 $ArticleCat = $Row['category'];
 $ArticleId = $Row['id'];
 $ArticleId = OtarEncrypt($key,$ArticleId);
-$query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0'"; 
+$query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0' AND webid='$WebId'"; 
 $result = mysql_query($query) or die(mysql_error());
 $row = mysql_fetch_array($result);
 $row = PbUnSerial($row);
@@ -71,34 +64,22 @@ $row = PbUnSerial($row);
 </div>				
 </div>
 </div>
-				      					
-
       	</div>
-	
 	</div> 
-	
 </div>
-
-
-
-
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.ui/jquery-ui.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.jeditable/jquery.jeditable.mini.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/jquery.datatables.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/bootstrap-adapter/js/datatables.js"></script>
-
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery-ui.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable.mini.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.datatables.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>
 <script type="text/javascript">
       //Add dataTable Functions
-    
     $(document).ready(function(){
       //initialize the javascript
       //Basic Instance
       $("#datatable").dataTable();
-      
       //Search input style
       $('.dataTables_filter input').addClass('form-control').attr('placeholder','Search');
       $('.dataTables_length select').addClass('form-control');    
-          
        /* Formating function for row details */
         function fnFormatDetails ( oTable, nTr )
         {
@@ -108,10 +89,8 @@ $row = PbUnSerial($row);
             sOut += '<tr><td>Link to source:</td><td>Could provide a link here</td></tr>';
             sOut += '<tr><td>Extra info:</td><td>And any further details here (images etc)</td></tr>';
             sOut += '</table>';
-             
             return sOut;
         }
-       
         /*
          * Insert a 'details' column to the table
          */
@@ -119,15 +98,12 @@ $row = PbUnSerial($row);
         var nCloneTd = document.createElement( 'td' );
         nCloneTd.innerHTML = '<img class="toggle-details" src="images/plus.png" />';
         nCloneTd.className = "center";
-         
         $('#datatable2 thead tr').each( function () {
             this.insertBefore( nCloneTh, this.childNodes[0] );
         } );
-         
         $('#datatable2 tbody tr').each( function () {
             this.insertBefore(  nCloneTd.cloneNode( true ), this.childNodes[0] );
         } );
-         
         /*
          * Initialse DataTables, with no sorting on the 'details' column
          */
@@ -137,7 +113,6 @@ $row = PbUnSerial($row);
             ],
             "aaSorting": [[1, 'asc']]
         });
-         
         /* Add event listener for opening and closing details
          * Note that the indicator for showing which row is open is not controlled by DataTables,
          * rather it is done here
@@ -157,13 +132,10 @@ $row = PbUnSerial($row);
                 oTable.fnOpen( nTr, fnFormatDetails(oTable, nTr), 'details' );
             }
         });
-        
       $('.dataTables_filter input').addClass('form-control').attr('placeholder','Search');
       $('.dataTables_length select').addClass('form-control');   
-      
       /* Init DataTables */
       var aTable = $('#datatable3').dataTable();
-       
       /* Apply the jEditable handlers to the table */
       aTable.$('td').editable( 'js/jquery.datatables/examples/examples_support/editable_ajax.php', {
           "callback": function( sValue, y ) {

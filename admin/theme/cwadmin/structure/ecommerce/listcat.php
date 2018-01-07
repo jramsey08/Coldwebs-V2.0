@@ -3,23 +3,24 @@ $PageIds['article'] = $Article['id'];
 $PageIds = OtarEncrypt($key,$PageIds);
 ?>
 <div class="cl-mcont">
-<div class="page-head">
-<ol class="breadcrumb">
-<li><a href="/admin">Dashboard</a></li>
-<li><a href="/admin/Ecommerce">Ecommerce</a></li>
-<li><a href="/admin/Ecommerce/Category">Category</a></li>
-<li class="active"><?php echo $Article['content']['name']; ?></li>
-</ol></div>		
+    <div class="page-head">
+        <ol class="breadcrumb">
+            <li><a href="/admin">Dashboard</a></li>
+            <li><a href="/admin/Ecommerce">Ecommerce</a></li>
+            <li><a href="/admin/Ecommerce-Category">Category</a></li>
+            <li class="active"><?php echo $Article['name']; ?></li>
+        </ol>
+    </div>		
 
 
 <div class="row">
-<div class="col-sm-12 col-md-9">
-<div class="tab-container">
-<ul class="nav nav-tabs">
-<li class="active"><a href="#basic" data-toggle="tab">Basic Info</a></li>
-<li><a href="#gallery" data-toggle="tab">Gallery</a></li>
-</ul>
-<div class="tab-content">
+    <div class="col-sm-12 col-md-9">
+        <div class="tab-container">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#basic" data-toggle="tab">Basic Info</a></li>
+                <li><a href="#gallery" data-toggle="tab">Gallery</a></li>
+            </ul>
+            <div class="tab-content">
 
 <div class="tab-pane active cont" id="basic">
 <div class="row">
@@ -33,7 +34,7 @@ $PageIds = OtarEncrypt($key,$PageIds);
 <div class="form-group">
 <label class="col-sm-3 control-label">Title</label>
 <div class="col-sm-6">
-<input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $Article['content']['name']; ?>'>
+<input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $Article['name']; ?>'>
 </div></div><br><br>
 <div class="form-group">
 <label class="col-sm-3 control-label">Url</label>
@@ -46,21 +47,24 @@ $PageIds = OtarEncrypt($key,$PageIds);
 <div class="form-group">
 <label class="col-sm-6 control-label">Type</label>
 <div class="col-sm-6">
-<select class="form-control" name='cattype'>
-<option value='' <?php if($Article['content']['cattype'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
-<option value='0' <?php if($Article['content']['cattype'] == "0"){ echo "selected='selected'"; } ?>>Women</option>
-<option value='1' <?php if($Article['content']['cattype'] == "1"){ echo "selected='selected'"; } ?>>Men</option>
-<option value='2' <?php if($Article['content']['cattype'] == "2"){ echo "selected='selected'"; } ?>>Kids</option>
-<option value='3' <?php if($Article['content']['cattype'] == "3"){ echo "selected='selected'"; } ?>>Other</option>
-</select></div></div><br><br>
+<select class="form-control" name='category'>
+<option value='' <?php if($Article['category'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
+<?php
+$Query = "SELECT * FROM admin WHERE type='prodcat' AND trash='0' AND active='1' ORDER BY name";
+$Result = mysql_query($Query) or die(mysql_error());
+while($Row = mysql_fetch_array($Result)){
+    $Row = PbUnSerial($Row);
+?>
+<option value='<?php echo $Row["id"]; ?>' <?php if($Article['category'] == $Row["id"]){ echo "selected='selected'"; } ?>><?php echo $Row["name"]; ?></option>
+<?php } ?>
+</select></div></div><br><br><br><br>
 <div class="form-group">
-<label class="col-sm-3 control-label">Allow Comments</label>
+<label class="col-sm-6 control-label">Main Cat</label>
 <div class="col-sm-6">
-<select class="form-control" name='comment'>
-<option value='0' <?php if($Article['other']['comment'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
-<option value='0' <?php if($Article['other']['comment'] == "0"){ echo "selected='selected'"; } ?>>No</option>
-<option value='1' <?php if($Article['other']['comment'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
-</select></div></div>
+<select class="form-control" name='maincat'>
+<option value='0' <?php if($Article['content']['maincat'] == "0"){ echo "selected='selected'"; } ?>>No</option>
+<option value='1' <?php if($Article['content']['maincat'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
+</select></div></div><br><br>
 </div>
 <div class="col-sm-12 col-md-12">
 <div class="form-group">
@@ -112,7 +116,7 @@ $PageIds = OtarEncrypt($key,$PageIds);
 <th style="width:15%;" class="text-center"><strong>Action</strong></th>
 </tr></thead>
 <tbody class="no-border-y">
-<?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND trash='0' AND active='1' ORDER BY list";
+<?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY list";
 $result = mysql_query($query) or die(mysql_error());
 while($row = mysql_fetch_array($result)){ ?>
 <tr>
@@ -125,8 +129,6 @@ while($row = mysql_fetch_array($result)){ ?>
 </tbody></table>
 </div></div></div></div>
 </div>
-
-
 
 
 
@@ -272,9 +274,8 @@ EmbedCode
 
 
 
-<input type="hidden" name="category" value="self">
 <input type="hidden" name="imgtype" value="prodcat">
-<input type="hidden" name="redir" value="admin/Ecommerce/Category">
+<input type="hidden" name="redir" value="admin/Ecommerce-Category">
 <input type="hidden" name="userid" value="<?php echo $Array['userinfo']['id']; ?>">
 <input type="hidden" name="img" value="<?php echo $Article['content']['img']; ?>">
 <input type="hidden" name="PageIds" value="<?php echo $PageIds; ?>">

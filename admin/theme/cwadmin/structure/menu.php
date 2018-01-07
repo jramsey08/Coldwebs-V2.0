@@ -1,105 +1,122 @@
 <div class="cl-mcont">
-<div class="page-head">
-<ol class="breadcrumb">
-<li><a href="/admin">Dashboard</a></li>
-<li class="active">Website Menu</li>
-</ol></div>
+    <div class="page-head">
+        <ol class="breadcrumb">
+            <li><a href="/admin">Dashboard</a></li>
+            <li class="active">Website Menu</li>
+        </ol>
+    </div>
 
-<div class="row">
-<div class="col-md-12">
-<div class="block-flat">
-<div class="header">							
-<h3>Website Menu
-<div align="right">
-<button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
-</div>
-</h3>			
-</div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="block-flat">
+                <div class="header">							
+                    <h3>Website Menu
+                        <div align="right">
+                            <button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
+                        </div>
+                    </h3>			
+                </div>
 
 
-<form name='editarticle' id='edittable' method='post'><br>
-<center>
-<button type='submit' formaction="/Process/EditArticle/Delete" style="background-color: red; color: white;" class="btn btn-trans"><i class="fa "></i> Delete </button>
-<button type='submit' formaction="/Process/EditArticle/Active" style="background-color: green; color: white;" class="btn btn-trans"><i class="fa "></i> Activate </button>
-<button type='submit' formaction="/Process/EditArticle/Inactive" style="background-color: grey; color: white;" class="btn btn-trans"><i class="fa "></i> In-Active </button>
-</center>
+                <form name='editarticle' id='edittable' method='post'><br>
+                    <center>
+                        <button type='submit' formaction="/Process/EditArticle/Delete" style="background-color: red; color: white;" class="btn btn-trans"><i class="fa "></i> Delete </button>
+                        <button type='submit' formaction="/Process/EditArticle/Active" style="background-color: green; color: white;" class="btn btn-trans"><i class="fa "></i> Activate </button>
+                        <button type='submit' formaction="/Process/EditArticle/Inactive" style="background-color: grey; color: white;" class="btn btn-trans"><i class="fa "></i> In-Active </button>
+                    </center>
 
-<div class="content">
-<div class="table-responsive">
-<table class="table table-bordered" id="datatable" >
-<thead>
-<tr>
-<th></th>
-<th>Name</th>
-<th>Order</th>
-<th>Category</th>
-<th>Status</th>
-<th>Settings</th>
-</tr>
-</thead>
+                    <div class="content">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="datatable" >
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Name</th>
+                                        <th>Order</th>
+                                        <th>Category</th>
+                                        <th>Status</th>
+                                        <th>Settings</th>
+                                    </tr>
+                                </thead>
 
-<tbody>
+                                <tbody>
 <?php
-$Query = "SELECT * FROM articles WHERE type='menu' AND trash='0' ORDER BY list ASC"; 
+$Query = "SELECT * FROM articles WHERE type='menu' AND trash='0' AND webid='$WebId' ORDER BY list"; 
 $Result = mysql_query($Query) or die(mysql_error());
 while($Row = mysql_fetch_array($Result)){
-$Row = PbUnSerial($Row);
-$ArticleCat = $Row['category'];
-$ArticleId = $Row['id'];
-$ArticleId = OtarEncrypt($key,$ArticleId);
-$query = "SELECT * FROM articles WHERE id='$ArticleCat' AND type='menu' AND active='1' AND trash='0'"; 
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
-$row = PbUnSerial($row); ?>
-<tr class="odd gradeX">
-<td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
-<td><?php echo $Row['content']['name']; ?></td>
-<td><?php echo $Row['list']; ?></td>
-<td><?php echo $row['content']['name']; ?></td>
-<td><?php echo StatusName($Row['active']); ?></td>
-<td class="center"> 
-<div class="btn-group">
-<button class="btn btn-default btn-xs" type="button">Actions</button>
-<button data-toggle="dropdown" class="btn btn-xs btn-primary dropdown-toggle" type="button"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>
-<ul role="menu" class="dropdown-menu">
-<li><a href="/admin/Menu/<?php echo $ArticleId; ?>">Edit</a></li>
-<li><a href="#">Copy</a></li>
-<li><a href="#">Details</a></li>
-<li class="divider"></li>
-<li><a href="/Process/Delete/Articles/<?php echo $ArticleId; ?>">Remove</a></li>
-</ul></div></td>
-</tr>
+    $Row = PbUnSerial($Row);
+    $ArticleCat = $Row['category'];
+    $ArticleId = $Row['id'];
+    $ArticleId = OtarEncrypt($key,$ArticleId);
+    $query = "SELECT * FROM articles WHERE id='$ArticleCat' AND type='menu' AND active='1' AND trash='0' AND webid='$WebId'"; 
+    $result = mysql_query($query) or die(mysql_error());
+    $row = mysql_fetch_array($result);
+    $row = PbUnSerial($row);
+?>
+                                    <tr class="odd gradeX">
+                                        <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
+                                        <td><?php echo $Row['name']; ?></td>
+                                        <td><input style="border:none; background-color: inherit;" placeholder='Enter Order' type='text' onkeypress='validate(event)' value='<?php echo $Row['list']; ?>'id="bg-menu-list-<?php echo $Row['id']; ?>" onchange="CwAutoSave(<?php echo $Row['id']; ?>)"></td>
+                                        <td><?php echo $row['name']; ?></td>
+                                        <td><?php echo StatusName($Row['active']); ?></td>
+                                        <td class="center"> 
+                                            <div class="btn-group">
+                                                <button class="btn btn-default btn-xs" type="button">Actions</button>
+                                                <button data-toggle="dropdown" class="btn btn-xs btn-primary dropdown-toggle" type="button">
+                                                    <span class="caret"></span>
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <ul role="menu" class="dropdown-menu">
+                                                    <li><a href="/admin/Menu/<?php echo $ArticleId; ?>">Edit</a></li>
+                                                    <li class="divider"></li>
+                                                    <li><a href="/Process/Delete/Articles/<?php echo $ArticleId; ?>">Remove</a></li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
 <?php } ?>									
-</tbody>
-</table>							
-</div>
-</div>
-</div>				
-</div>
-</div>
-				      					
-
-      	</div>
-	
-	</div> 
+                                </tbody>
+                            </table>							
+                        </div>
+                    </div>
+                </div>				
+            </div>
+        </div>
+    </div>
+</div> 
 	
 </div>
-<input type='hidden' name='redirect' value='<?php echo $Array["siteinfo"]["domain"]; ?>/admin/Menu'>
+<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/Menu'>
 </form>
 
+<script>
+<?php $ListDomain = "http://www.$_SERVER[HTTP_HOST]"; ?>
+function validate(evt) {
+  var theEvent = evt || window.event;
+  var key = theEvent.keyCode || theEvent.which;
+  key = String.fromCharCode( key );
+  var regex = /[0-9]|\./;
+  if( !regex.test(key) ) {
+    theEvent.returnValue = false;
+    if(theEvent.preventDefault) theEvent.preventDefault();
+  }
+}
+function CwAutoSave(ListId){
+    var X = "bg-menu-list-" + ListId;
+    var List = document.getElementById(X);
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("GET", "<?php echo $ListDomain; ?>./api/cwautosave/request.php?id=" + ListId + "&type=menu&list=" + List.value, true);
+    xhttp.send();
+}
+</script>
 
 
-<<<<<<< HEAD
+
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery-ui.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript" src="<?php echo "$THEME/header/js/datatables.min.js" ?>"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>
-=======
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.ui/jquery-ui.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.jeditable/jquery.jeditable.mini.js"></script>
-<script type="text/javascript" src="<?php echo "$THEME/header/js/datatables.min.js" ?>"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/bootstrap-adapter/js/datatables.js"></script>
->>>>>>> origin/master
+
 
 <script type="text/javascript">
       //Add dataTable Functions
@@ -196,15 +213,11 @@ $row = PbUnSerial($row); ?>
 </script>
 
 
-<<<<<<< HEAD
+
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-multiselect.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.multi-select.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.quicksearch.js"></script>
-=======
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.multiselect/js/bootstrap-multiselect.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.multiselect/js/jquery.multi-select.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.quicksearch/jquery.quicksearch.js"></script>
->>>>>>> origin/master
+
 
 			<script type="text/javascript">
 			    $(document).ready(function() {

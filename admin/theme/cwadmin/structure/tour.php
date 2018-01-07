@@ -82,4 +82,4 @@
 	
 </div>
 
-<script src="http://condorthemes.com/flatdream/js/intro.js/intro.js" type="text/javascript"></script>
+<script src="/admin/theme/cwadmin/header/js/intro.js" type="text/javascript"></script>

@@ -6,33 +6,25 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<link rel="shortcut icon" href="images/icon.png">
-
 	<title>Flat Dream</title>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,400italic,700,800' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Raleway:300,200,100' rel='stylesheet' type='text/css'>
-
 	<!-- Bootstrap core CSS -->
 	<link href="js/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="js/jquery.gritter/css/jquery.gritter.css" />
 	<link rel="stylesheet" href="fonts/font-awesome-4/css/font-awesome.min.css">
-
 	<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!--[if lt IE 9]>
 	  <script src="../../assets/js/html5shiv.js"></script>
 	  <script src="../../assets/js/respond.min.js"></script>
 	<![endif]-->
 	<link rel="stylesheet" type="text/css" href="js/jquery.nanoscroller/nanoscroller.css" />
-
   <link rel="stylesheet" type="text/css" href="js/jquery.select2/select2.css" />
 <link rel="stylesheet" type="text/css" href="js/bootstrap.wysihtml5/dist/bootstrap3-wysihtml5.min.css"></link>
-  
 	<link href="css/style.css" rel="stylesheet" />	
-    
 </head>
 <body class="animated">
-
 <div id="cl-wrapper">
-
   <div class="cl-sidebar">
     <div class="cl-toggle"><i class="fa fa-bars"></i></div>
     <div class="cl-navblock">
@@ -137,7 +129,6 @@
                 <li  ><a href="pages-code-editor.html">Code Editor</a></li>
               </ul>
             </li>
-
           </ul>
         </div>
       </div>
@@ -219,12 +210,9 @@
           </li>
           <li class="button"><a class="toggle-menu menu-right push-body" href="javascript:;" class="speech-button"><i class="fa fa-comments"></i></a></li>				
         </ul>
-
       </div><!--/.nav-collapse animate-collapse -->
     </div>
   </div>
-  
-    
 	<div class="cl-mcont aside">		<div class="page-aside email">
       <div class="">
         <div class="content">
@@ -243,7 +231,6 @@
             <li><a href="#"><i class="fa fa-star-o"></i> Tags</a></li>
             <li><a href="#"><i class="fa fa-trash-o"></i> Trash</a></li>
           </ul>
-          
           <p class="title">Labels</p>
           <ul class="nav nav-pills nav-stacked ">
             <li><a href="#"><span class="label label1 pull-right">0</span> Inbox</a></li>
@@ -292,9 +279,7 @@
     </div>
 	</div> 
 	</div>
-	
 	</div> 
-	
 </div>
 <!-- Right Chat-->
 <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right side-chat">
@@ -312,20 +297,17 @@
       <li class="online"><a href="#"><i class="fa fa-circle-o"></i> Richard Avedon</a></li>
       <li class="busy"><a href="#"><i class="fa fa-circle-o"></i> Allen Collins</a></li>
     </ul>
-    
     <p class="title">Friends</p>
     <ul class="nav nav-pills nav-stacked contacts">
       <li class="online"><a href="#"><i class="fa fa-circle-o"></i> Jaime Garzon</a></li>
       <li class="outside"><a href="#"><i class="fa fa-circle-o"></i> Dave Grohl</a></li>
       <li><a href="#"><i class="fa fa-circle-o"></i> Victor Jara</a></li>
     </ul>   
-    
     <p class="title">Work</p>
     <ul class="nav nav-pills nav-stacked contacts">
       <li><a href="#"><i class="fa fa-circle-o"></i> Ansel Adams</a></li>
       <li><a href="#"><i class="fa fa-circle-o"></i> Gustavo Cerati</a></li>
     </ul>
-    
   </div>
   <div id="chat-box">
     <div class="header">
@@ -363,15 +345,15 @@
     </div>
   </div>
 </nav>
-  
-	<script src="js/jquery.js"></script>
-	<script src="js/jquery.cookie/jquery.cookie.js"></script> 
-  <script src="js/jquery.pushmenu/js/jPushMenu.js"></script>
-	<script type="text/javascript" src="js/jquery.nanoscroller/jquery.nanoscroller.js"></script>
-	<script type="text/javascript" src="js/jquery.sparkline/jquery.sparkline.min.js"></script>
-  <script type="text/javascript" src="js/jquery.ui/jquery-ui.js" ></script>
-	<script type="text/javascript" src="js/jquery.gritter/js/jquery.gritter.js"></script>
-	<script type="text/javascript" src="js/behaviour/core.js"></script>
+
+<script src="/admin/theme/cwadmin/header/js/jquery.js"></script>
+<script src="/admin/theme/cwadmin/header/js/jquery.cookie.js"></script> 
+<script src="/admin/theme/cwadmin/header/js/jPushMenu.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.nanoscroller.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.sparkline.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery-ui.js" ></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.gritter.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/core.js"></script>
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
@@ -386,7 +368,6 @@
       right:0;
       margin-right:-109px;
     }
-    
     #color-switcher .toggle{
       cursor:pointer;
       font-size:15px;
@@ -400,7 +381,6 @@
       left:-24px;
       top:22px;
     }
-    
     #color-switcher p{color: rgba(255, 255, 255, 0.6);font-size:12px;margin-bottom:3px;}
     #color-switcher .palette{padding:1px;}
     #color-switcher .color{width:15px;height:15px;display:inline-block;cursor:pointer;}
@@ -433,14 +413,11 @@
     </div>
     <div class="toggle"><i class="fa fa-angle-left"></i></div>
   </div>
-
   <script type="text/javascript">
     var link = $('link[href="css/style.css"]');
-    
     if($.cookie("css")) {
       link.attr("href",'css/skin-' + $.cookie("css") + '.css');
     }
-    
     $(function(){
       $("#color-switcher .toggle").click(function(){
         var s = $(this).parent();
@@ -450,7 +427,6 @@
           s.animate({'margin-right':'0'},400).toggleClass("open");
         }
       });
-      
       $("#color-switcher .color").click(function(){
         var color = $(this).data("color");
         $("body").fadeOut(function(){
@@ -461,24 +437,19 @@
         });
       });
     });
-  </script> <script type="text/javascript" src="js/bootstrap.wysihtml5/dist/wysihtml5-0.3.0.js"></script>
-<script type="text/javascript" src="js/bootstrap.wysihtml5/dist/bootstrap3-wysihtml5.all.min.js"></script>
-<script src="js/jquery.select2/select2.min.js" type="text/javascript"></script>
-
-
+  </script> <script type="text/javascript" src="/admin/theme/cwadmin/header/js/wysihtml5-0.3.0.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap3-wysihtml5.all.min.js"></script>
+<script src="/admin/theme/cwadmin/header/js/select2.min.js" type="text/javascript"></script>
   <script type="text/javascript">
     $(document).ready(function(){
       //initialize the javascript
-      
       $('#some-textarea').wysihtml5({"stylesheets": ["js/bootstrap.wysihtml5/styles/email-editor.css"]});
       $(".tags").select2({tags: 0,width: '100%'});
     });
   </script>
-  
-  
-<script type="text/javascript" src="js/jquery.flot/jquery.flot.js"></script>
-<script type="text/javascript" src="js/jquery.flot/jquery.flot.pie.js"></script>
-<script type="text/javascript" src="js/jquery.flot/jquery.flot.resize.js"></script>
-<script type="text/javascript" src="js/jquery.flot/jquery.flot.labels.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.flot.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.flot.pie.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.flot.resize.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.flot.labels.js"></script>
 </body>
 </html>

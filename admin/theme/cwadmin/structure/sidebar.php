@@ -38,7 +38,7 @@
 
 <tbody>
 <?php
-$Query = "SELECT * FROM articles WHERE type='sidebar' AND trash='0'";
+$Query = "SELECT * FROM articles WHERE type='sidebar' AND trash='0' AND webid='$WebId'";
 $Result = mysql_query($Query) or die(mysql_error());
 while($Row = mysql_fetch_array($Result)){
 $Row = PbUnSerial($Row);
@@ -78,10 +78,10 @@ if($Row['hits'] == ""){
 
 
 
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.ui/jquery-ui.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.jeditable/jquery.jeditable.mini.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery-ui.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript" src="<?php echo "$THEME/header/js/datatables.min.js" ?>"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/bootstrap-adapter/js/datatables.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>
 
 <script type="text/javascript">
       //Add dataTable Functions

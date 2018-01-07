@@ -2,28 +2,25 @@
 <div class="page-head">
 <ol class="breadcrumb">
 <li><a href="/admin">Dashboard</a></li>
-<li class="active">Website Categories</li>
+<li class="active">Categories</li>
 </ol></div>
-
 <div class="row">
 <div class="col-md-12">
 <div class="block-flat">
 <div class="header">							
-<h3>Website Categories
+<h3>Categories
 <div align="right">
 <button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
+<button type="button" onclick="window.location.href='./Trash/<?php echo $_GET['url']; ?>/'" class="btn btn-flat"><i class="fa fa-trash"></i> View Trash</button>
 </div>
 </h3>			
 </div>
-
-
 <form name='editarticle' id='edittable' method='post'><br>
 <center>
 <button type='submit' formaction="/Process/EditArticle/Delete" style="background-color: red; color: white;" class="btn btn-trans"><i class="fa "></i> Delete </button>
 <button type='submit' formaction="/Process/EditArticle/Active" style="background-color: green; color: white;" class="btn btn-trans"><i class="fa "></i> Activate </button>
 <button type='submit' formaction="/Process/EditArticle/Inactive" style="background-color: grey; color: white;" class="btn btn-trans"><i class="fa "></i> In-Active </button>
 </center>
-
 <div class="content">
 <div class="table-responsive">
 <table class="table table-bordered" id="datatable" >
@@ -36,39 +33,42 @@
 <th>Settings</th>
 </tr>
 </thead>
-
 <tbody>
 <?php
 $Count = "";
-$Query = "SELECT * FROM articles WHERE category='self' AND type='category' AND trash='0'"; 
+$Query = "SELECT * FROM articles WHERE category='self' AND type='category' AND trash='0' AND webid='$WebId'";
 $Result = mysql_query($Query) or die(mysql_error());
 while($Row = mysql_fetch_array($Result)){
-$Row = PbUnSerial($Row);
-$Count = "0";
-$ArticleCat = $Row['id'];
-$ArticleId = $Row['id'];
-$ArticleId = OtarEncrypt($key,$ArticleId);
-if($Cw_Multiple_Cat['active'] == "1"){
-    $query = "SELECT * FROM articles WHERE category LIKE '%-" . $ArticleCat. "-%' AND trash='0'";
-}else{
-    $query = "SELECT * FROM articles WHERE category='$ArticleCat' AND trash='0'";
-}
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$Count = $Count + 1; } ?>
+    $Row = PbUnSerial($Row);
+    $Count = "0";
+    $ArticleCat = $Row['category'];
+    $ArticleId = $Row['id'];
+    $ArticleId = OtarEncrypt($key,$ArticleId);
+    if($Cw_Multiple_Cat['active'] == "1"){ 
+        $query = "SELECT * FROM articles WHERE category LIKE '%-" . $ArticleCat. "-%' AND type LIKE 'post-%' AND trash='0' AND webid='$WebId'";
+    }else{
+        $query = "SELECT * FROM articles WHERE category='$ArticleCat' AND type LIKE 'post-%' AND trash='0' AND webid='$WebId'";
+    }
+    $result = mysql_query($query) or die(mysql_error());
+    while($row = mysql_fetch_array($result)){
+        $Count = $Count + 1; }
+?>
 <tr class="odd gradeX">
 <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
-<td><?php echo $Row['content']['name']; ?></td>
+<td><?php echo $Row['name']; ?></td>
 <td><?php echo $Count; ?></td>
+<?php if($Row['active'] != "1"){ ?>
+<td><a href="<?php echo "/CwPreview/$Row[id]"; ?>" target="_blank">Preview</a></td>
+<?php }else{ ?>
 <td><?php echo StatusName($Row['active']); ?></td>
+<?php } ?>
 <td class="center"> 
 <div class="btn-group">
 <button class="btn btn-default btn-xs" type="button">Actions</button>
-<button data-toggle="dropdown" class="btn btn-xs btn-primary dropdown-toggle" type="button"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>
+<button data-toggle="dropdown" class="btn btn-xs btn-primary dropdown-toggle" type="button">
+<span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>
 <ul role="menu" class="dropdown-menu">
 <li><a href="/admin/Category/<?php echo $ArticleId; ?>">Edit</a></li>
-<li><a href="#">Copy</a></li>
-<li><a href="#">Details</a></li>
 <li class="divider"></li>
 <li><a href="/Process/Delete/Articles/<?php echo $ArticleId; ?>">Remove</a></li>
 </ul></div></td>
@@ -81,27 +81,14 @@ $Count = $Count + 1; } ?>
 </div>				
 </div>
 </div>
-				      					
-
       	</div>
-	
 	</div> 
-	
 </div>
-<input type='hidden' name='redirect' value='<?php echo $Array["siteinfo"]["domain"]; ?>/admin/Category'>
+<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/Category'>
 </form>
-
-
-
-<<<<<<< HEAD
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.datatables.min.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>
-=======
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.jeditable/jquery.jeditable.mini.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/jquery.datatables.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/bootstrap-adapter/js/datatables.js"></script>
->>>>>>> origin/master
 <script type="text/javascript">
       //Add dataTable Functions
       var functions = $('<div class="btn-group">
@@ -118,16 +105,13 @@ $Count = $Count + 1; } ?>
         $(this).html("");
         functions.clone().appendTo(this);
       });
-    
     $(document).ready(function(){
       //initialize the javascript
       //Basic Instance
       $("#datatable").dataTable();
-      
       //Search input style
       $('.dataTables_filter input').addClass('form-control').attr('placeholder','Search');
       $('.dataTables_length select').addClass('form-control');    
-          
        /* Formating function for row details */
         function fnFormatDetails ( oTable, nTr )
         {
@@ -137,10 +121,8 @@ $Count = $Count + 1; } ?>
             sOut += '<tr><td>Link to source:</td><td>Could provide a link here</td></tr>';
             sOut += '<tr><td>Extra info:</td><td>And any further details here (images etc)</td></tr>';
             sOut += '</table>';
-             
             return sOut;
         }
-       
         /*
          * Insert a 'details' column to the table
          */
@@ -148,15 +130,12 @@ $Count = $Count + 1; } ?>
         var nCloneTd = document.createElement( 'td' );
         nCloneTd.innerHTML = '<img class="toggle-details" src="http://condorthemes.com/flatdream/images/plus.png" />';
         nCloneTd.className = "center";
-         
         $('#datatable2 thead tr').each( function () {
             this.insertBefore( nCloneTh, this.childNodes[0] );
         } );
-         
         $('#datatable2 tbody tr').each( function () {
             this.insertBefore(  nCloneTd.cloneNode( true ), this.childNodes[0] );
         } );
-         
         /*
          * Initialse DataTables, with no sorting on the 'details' column
          */
@@ -166,7 +145,6 @@ $Count = $Count + 1; } ?>
             ],
             "aaSorting": [[1, 'asc']]
         });
-         
         /* Add event listener for opening and closing details
          * Note that the indicator for showing which row is open is not controlled by DataTables,
          * rather it is done here
@@ -186,12 +164,10 @@ $Count = $Count + 1; } ?>
                 oTable.fnOpen( nTr, fnFormatDetails(oTable, nTr), 'details' );
             }
         } );
-        
       $('.dataTables_filter input').addClass('form-control').attr('placeholder','Search');
       $('.dataTables_length select').addClass('form-control');    
       /* Init DataTables */
       var oTable = $('#datatable3').dataTable();
-       
       /* Apply the jEditable handlers to the table */
       oTable.$('td').editable( 'http://condorthemes.com/flatdream/js/jquery.datatables/examples/examples_support/editable_ajax.php', {
           "callback": function( sValue, y ) {
@@ -208,14 +184,10 @@ $Count = $Count + 1; } ?>
       });
     });
 </script>
-
-
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/masonry.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.magnific-popup/dist/jquery.magnific-popup.min.js"></script>
-
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/masonry.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.magnific-popup.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
-      
       //Initialize Mansory
       var $container = $('.gallery-cont');
       // initialize
@@ -223,22 +195,18 @@ $Count = $Count + 1; } ?>
         columnWidth: 0,
         itemSelector: '.item'
       });
-      
       //Resizes gallery items on sidebar collapse
       $("#sidebar-collapse").click(function(){
           $container.masonry();      
       });
-      
       //MagnificPopup for images zoom
       $('.image-zoom').magnificPopup({ 
         type: 'image',
         mainClass: 'mfp-with-zoom', // this class is for CSS animation below
         zoom: {
         enabled: true, // By default it's false, so don't forget to enable it
-
         duration: 300, // duration of the effect, in milliseconds
         easing: 'ease-in-out', // CSS transition easing function 
-
         // The "opener" function should return the element from which popup will be zoomed in
         // and to which popup will be scaled down
         // By defailt it looks for an image tag:
@@ -249,8 +217,6 @@ $Count = $Count + 1; } ?>
           return parent;
         }
         }
-
       });
-
     });
 </script>

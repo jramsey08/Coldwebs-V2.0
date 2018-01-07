@@ -72,22 +72,17 @@ while($Row = mysql_fetch_array($Result)){
 	</div> 
 	
 </div>
-<input type='hidden' name='redirect' value='<?php echo $Array["siteinfo"]["domain"]; ?>/admin/CwAccess'>
+<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/CwAccess'>
 </form>
 
 
 
-<<<<<<< HEAD
+
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery-ui.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript" src="<?php echo "$THEME/header/js/datatables.min.js" ?>"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>
-=======
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.ui/jquery-ui.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.jeditable/jquery.jeditable.mini.js"></script>
-<script type="text/javascript" src="<?php echo "$THEME/header/js/datatables.min.js" ?>"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/bootstrap-adapter/js/datatables.js"></script>
->>>>>>> origin/master
+
 
 <script type="text/javascript">
       //Add dataTable Functions
@@ -184,9 +179,9 @@ while($Row = mysql_fetch_array($Result)){
 </script>
 
 
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.multiselect/js/bootstrap-multiselect.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.multiselect/js/jquery.multi-select.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.quicksearch/jquery.quicksearch.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-multiselect.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.multi-select.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.quicksearch.js"></script>
 
 			<script type="text/javascript">
 			    $(document).ready(function() {

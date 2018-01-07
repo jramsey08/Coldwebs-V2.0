@@ -2,16 +2,17 @@
 <div class="page-head">
 <ol class="breadcrumb">
 <li><a href="/admin">Dashboard</a></li>
-<li class="active">Website Portfolio</li>
+<li class="active">Portfolio Posts</li>
 </ol></div>
 
 <div class="row">
 <div class="col-md-12">
 <div class="block-flat">
 <div class="header">							
-<h3>Website Portfolio
+<h3>Portfolio Posts
 <div align="right">
 <button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
+<button type="button" onclick="window.location.href='./Trash/<?php echo $_GET['url']; ?>/'" class="btn btn-flat"><i class="fa fa-trash"></i> View Trash</button>
 </div>
 </h3>			
 </div><br>
@@ -40,30 +41,33 @@
 
 <tbody>
 <?php
-$Query = "SELECT * FROM articles WHERE category!='self' AND category!='' AND type!='menu' AND type='portfolio' AND type!='pending' AND trash='0'"; 
+$Query = "SELECT * FROM articles WHERE type='post-portfolio' AND trash='0' AND webid='$WebId'";
 $Result = mysql_query($Query) or die(mysql_error());
 while($Row = mysql_fetch_array($Result)){
 $Row = PbUnSerial($Row);
 $ArticleCat = $Row['category'];
 $ArticleId = $Row['id'];
 $ArticleId = OtarEncrypt($key,$ArticleId);
-$query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0'"; 
+$query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0' AND webid='$WebId'"; 
 $result = mysql_query($query) or die(mysql_error());
 $row = mysql_fetch_array($result);
 $row = PbUnSerial($row); ?>
 <tr class="odd gradeX">
 <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
-<td><?php echo $Row['content']['name']; ?></td>
+<td><?php echo $Row['name']; ?></td>
 <td><?php echo $Row['content']['hits']; ?></td>
-<td><?php echo $row['content']['name']; ?></td>
+<td><?php echo $row['name']; ?></td>
+<?php if($Row['active'] != "1"){ ?>
+<td><a href="<?php echo "/CwPreview/$Row[id]"; ?>" target="_blank">Preview</a></td>
+<?php }else{ ?>
 <td><?php echo StatusName($Row['active']); ?></td>
+<?php } ?>
 <td class="center">
 <div class="btn-group">
 <button class="btn btn-default btn-xs" type="button">Actions</button>
 <button data-toggle="dropdown" class="btn btn-xs btn-primary dropdown-toggle" type="button"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>
 <ul role="menu" class="dropdown-menu">
 <li><a href="/admin/Portfolio/<?php echo $ArticleId; ?>">Edit</a></li>
-<li><a href="/Process/Copy/Portfolio/<?php echo OtarEncrypt($key,$ArticleId); ?>">Copy</a></li>
 <li class="divider"></li>
 <li><a href="/Process/Delete/Portfolio/<?php echo $ArticleId; ?>">Remove</a></li>
 </ul></div></td>
@@ -83,23 +87,16 @@ $row = PbUnSerial($row); ?>
 	</div> 
 	
 </div>
-<input type='hidden' name='redirect' value='<?php echo $Array["siteinfo"]["domain"]; ?>/admin/Portfolio'>
+<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/Portfolio'>
 </form>
 
 
 
-<<<<<<< HEAD
+
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery-ui.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript" src="<?php echo "$THEME/header/js/datatables.min.js" ?>"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>
-=======
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.ui/jquery-ui.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.jeditable/jquery.jeditable.mini.js"></script>
-<script type="text/javascript" src="<?php echo "$THEME/header/js/datatables.min.js" ?>"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/bootstrap-adapter/js/datatables.js"></script>
->>>>>>> origin/master
-
 <script type="text/javascript">
       //Add dataTable Functions
     

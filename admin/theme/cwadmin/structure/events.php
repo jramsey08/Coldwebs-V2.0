@@ -41,7 +41,7 @@
 
 <tbody>
 <?php
-$Query = "SELECT * FROM articles WHERE category!='self' AND category!='x' AND category!='' AND type='event' AND trash='0'";
+$Query = "SELECT * FROM articles WHERE category!='self' AND category!='x' AND category!='' AND type='post-event' AND trash='0' AND webid='$WebId'";
 $Result = mysql_query($Query) or die(mysql_error());
 while($Row = mysql_fetch_array($Result)){
 $Row = PbUnSerial($Row);
@@ -51,7 +51,7 @@ $ArticleId = OtarEncrypt($key,$ArticleId);
 ?>
 <tr class="odd gradeX">
 <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
-<td><?php echo $Row['content']['name']; ?></td>
+<td><?php echo $Row['name']; ?></td>
 <td><?php echo date("M d, Y",$Row[date]); ?></td>
 <td><?php echo $Row['other']['venu']; ?></td>
 <?php if($Row['active'] != "1"){ ?>
@@ -82,7 +82,7 @@ $ArticleId = OtarEncrypt($key,$ArticleId);
 	</div> 
 	
 </div>
-<input type='hidden' name='redirect' value='<?php echo $Array["siteinfo"]["domain"]; ?>/admin/Events'>
+<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/Events'>
 </form>
 
 

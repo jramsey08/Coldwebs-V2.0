@@ -12,10 +12,7 @@
 <ul class="nav nav-tabs">
 <li class="active"><a href="#basic" data-toggle="tab">Basic Info</a></li>
 <li><a href="#gallery" data-toggle="tab">Extra Images</a></li>
-<<<<<<< HEAD
 <li><a href="#uploads" data-toggle="tab">Uploads</a></li>
-=======
->>>>>>> origin/master
 </ul>
 
 
@@ -67,7 +64,7 @@
 <label class="col-sm-3 control-label">Ad Location</label>
 <div class="col-sm-6">
 <select class="form-control" name='location'>
-<<<<<<< HEAD
+
 <option value='any' <?php if($Article['location'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
 <option value='x' <?php if($Article['location'] == "x"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Any*</option>
 <option value='1' <?php if($Article['location'] == "1"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Top Banner</option>
@@ -75,15 +72,7 @@
 <option value='3' <?php if($Article['location'] == "3"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Sidebar</option>
 <option value='4' <?php if($Article['location'] == "4"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Footer</option>
 <option value='x' <?php if($Article['location'] != "" AND $Loc_Find != "1"){ echo "selected='selected'"; } ?>>Manual</option>
-=======
-<option value='any' <?php if($Article['location'] == "any"){ echo "selected='selected'"; } ?>>Select Below</option>
-<option value='x' <?php if($Article['location'] == "x"){ echo "selected='selected'"; } ?>>Any*</option>
-<option value='1' <?php if($Article['location'] == "1"){ echo "selected='selected'"; } ?>>Top Banner</option>
-<option value='2' <?php if($Article['location'] == "2"){ echo "selected='selected'"; } ?>>Body</option>
-<option value='3' <?php if($Article['location'] == "3"){ echo "selected='selected'"; } ?>>Sidebar</option>
-<option value='4' <?php if($Article['location'] == "4"){ echo "selected='selected'"; } ?>>Footer</option>
-<option value='x' <?php if($Article['location'] == "x"){ echo "selected='selected'"; } ?>>Manual</option>
->>>>>>> origin/master
+
 </select></div></div>
 </div>
 <br><br>
@@ -181,24 +170,22 @@
 
 
 
-<<<<<<< HEAD
-<div class="tab-pane cont" id="uploads">
-<div class="col-sm-12 col-md-12">
-<div class="header"><h3>Media Uploader</h3>
-</div></div>
-<div class="row">
-<div class="col-sm-12 col-md-12">
-<?php if($Article['id'] == ""){
-    $Rand = rand("999","9999999");
-}
-?>
-<center>
-<iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $Rand; ?>&id=<?php echo $Article['id']; ?>' scrolling='no' frameborder="0" height="600" width="720" ></iframe></center>
-</div></div>
-</div>
-=======
 
->>>>>>> origin/master
+<div class="tab-pane cont" id="uploads">
+    <div class="col-sm-12 col-md-12">
+        <div class="header">
+            <h3>Media Uploader</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <?php $GalRand = "Galupload-" . RandomCode("50"); ?>
+            <input type="hidden" name='galrand' value='<?php echo $GalRand; ?>'>
+            <iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' scrolling='no' frameborder="0" height="600" width="720" ></iframe>
+        </div>
+    </div>
+</div>
+
 
 
 
@@ -209,45 +196,33 @@
 <div class="col-sm-12 col-md-12">
 <div class="header"><h3>Extra Images</h3>
 </div></div>
-<<<<<<< HEAD
+
 
 <div class="row">
 <div class="col-md-12">
-=======
-<div class="row">
-<div class="col-sm-6 col-md-6">
-<div class="content">
-<div class="form-group">
-<label class="col-sm-3 control-label">Upload Images</label>
-<div class="col-sm-6">
-<div class="fileinput fileinput-new" data-provides="fileinput">
-<span class="btn btn-primary btn-file">
-<span class="fileinput-new">Select file(s)</span>
-<span class="fileinput-exists">Change</span><input type="file" multiple="" name="gallery[]"></span>
-<a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">&times;</a>
-</div></div></div></div></div></div>
-<div class="row">
-<div class="col-md-12">
-<div class="header"><h3>View Images</h3></div>
->>>>>>> origin/master
+
 <div class="content">
 <div class="table-responsive">
 <table class="table no-border hover">
 <thead class="no-border">
 <tr>
-<th style="width:30%;"><strong>Image</strong></th>
-<th style="width:20%;"><strong>Order</strong></th>
+<th style="width:15%;"><strong>Image</strong></th>
+<th style="width:10%;"><strong>Order</strong></th>
 <th style="width:50%;"><strong>Url</strong></th>
-<th style="width:30%;"><strong>Delete</strong></th>
+<th style="width:40%;"><strong>Show</strong></th>
+<th style="width:40%;"><strong>Hide</strong></th>
+<th style="width:40%;"><strong>Delete</strong></th>
 </tr></thead>
 <tbody class="no-border-y">
-<?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND trash='0' AND active='1' ORDER BY list";
+<?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND trash='0' AND webid='$WebId' ORDER BY list";
 $result = mysql_query($query) or die(mysql_error());
 while($row = mysql_fetch_array($result)){ ?>
 <tr>
-<td><img src='<?php echo $row['img']; ?>' height="200" width="200"></td>
-<td style="width:20%;"><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="1" value='<?php echo $row["list"]; ?>'></td>
-<td style="width:50%;"><input type='text' name="ImageUrl[<?php echo $row['id']; ?>]" placeholder='http://example.com' size="50" value='<?php echo $row["url"]; ?>'></td>
+<td><a href="/admin/ImgRotate/<?php echo OtarEncrypt($key, $row['id']); ?>"><img class='ImgSrc' src='<?php echo $row['img']; ?>' height="200" width="200"></a></td>
+<td style="width:10%;" class='ImageOrder'><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="10" value='<?php echo $row["list"]; ?>'></td>
+<td style="width:60%;" class='ImageUrl'><input type='text' name="ImageUrl[<?php echo $row['id']; ?>]" size="80" value='<?php echo $row["url"]; ?>'></td>
+<td><input type="radio" name="Imageactive[<?php echo $row['id']; ?>]" value="1" <?php if($row['active'] == "1"){ echo "checked"; } ?>></td>
+<td><input type="radio" name="Imageactive[<?php echo $row['id']; ?>]" value="0" <?php if($row['active'] == "0"){ echo "checked"; } ?>></td>
 <td><input type="checkbox" name="removegal[]" value="<?php echo $row['id']; ?>"></td>
 </tr><?php } ?>
 </tbody></table>
@@ -396,16 +371,16 @@ function formSubmitter(formTag, messageTag){
 
 
 
- </script> <script type="text/javascript" src="http://condorthemes.com/flatdream/js/jasny.bootstrap/extend/js/jasny-bootstrap.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/moment.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/daterangepicker.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.touchspin/bootstrap-touchspin/bootstrap.touchspin.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.switch/bootstrap-switch.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.select2/select2.min.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.slider/js/bootstrap-slider.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.icheck/icheck.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jasny-bootstrap.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/moment.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/daterangepicker.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap.touchspin.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-colorpicker.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-switch.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/select2.min.js" ></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-slider.js" ></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/icheck.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
       /*Date Range Picker*/
@@ -556,10 +531,7 @@ function formSubmitter(formTag, messageTag){
 
 
 
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.summernote/dist/summernote.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
-<<<<<<< HEAD
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/src/bootstrap-wysihtml5.js"></script>
-=======
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/src/bootstrap-wysihtml5.js"></script>
->>>>>>> origin/master
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/summernote.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/wysihtml5-0.3.0.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-wysihtml5.js"></script>
+

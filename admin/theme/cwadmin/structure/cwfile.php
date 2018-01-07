@@ -41,17 +41,17 @@
 
 <tbody>
 <?php
-$Query = "SELECT * FROM articles WHERE category!='self' AND type='cwfile' AND trash='0'"; 
+$Query = "SELECT * FROM articles WHERE category!='self' AND type='cwfile' AND trash='0' AND webid='$WebId'"; 
 $Result = mysql_query($Query) or die(mysql_error());
 while($Row = mysql_fetch_array($Result)){
 $Row = PbUnSerial($Row);
 $ArticleCat = $Row['category'];
 $ArticleId = $Row['id'];
-$query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0'"; 
+$query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0' AND webid='$WebId'"; 
 $result = mysql_query($query) or die(mysql_error());
 $row = mysql_fetch_array($result);
 $row = PbUnSerial($row);
-$querY = "SELECT * FROM images WHERE album='$ArticleId' AND active='1' AND trash='0'";
+$querY = "SELECT * FROM images WHERE album='$ArticleId' AND active='1' AND trash='0' AND webid='$WebId'";
 $resulT = mysql_query($querY) or die(mysql_error());
 while($roW = mysql_fetch_array($resulT)){
     $GalleryCount = $GalleryCount + 1;
@@ -92,22 +92,16 @@ $roW = PbUnSerial($roW); ?>
 	</div> 
 	
 </div>
-<input type='hidden' name='redirect' value='<?php echo $Array["siteinfo"]["domain"]; ?>/admin/CwFile'>
+<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/CwFile'>
 </form>
 
 
 
-<<<<<<< HEAD
+
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery-ui.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript" src="<?php echo "$THEME/header/js/datatables.min.js" ?>"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>
-=======
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.ui/jquery-ui.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.jeditable/jquery.jeditable.mini.js"></script>
-<script type="text/javascript" src="<?php echo "$THEME/header/js/datatables.min.js" ?>"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/bootstrap-adapter/js/datatables.js"></script>
->>>>>>> origin/master
 
 <script type="text/javascript">
       //Add dataTable Functions

@@ -12,7 +12,7 @@
 <div class="header">							
 <h3>Product Categories
 <div align="right">
-<button type="button" onclick="window.location.href='./<?php echo "$_GET[type]/"; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
+<button type="button" onclick="window.location.href='./<?php echo $_GET["url"]; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
 </div>
 </h3>			
 </div>
@@ -42,7 +42,7 @@
 <tbody>
 <?php
 $Count = "";
-$Query = "SELECT * FROM articles WHERE category='self' AND type='prodcat' AND trash='0'";
+$Query = "SELECT * FROM articles WHERE type='prodcat' AND trash='0' AND webid='$WebId'";
 $Result = mysql_query($Query) or die(mysql_error());
 while($Row = mysql_fetch_array($Result)){
 $Row = PbUnSerial($Row);
@@ -51,27 +51,25 @@ $ArticleCat = $Row['id'];
 $ArticleId = $Row['id'];
 $ArticleId = OtarEncrypt($key,$ArticleId);
 if($Cw_Multiple_Cat['active'] == "1"){
-    $query = "SELECT * FROM articles WHERE category LIKE '%-" . $ArticleCat. "-%' AND trash='0'";
+    $query = "SELECT * FROM articles WHERE category LIKE '%-" . $ArticleCat. "-%' AND trash='0' AND webid='$WebId'";
 }else{
-    $query = "SELECT * FROM articles WHERE category='$ArticleCat' AND trash='0'";
+    $query = "SELECT * FROM articles WHERE category='$ArticleCat' AND trash='0' AND webid='$WebId'";
 }
 $result = mysql_query($query) or die(mysql_error());
 while($row = mysql_fetch_array($result)){
 $Count = $Count + 1; } ?>
 <tr class="odd gradeX">
 <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
-<td><?php echo $Row['content']['name']; ?></td>
+<td><?php echo $Row['name']; ?></td>
 <td><?php echo $Count; ?></td>
-<td><?php echo $Row['content']['name']; ?></td>
+<td><?php echo $Row['name']; ?></td>
 <td><?php echo StatusName($Row['active']); ?></td>
 <td class="center">
 <div class="btn-group">
 <button class="btn btn-default btn-xs" type="button">Actions</button>
 <button data-toggle="dropdown" class="btn btn-xs btn-primary dropdown-toggle" type="button"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>
 <ul role="menu" class="dropdown-menu">
-<li><a href="/admin/Ecommerce/Category/<?php echo $ArticleId; ?>">Edit</a></li>
-<li class="divider"></li>
-<li><a href="/Process/Delete/Articles/<?php echo $ArticleId; ?>">Remove</a></li>
+<li><a href="/admin/Ecommerce-Category/<?php echo $ArticleId; ?>">Edit</a></li>
 </ul></div></td>
 </tr>
 <?php } ?>
@@ -89,7 +87,7 @@ $Count = $Count + 1; } ?>
 	</div> 
 	
 </div>
-<input type='hidden' name='redirect' value='<?php echo $Array["siteinfo"]["domain"]; ?>/admin/Ecommerce/Category'>
+<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/Ecommerce-Category'>
 </form>
 
 

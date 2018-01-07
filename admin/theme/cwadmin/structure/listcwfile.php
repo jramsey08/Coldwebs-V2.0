@@ -8,7 +8,7 @@ $newToken = generateFormToken('cwfile');
 <ol class="breadcrumb">
 <li><a href="/admin">Dashboard</a></li>
 <li><a href="/admin/CwFile">CW File Manager</a></li>
-<li class="active"><?php echo $Article['content']['name']; ?></li>
+<li class="active"><?php echo $Article['name']; ?></li>
 </ol></div>		
 		
 <div class="row">		
@@ -17,10 +17,7 @@ $newToken = generateFormToken('cwfile');
 <ul class="nav nav-tabs">
 <li class="active"><a href="#basic" data-toggle="tab">Basic Info</a></li>
 <li><a href="#gallery" data-toggle="tab">Gallery</a></li>
-<<<<<<< HEAD
 <li><a href="#uploads" data-toggle="tab">Uploads</a></li>
-=======
->>>>>>> origin/master
 </ul>
 
 
@@ -39,7 +36,7 @@ $newToken = generateFormToken('cwfile');
 <div class="form-group">
 <label class="col-sm-3 control-label">Title</label>
 <div class="col-sm-6">
-<input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $Article['content']['name']; ?>'>
+<input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $Article['name']; ?>'>
 </div></div><br><br>
 <div class="form-group">
 <label class="col-sm-3 control-label">Protected</label>
@@ -89,16 +86,13 @@ $newToken = generateFormToken('cwfile');
 
 
 
-<<<<<<< HEAD
-=======
 
->>>>>>> origin/master
 <div class="tab-pane cont" id="gallery">
 <div class="col-sm-12 col-md-12">
 <div class="header"><h3>Gallery</h3>
 </div></div>
 <div class="row">
-<<<<<<< HEAD
+
 <div class="col-sm-12 col-md-6">
 <div class="content">
 <div class="form-group">
@@ -113,19 +107,7 @@ $newToken = generateFormToken('cwfile');
 <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Remove</a>
 </div></div></div></div></div>
 </div>
-=======
-<div class="col-sm-12 col-md-12">
-<div class="content">
-<div class="form-group">
-<label class="col-sm-3 control-label">Main Images</label>
-<div class="col-sm-6">
-<div class="fileinput fileinput-new" data-provides="fileinput">
-<span class="btn btn-primary btn-file">
-<span class="fileinput-new">Select file(s)</span>
-<span class="fileinput-exists">Change</span><input type="file" multiple="" name="gallery[]"></span>
-<a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">&times;</a>
-</div></div></div></div></div></div>
->>>>>>> origin/master
+
 <div class="row">
 <div class="col-md-12">
 <div class="header"><h3>Extra Images</h3></div>
@@ -134,34 +116,27 @@ $newToken = generateFormToken('cwfile');
 <table class="table no-border hover">
 <thead class="no-border">
 <tr>
-<<<<<<< HEAD
-<th style="width:30%;"><strong>Image</strong></th>
-<th style="width:30%;"><strong>Order</strong></th>
-<th style="width:30%;"><strong>Url</strong></th>
-<th style="width:30%;"><strong>Delete</strong></th>
+
+<th style="width:15%;"><strong>Image</strong></th>
+<th style="width:10%;"><strong>Order</strong></th>
+<th style="width:50%;"><strong>Url</strong></th>
+<th style="width:40%;"><strong>Show</strong></th>
+<th style="width:40%;"><strong>Hide</strong></th>
+<th style="width:40%;"><strong>Delete</strong></th>
 </tr></thead>
 <tbody class="no-border-y">
-<?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND type='image' AND trash='0' AND active='1' ORDER BY list";
+<?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND type='image' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY list";
 $result = mysql_query($query) or die(mysql_error());
 while($row = mysql_fetch_array($result)){ 
 if($Article['id'] == ""){
     #exit;
 } ?>
 <tr>
-<td><img src='<?php echo $row['img']; ?>' height="200" width="200"></td>
-<td style="width:30%;"><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="1" value='<?php echo $row["list"]; ?>'></td>
-<td style="width:30%;"><input type='text' name="ImageUrl[<?php echo $row['id']; ?>]" size="1" value='<?php echo $row["url"]; ?>'></td>
-=======
-<th style="width:40%;"><strong>Image</strong></th>
-<th style="width:10%;"><strong>Delete</strong></th>
-</tr></thead>
-<tbody class="no-border-y">
-<?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND trash='0' AND active='1' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ ?>
-<tr>
-<td><img src='<?php echo $row['img']; ?>' height="200" width="200"></td>
->>>>>>> origin/master
+<td><a href="/admin/ImgRotate/<?php echo OtarEncrypt($key, $row['id']); ?>"><img class='ImgSrc' src='<?php echo $row['img']; ?>' height="200" width="200"></a></td>
+<td style="width:10%;" class='ImageOrder'><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="10" value='<?php echo $row["list"]; ?>'></td>
+<td style="width:60%;" class='ImageUrl'><input type='text' name="ImageUrl[<?php echo $row['id']; ?>]" size="80" value='<?php echo $row["url"]; ?>'></td>
+<td><input type="radio" name="Imageactive[<?php echo $row['id']; ?>]" value="1" <?php if($row['active'] == "1"){ echo "checked"; } ?>></td>
+<td><input type="radio" name="Imageactive[<?php echo $row['id']; ?>]" value="0" <?php if($row['active'] == "0"){ echo "checked"; } ?>></td>
 <td><input type="checkbox" name="removegal[]" value="<?php echo $row['id']; ?>"></td>
 </tr><?php } ?>
 </tbody></table>
@@ -169,31 +144,24 @@ while($row = mysql_fetch_array($result)){ ?>
 </div>
 
 
-<<<<<<< HEAD
+
 <div class="tab-pane cont" id="uploads">
-<div class="col-sm-12 col-md-12">
-<div class="header"><h3>Media Uploader</h3>
-</div></div>
-<div class="row">
-<div class="col-sm-12 col-md-12">
-<?php if($Article['id'] == ""){
-    $Rand = rand("999","9999999");
-}
-?><center>
-<iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $Rand; ?>&id=<?php echo $Article['id']; ?>' scrolling='no' frameborder="0" height="600" width="720" ></iframe></center>
-</div></div>
+    <div class="col-sm-12 col-md-12">
+        <div class="header">
+            <h3>Media Uploader</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <?php $GalRand = "Galupload-" . RandomCode("50"); ?>
+            <input type="hidden" name='galrand' value='<?php echo $GalRand; ?>'>
+            <iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' scrolling='no' frameborder="0" height="600" width="720" ></iframe>
+        </div>
+    </div>
 </div>
 
 
-=======
->>>>>>> origin/master
-
-
-
-
-		
-		
-		
+	
 		
 	
 </div></div>
@@ -323,7 +291,7 @@ v
 
 
 
-<<<<<<< HEAD
+
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jasny-bootstrap.min.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap.daterangepicker/moment.min.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/daterangepicker.js"></script>
@@ -334,23 +302,7 @@ v
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/select2.min.js" ></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-slider.js" ></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/icheck.min.js"></script>
-
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/summernote.min.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/wysihtml5-0.3.0.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-wysihtml5.js"></script>
-=======
- </script> <script type="text/javascript" src="http://condorthemes.com/flatdream/js/jasny.bootstrap/extend/js/jasny-bootstrap.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/moment.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/daterangepicker.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.touchspin/bootstrap-touchspin/bootstrap.touchspin.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.switch/bootstrap-switch.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.select2/select2.min.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.slider/js/bootstrap-slider.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.icheck/icheck.min.js"></script>
 
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.summernote/dist/summernote.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/src/bootstrap-wysihtml5.js"></script>
->>>>>>> origin/master

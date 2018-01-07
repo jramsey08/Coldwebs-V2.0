@@ -176,7 +176,7 @@ $FunctionNew = OtarEncrypt($key,$FunctionNew);
 <th style="width:15%;" class="text-center"><strong>Action</strong></th>
 </tr></thead>
 <tbody class="no-border-y">
-<?php $query = "SELECT * FROM images WHERE album='$PostId' AND trash='0' AND active='1' ORDER BY list";
+<?php $query = "SELECT * FROM images WHERE album='$PostId' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY list";
 $result = mysql_query($query) or die(mysql_error());
 while($row = mysql_fetch_array($result)){ ?>
 <tr>
@@ -214,12 +214,15 @@ $Split2 = $Half + 1;
 $query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0' ORDER BY list LIMIT 0,$Split1";
 $result = mysql_query($query) or die(mysql_error());
 while($row = mysql_fetch_array($result)){
-$name = strtolower($row['name']); ?>
+$name = strtolower($row['name']); 
+$SocName = $Array['siteinfo']['other']['social']["$name"];
+$MainSocial = $Array['siteinfo']['other']['socialauth']["$name"];
+?>
 <label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
 <div class="col-sm-6">
 <div class="input-group">
 <span class="input-group-addon">@</span>
-<input type="text" class="form-control" name="social[<?php echo $name; ?>]" value="<?php echo $Array['siteinfo']['other']['social']["$name"]; ?>" placeholder="Username / Url">
+<input type="text" class="form-control" name="social[<?php echo $name; ?>]" value="<?php echo $SocName; ?>" placeholder="Username / Url" <?php if($MainSocial == "1"){ echo "disabled"; } ?>>
 </div></div><br><br><br>
 <?php } echo "</div></div>"; ?>
 <div class="col-sm-6 col-md-6">
@@ -227,12 +230,15 @@ $name = strtolower($row['name']); ?>
 <?php $query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0' ORDER BY list LIMIT $Split1,$TotalSocial";
 $result = mysql_query($query) or die(mysql_error());
 while($row = mysql_fetch_array($result)){
-$name = strtolower($row['name']); ?>
+$name = strtolower($row['name']);
+$SocName = $Array['siteinfo']['other']['social']["$name"];
+$MainSocial = $Array['siteinfo']['other']['socialauth']["$name"];
+?>
 <label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
 <div class="col-sm-6">
 <div class="input-group">
 <span class="input-group-addon">@</span>
-<input type="text" class="form-control" name="social[<?php echo $name; ?>]" value="<?php echo $Array['siteinfo']['other']['social']["$name"]; ?>" placeholder="Username / Url">
+<input type="text" class="form-control" name="social[<?php echo $name; ?>]" value="<?php echo $SocName; ?>" placeholder="Username / Url" <?php if($MainSocial == "1"){ echo "disabled"; } ?>>
 </div></div><br><br><br>
 <?php } echo "</div></div>"; ?>
 </div></div></div>
@@ -316,23 +322,32 @@ if($row['category'] == "text"){ ?>
 <div class="col-sm-6">
 <select class="form-control" name='maintheme'>
 <option value="<?php echo $Array['siteinfo']['theme']; ?>">Select Below</option>
-<?php $Templates = Pulltheme($ThemePath,"0");
+<?php $Templates = Pulltheme("../theme/","0");
 foreach ($Templates as $Template){
     echo "<option value='$Template[0]'"; if($Array['siteinfo']['theme'] == $Template['0']){ echo "selected=selected"; } echo ">$Template[1]</option>"; 
-} ?></select></div></div><br><br><br></div>
+} ?></select></div></div><br><br><br>
+
 <div class="form-group">
 <label class="col-sm-3 control-label">Offline Template</label>
 <div class="col-sm-6">
 <select class="form-control" name='offlinetheme'>
-<<<<<<< HEAD
-<option value="<?php echo $Array['siteinfo']['other']['offline']; ?>">Select Below</option>
-=======
 <option value="<?php echo $Array['siteinfo']['theme']; ?>">Select Below</option>
->>>>>>> origin/master
-<?php $Templates = Pulltheme($ThemePath,"0");
+<?php $Templates = Pulltheme("../theme/","2");
 foreach ($Templates as $Template){
     echo "<option value='$Template[0]'"; if($Array['siteinfo']['other']['offline'] == $Template['0']){ echo "selected=selected"; } echo ">$Template[1]</option>"; 
+} ?></select></div></div><br><br><br>
+
+
+<div class="form-group">
+<label class="col-sm-3 control-label">Admin Template</label>
+<div class="col-sm-6">
+<select class="form-control" name='admin_theme'>
+<option value="<?php echo $Array['siteinfo']['other']['admin_theme']; ?>">Select Below</option>
+<?php $Templates = Pulltheme("theme","1");
+foreach ($Templates as $Template){
+    echo "<option value='$Template[0]'"; if($Array['siteinfo']['other']['admin_theme'] == $Template['0']){ echo "selected=selected"; } echo ">$Template[1]</option>";
 } ?></select></div></div><br><br><br></div>
+
 
 <br><br><br>
 </div></div></div>
@@ -410,7 +425,6 @@ foreach ($Templates as $Template){
 
 
 
-<<<<<<< HEAD
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jasny-bootstrap.min.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/moment.min.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/daterangepicker.js"></script>
@@ -421,18 +435,6 @@ foreach ($Templates as $Template){
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/select2.min.js" ></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/jss/bootstrap-slider.js" ></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/icheck.min.js"></script>
-=======
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jasny.bootstrap/extend/js/jasny-bootstrap.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/moment.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/daterangepicker.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.touchspin/bootstrap-touchspin/bootstrap.touchspin.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.switch/bootstrap-switch.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.select2/select2.min.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.slider/js/bootstrap-slider.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.icheck/icheck.min.js"></script>
->>>>>>> origin/master
 <script type="text/javascript">
     $(document).ready(function(){
       /*Date Range Picker*/
@@ -582,19 +584,11 @@ foreach ($Templates as $Template){
 </script>
 
 
-<<<<<<< HEAD
 <script src="/admin/theme/cwadmin/header/js/ckeditor.js"></script>
 <script src="http://condorthemes.com/flatdream/js/ckeditor/adapters/jquery.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/summernote.min.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/wysihtml5-0.3.0.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-wysihtml5.js"></script>
-=======
-<script src="http://condorthemes.com/flatdream/js/ckeditor/ckeditor.js"></script>
-<script src="http://condorthemes.com/flatdream/js/ckeditor/adapters/jquery.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.summernote/dist/summernote.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/src/bootstrap-wysihtml5.js"></script>
->>>>>>> origin/master
 
 <script type="text/javascript">
     $(document).ready(function(){
@@ -612,15 +606,9 @@ foreach ($Templates as $Template){
 
 
 
-<<<<<<< HEAD
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-multiselect.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.multi-select.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.quicksearch.js"></script>
-=======
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.multiselect/js/bootstrap-multiselect.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.multiselect/js/jquery.multi-select.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.quicksearch/jquery.quicksearch.js"></script>
->>>>>>> origin/master
 
 			<script type="text/javascript">
 			    $(document).ready(function() {

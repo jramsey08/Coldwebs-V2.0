@@ -2,14 +2,14 @@
 <div class="page-head">
 <ol class="breadcrumb">
 <li><a href="/admin">Dashboard</a></li>
-<li class="active">Website Blog</li>
+<li class="active">Blog</li>
 </ol></div>
 
 <div class="row">
 <div class="col-md-12">
 <div class="block-flat">
 <div class="header">							
-<h3>Blog Articles
+<h3>Blog Posts
 <div align="right">
 <button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
 <button type="button" onclick="window.location.href='./Trash/<?php echo $_GET['url']; ?>/'" class="btn btn-flat"><i class="fa fa-trash"></i> View Trash</button>
@@ -41,14 +41,14 @@
 
 <tbody>
 <?php
-$Query = "SELECT * FROM articles WHERE category!='self' AND category!='x' AND category!='' AND type!='menu' AND type='post' AND type!='pending' AND trash='0'";
+$Query = "SELECT * FROM articles WHERE type='post-blog' AND trash='0' AND webid='$WebId'";
 $Result = mysql_query($Query) or die(mysql_error());
 while($Row = mysql_fetch_array($Result)){
 $Row = PbUnSerial($Row);
 $ArticleCat = $Row['category'];
 $ArticleId = $Row['id'];
 $ArticleId = OtarEncrypt($key,$ArticleId);
-$query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0'"; 
+$query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0' AND webid='$WebId'"; 
 $result = mysql_query($query) or die(mysql_error());
 $row = mysql_fetch_array($result);
 $row = PbUnSerial($row); 
@@ -68,9 +68,9 @@ if($Show == "1"){
 ?>
 <tr class="odd gradeX">
 <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
-<td><?php echo $Row['content']['name']; ?></td>
+<td><?php echo $Row['name']; ?></td>
 <td><?php echo number_format("$Row[hits]"); ?></td>
-<td><?php echo $row['content']['name']; ?></td>
+<td><?php echo $row['name']; ?></td>
 <?php if($Row['active'] != "1"){ ?>
 <td><a href="<?php echo "/CwPreview/$Row[id]"; ?>" target="_blank">Preview</a></td>
 <?php }else{ ?>
@@ -99,15 +99,15 @@ if($Show == "1"){
 	</div> 
 	
 </div>
-<input type='hidden' name='redirect' value='<?php echo $Array["siteinfo"]["domain"]; ?>/admin/Blog'>
+<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/Blog'>
 </form>
 
 
 
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.ui/jquery-ui.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.jeditable/jquery.jeditable.mini.js"></script>
-<script type="text/javascript" src="<?php echo "$THEME/header/js/datatables.min.js" ?>"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/bootstrap-adapter/js/datatables.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery-ui.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable/jquery.jeditable.mini.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.min.js" ?>"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>
 
 <script type="text/javascript">
       //Add dataTable Functions

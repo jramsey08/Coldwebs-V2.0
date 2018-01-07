@@ -2,12 +2,8 @@
 <div class="page-head">
 <ol class="breadcrumb">
 <li><a href="/admin">Dashboard</a></li>
-<<<<<<< HEAD
 <li><a href="/admin/Blog">Blog</a></li>
 <li class="active">Blog Trash</li>
-=======
-<li class="active">Articles Trash</li>
->>>>>>> origin/master
 </ol></div>
 
 <div class="row">
@@ -44,14 +40,14 @@
 
 <tbody>
 <?php
-$Query = "SELECT * FROM articles WHERE category!='self' AND category!='x' AND category!='' AND type!='menu' AND trash='1'"; 
+$Query = "SELECT * FROM articles WHERE category!='self' AND category!='x' AND category!='' AND type!='menu' AND trash='1' AND webid='$WebId'"; 
 $Result = mysql_query($Query) or die(mysql_error());
 while($Row = mysql_fetch_array($Result)){
 $Row = PbUnSerial($Row);
 $ArticleCat = $Row['category'];
 $ArticleId = $Row['id'];
 $ArticleId = OtarEncrypt($key,$ArticleId);
-$query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0'"; 
+$query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0' AND webid='$WebId'"; 
 $result = mysql_query($query) or die(mysql_error());
 $row = mysql_fetch_array($result);
 $row = PbUnSerial($row); ?>

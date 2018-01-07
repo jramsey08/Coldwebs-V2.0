@@ -1,48 +1,32 @@
-<<<<<<< HEAD
 <link rel="stylesheet" type="text/css" href="/admin/theme/cwadmin/header/css/bootstrap-multiselect.css"/>
 <link rel="stylesheet" type="text/css" href="/admin/theme/cwadmin/header/css/multi-select.css" />
-=======
-<link rel="stylesheet" type="text/css" href="http://condorthemes.com/flatdream/js/bootstrap.multiselect/css/bootstrap-multiselect.css"/>
-<link rel="stylesheet" type="text/css" href="http://condorthemes.com/flatdream/js/jquery.multiselect/css/multi-select.css" />
->>>>>>> origin/master
-
 <?php
 $PageArticleId = $PageInfo['pagearticle']['id']; 
 $NewFunctionId = RandomCode(300);
-
 if($PageArticleId == ""){
     $PageArticleId = $NewFunctionId;
 }
-
 $FunctionNew = $PageArticleId;
 $FunctionNew = OtarEncrypt($key,$FunctionNew);
 ?>
-
-
 <div class="cl-mcont">
 <div class="page-head">
 <ol class="breadcrumb">
 <li><a href="/admin">Dashboard</a></li>
 <li><a href="/admin/Pages">Pages</a></li>
-<li class="active"><?php echo $Article['content']['name']; ?></li>
+<li class="active"><?php echo $Article['name']; ?></li>
 </ol></div>
-
 <div class="row">		
 <div class="col-sm-12 col-md-9">
 <div class="tab-container">
 <ul class="nav nav-tabs">
 <li class="active"><a href="#basic" data-toggle="tab">Basic Info</a></li>
-<<<<<<< HEAD
-<!--<li><a href="#social" data-toggle="tab">Social Media</a></li>-->
+<li><a href="#gallery" data-toggle="tab">Gallery</a></li>
 <li><a href="#layout" data-toggle="tab">Page Layout</a></li>
+<li><a href="#uploads" data-toggle="tab">Uploads</a></li>
 <li><a href="#extra" data-toggle="tab">Extra</a></li>
-=======
-<li><a href="#social" data-toggle="tab">Social Media</a></li>
-<li><a href="#layout" data-toggle="tab">Page Layout</a></li>
->>>>>>> origin/master
 </ul>
 <div class="tab-content">
-
 <div class="tab-pane active cont" id="basic">
 <div class="row">
 <form role="form" action='/Process/Pages' enctype="multipart/form-data">
@@ -55,7 +39,7 @@ $FunctionNew = OtarEncrypt($key,$FunctionNew);
 <div class="form-group">
 <label class="col-sm-3 control-label">Title</label>
 <div class="col-sm-6">
-<input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $Article['content']['name']; ?>'>
+<input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $Article['name']; ?>'>
 </div></div><br><br>
 <div class="form-group">
 <label class="col-sm-3 control-label">Url</label>
@@ -88,54 +72,64 @@ $FunctionNew = OtarEncrypt($key,$FunctionNew);
 </div></div>
 </div></div>
 
-<div class="tab-pane" id="social">
-<div class="row">
-<div class="col-sm-12 col-md-12">
-<div class="header"><h3>Social Media Integration</h3></div>
-<div class="content">
-<div class="col-sm-6 col-md-6">
-<div class="form-group">
-<?php
-$query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-    $TotalSocial = $TotalSocial + 1;
-}
-if ($TotalSocial % 2 == 0) {
-}else{
-    $TotalSocial = $TotalSocial + 1;
-}
-$Half = $TotalSocial / 2;
-$Split1 = $Half;
-$Split2 = $Half + 1;
-$query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0' LIMIT 0,$Split1";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$name = strtolower($row['name']);
-$Social = $Article['other']['social']; ?>
-<label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
-<div class="col-sm-6">
-<div class="input-group">
-<span class="input-group-addon">@</span>
-<input type="text" class="form-control" name="social[<?php echo $name; ?>]" value="<?php echo isset_get($Social,$name); ?>" placeholder="Username / Url">
-</div></div><br><br><br>
-<?php } echo "</div></div>"; ?>
-<div class="col-sm-6 col-md-6">
-<div class="form-group">
-<?php $query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0' LIMIT $Split2,20";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$name = strtolower($row['name']);
-$Social = $Article['other']['social']; ?>
-<label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
-<div class="col-sm-6">
-<div class="input-group">
-<span class="input-group-addon">@</span>
-<input type="text" class="form-control" name="social[<?php echo $name; ?>]" value="<?php echo isset_get($Social,$name); ?>" placeholder="Username / Url">
-</div></div><br><br><br>
-<?php } echo "</div></div>"; ?>
-</div></div></div>
+
+
+<div class="tab-pane cont" id="uploads">
+    <div class="col-sm-12 col-md-12">
+        <div class="header">
+            <h3>Media Uploader</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <?php $GalRand = "Galupload-" . RandomCode("50"); ?>
+            <input type="hidden" name='galrand' value='<?php echo $GalRand; ?>'>
+            <iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' scrolling='no' frameborder="0" height="600" width="720" ></iframe>
+        </div>
+    </div>
 </div>
+
+
+
+
+
+<div class="tab-pane cont" id="gallery">
+<div class="col-sm-12 col-md-12">
+<div class="header"><h3>Gallery</h3>
+</div></div>
+<div class="row">
+<div class="col-md-12">
+<div class="header"><h3></h3></div>
+<div class="content">
+<div class="table-responsive">
+<table class="table no-border hover">
+<thead class="no-border">
+<tr>
+<th style="width:30%;"><strong>Image</strong></th>
+<th style="width:30%;"><strong>Order</strong></th>
+<th style="width:30%;"><strong>Url</strong></th>
+<th style="width:30%;"><strong>Delete</strong></th>
+</tr></thead>
+<tbody class="no-border-y">
+<?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY list";
+$result = mysql_query($query) or die(mysql_error());
+while($row = mysql_fetch_array($result)){ 
+if($Article['id'] == ""){
+    exit;
+} ?>
+<tr>
+<td><img src='<?php echo $row['img']; ?>' height="200" width="200"></td>
+<td style="width:10%;"><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="1" value='<?php echo $row["list"]; ?>'></td>
+<td style="width:60%;"><input type='text' name="ImageUrl[<?php echo $row['id']; ?>]" size="60" value='<?php echo $row["url"]; ?>'></td>
+<td><input type="checkbox" name="removegal[]" value="<?php echo $row['id']; ?>"></td>
+</tr><?php } ?>
+</tbody></table>
+</div></div></div></div>
+</div>
+
+
+
+
 
 <div class="tab-pane" id="layout">
 <div class="row">
@@ -156,7 +150,7 @@ $Social = $Article['other']['social']; ?>
 <tbody>
 <?php
 $Id = $Article['id'];
-$Query = "SELECT * FROM page_function WHERE template='$PageInfo[template]' AND page='$PageArticleId' AND trash='0' ORDER BY list"; 
+$Query = "SELECT * FROM page_function WHERE template='$PageInfo[template]' AND page='$PageArticleId' AND trash='0' AND webid='$WebId' ORDER BY list"; 
 $Result = mysql_query($Query) or die(mysql_error());
 while($Row = mysql_fetch_array($Result)){
 $Row = PbUnSerial($Row);
@@ -182,36 +176,51 @@ $FunctionId = $Row['id']; ?>
 </div></div></div>
 </div>
 
-
-
-
-<<<<<<< HEAD
 <div class="tab-pane" id="extra">
-<div class="row">
-<div class="col-sm-12 col-md-12">
-<div class="header"><h3>Extra Configurations</h3></div>
-<div class="content">
-<div class="form-group">
-<label class="col-sm-3 control-label">Tags</label>
-<div class="col-sm-6">
-<input type="hidden" name='tags' placeholder="Enter Universal Tags" class="tags" value='<?php echo $Article['other']['tags']; ?>'>
-</div></div><br><br>
-</div></div></div></div>
-=======
->>>>>>> origin/master
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="header">
+                <h3>Extra Configurations</h3>
+            </div>
+            <div class="content">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Tags</label>
+                    <div class="col-sm-6">
+                        <input type="hidden" name='tags' placeholder="Enter Universal Tags" class="tags" value='<?php echo $Article['other']['tags']; ?>'>
+                    </div>
+                </div>
+                <br><br>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Override Category</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" name='catoveride'>
+                            <option value='0' <?php if($Article['other']['catoveride'] == "0"){ echo "selected='selected'"; } ?>>Select Below</option>
+                            <option value='0' <?php if($Article['other']['catoveride'] == "0"){ echo "selected='selected'"; } ?>>No</option>
+                            <option value='1' <?php if($Article['other']['catoveride'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
+                        </select>
+                    </div>
+                </div>
+                <br><br>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Secure Page</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" name='secure'>
+                            <option value='0' <?php if($Article['other']['secure'] == "0"){ echo "selected='selected'"; } ?>>Select Below</option>
+                            <option value='0' <?php if($Article['other']['secure'] == "0"){ echo "selected='selected'"; } ?>>No</option>
+                            <option value='1' <?php if($Article['other']['secure'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
+                        </select>
+                    </div>
+                </div>
+                <br><br>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 </div></div>
 </div>
-
-	
-		
-		
-		
-
 <div class="col-sm-3 col-md-3">
-
-
 <div class="panel panel-default">
 <div class="panel-heading">
 <h4 class="panel-title">
@@ -235,7 +244,6 @@ $FunctionId = $Row['id']; ?>
 <div id='cwmessage'></div>
 </div></center>
 </div></div>
-
 <div class="panel panel-default">
 <div class="panel-heading">
 <h4 class="panel-title">
@@ -255,7 +263,6 @@ $FunctionId = $Row['id']; ?>
 <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Remove</a>
 </div></div>
 </div></div></div>
-
 <div class="panel panel-default">
 <div class="panel-heading">
 <h4 class="panel-title">
@@ -294,27 +301,6 @@ foreach($Layouts as $Layout=>$x_value){
 }  ?>
 </select></div></div>
 </div></div></div></div>
-
-<<<<<<< HEAD
-=======
-<div class="panel panel-default">
-<div class="panel-heading">
-<h4 class="panel-title">
-<a data-toggle="collapse" data-parent="#accordion" href="#CwTags">
-<i class="fa "></i>Tags</a>
-</h4></div>
-<div id="CwTags" class="panel-collapse collapse">
-<div class="form-group">
-<label class="col-sm-6 control-label">Add Below:</label>
-<input class="tags" type="hidden" name='tags' value="<?php echo $Article['other']['tags']; ?>" />
-</div></div>
-</div>
-
-
-
->>>>>>> origin/master
-
-
 <div class="panel panel-default">
 <div class="panel-heading">
 <h4 class="panel-title">
@@ -349,43 +335,18 @@ EmbedCode
 </div></div></div>
 <div class="panel-body"></div>
 </div></div></div>
-
-
-
-
 </div>
-
-
-
-
 </div>
-	
-
-
-
-
-
-
-
-
-
 <input type="hidden" name="functionid" value="<?php echo $NewFunctionId; ?>">
 <input type="hidden" name="category" value="page">
 <input type="hidden" name="imgtype" value="post">
 <input type="hidden" name="userid" value="<?php echo $Array['userinfo']['id']; ?>">
 <input type="hidden" name="img" value="<?php echo $Article['content']['img']; ?>">
 <input type="hidden" name="PageIds" value="<?php echo $PageIds; ?>">
+<input type="hidden" name="article" value="<?php echo $Article['id']; ?>">
 <input type="hidden" name="pageinfo" value="<?php echo $PageIn; ?>">
-<<<<<<< HEAD
-=======
-<input type="hidden" name="imgsizes" value="<?php echo OtarEncrypt($key,$StructureImgSizes); ?>">
->>>>>>> origin/master
 </form>	
 </div>
-
-
-
-
 <?php if($Article['id'] == ""){ }else{ ?>
 <script language="JavaScript">
 <!--
@@ -395,10 +356,6 @@ function formSubmitter(formTag, messageTag){
 // -->
 </script>
 <?php } ?>
-
-
-
-<<<<<<< HEAD
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jasny-bootstrap.min.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/moment.min.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/daterangepicker.js"></script>
@@ -409,8 +366,6 @@ function formSubmitter(formTag, messageTag){
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/select2.min.js" ></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-slider.js" ></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/icheck.min.js"></script>
-
-
 <script type="text/javascript">
     $(document).ready(function(){
       /*Date Range Picker*/
@@ -424,7 +379,6 @@ function formSubmitter(formTag, messageTag){
         $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
         alert("Callback has fired: [" + start.format('MMMM D, YYYY') + " to " + end.format('MMMM D, YYYY') + "]");
       }
-
       var optionSet1 = {
         startDate: moment().subtract('days', 29),
         endDate: moment(),
@@ -461,7 +415,6 @@ function formSubmitter(formTag, messageTag){
             firstDay: 1
         }
       };
-
       var optionSet2 = {
         startDate: moment().subtract('days', 7),
         endDate: moment(),
@@ -475,11 +428,8 @@ function formSubmitter(formTag, messageTag){
            'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
         }
       };
-
       $('#reportrange span').html(moment().subtract('days', 29).format('MMMM D, YYYY') + ' - ' + moment().format('MMMM D, YYYY'));
-
       $('#reportrange').daterangepicker(optionSet1, cb);
-
       $('#reportrange').on('show', function() { console.log("show event fired"); });
       $('#reportrange').on('hide', function() { console.log("hide event fired"); });
       $('#reportrange').on('apply', function(ev, picker) { 
@@ -492,21 +442,16 @@ function formSubmitter(formTag, messageTag){
       $('#reportrange').on('cancel', function(ev, picker) { console.log("cancel event fired"); });
       /*Switch*/
       $('.switch').bootstrapSwitch();
-      
       /*DateTime Picker*/
         $(".datetime").datetimepicker({format: 'yyyy-mm-dd hh:ii'});
-      
       /*Select2*/
         $(".select2").select2({
           width: '100%'
         });
-      
        /*Tags*/
         $(".tags").select2({tags: 0,width: '100%'});
-      
        /*Slider*/
         $('.bslider').slider();     
-      
       /*Input & Radio Buttons*/
         $('.icheck').iCheck({
           checkboxClass: 'icheckbox_flat-green',
@@ -548,195 +493,13 @@ function formSubmitter(formTag, messageTag){
             e.preventDefault();
             $("#demo_endis").colorpicker('disable');
         });
-
         $(".enable-button").click(function(e) {
             e.preventDefault();
             $("#demo_endis").colorpicker('enable');
         });
-
-        
       /*End of Color Picker*/
     });
 </script>
-
-
-
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/summernote.min.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/wysihtml5-0.3.0.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-wysihtml5.js"></script>
-=======
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jasny.bootstrap/extend/js/jasny-bootstrap.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/moment.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/daterangepicker.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.touchspin/bootstrap-touchspin/bootstrap.touchspin.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.switch/bootstrap-switch.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.select2/select2.min.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.slider/js/bootstrap-slider.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.icheck/icheck.min.js"></script>
-
-
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.summernote/dist/summernote.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/src/bootstrap-wysihtml5.js"></script>
-
-
-
-
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.multiselect/js/bootstrap-multiselect.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.multiselect/js/jquery.multi-select.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.quicksearch/jquery.quicksearch.js"></script>
-
-			<script type="text/javascript">
-			    $(document).ready(function() {
-					
-			        $('#example1').multiselect();
-					
-			        $('#example2').multiselect();
-					
-			        $('#example3').multiselect({
-			            buttonClass: 'btn btn-link'
-			        });
-					
-			        $('#example4').multiselect({
-			            buttonClass: 'btn btn-default btn-sm'
-			        });
-					
-			        $('#example6').multiselect();
-					
-			        $('#example9').multiselect({
-			            onChange:function(element, checked){
-			                alert('Change event invoked!');
-			                console.log(element);
-			            }
-			        });
-					
-			        for (var i = 1; i <= 100; i++) {
-			            $('#example11').append('<option value="' + i + '">Options ' + i + '</option>');
-			        }
-			        $('#example11').multiselect({
-			            maxHeight: 200
-			        })
-					
-			        $('#example13').multiselect();
-					
-			        $('#example14').multiselect({
-			            buttonWidth: '500px',
-			            buttonText: function(options) {
-			                if (options.length === 0) {
-			                    return 'None selected <b class="caret"></b>';
-			                }
-			                else {
-			                    var selected = '';
-			                    options.each(function() {
-			                        selected += $(this).text() + ', ';
-			                    });
-			                    return selected.substr(0, selected.length -2) + ' <b class="caret"></b>';
-			                }
-			            }
-			        });
-					
-			        $('#example16').multiselect({
-			            onChange: function(option, checked) {
-                            if (checked === false) {
-                                $('#example16').multiselect('select', option.val());
-                            }
-			            }
-			        });
-					
-			        $('#example19').multiselect();
-
-			        $('#example20').multiselect({
-			            selectedClass: null
-			        });
-					
-			        $('#example23').multiselect();
-					
-			        $('#example24').multiselect();
-
-			        $('#example25').multiselect({
-			        	dropRight: true,
-			        	buttonWidth: '300px'
-			        });
-
-			        $('#example27').multiselect({
-			        	includeSelectAllOption: true
-			        });
-
-					// Add options for example 28.
-					for (var i = 1; i <= 100; i++) {
-						$('#example28').append('<option value="' + i + '">' + i + '</option>');
-					}
-
-			        $('#example28').multiselect({
-			        	includeSelectAllOption: true,
-			        	enableFiltering: true,
-			        	maxHeight: 150
-			        });
-                    
-                    $('#example32').multiselect();
-                    
-                    $('#example39').multiselect({
-                        includeSelectAllOption: true,
-			        	enableCaseInsensitiveFiltering: true
-                    });
-                    
-                    $('#example41').multiselect({
-			        	includeSelectAllOption: true
-			        });
-              //multi-select boxed
-              $('#my-select').multiSelect()
-              $('#pre-selected-options').multiSelect();
-              $('#callbacks').multiSelect({
-                afterSelect: function(values){
-                  alert("Select value: "+values);
-                },
-                afterDeselect: function(values){
-                  alert("Deselect value: "+values);
-                }
-              });
-              $('#optgroup').multiSelect({ selectableOptgroup: true });
-              $('#disabled-attribute').multiSelect();
-              $('#custom-headers').multiSelect({
-                selectableHeader: "<div class='custom-header'>Selectable items</div>",
-                selectionHeader: "<div class='custom-header'>Selection items</div>",
-              });
-              $('#searchable').multiSelect({
-                selectableHeader: "<input type='text' class='form-control search-input' autocomplete='off' placeholder='Search'>",
-                selectionHeader: "<input type='text' class='form-control search-input' autocomplete='off' placeholder='Search'>",
-                afterInit: function(ms){
-                  var that = this,
-                      $selectableSearch = that.$selectableUl.prev(),
-                      $selectionSearch = that.$selectionUl.prev(),
-                      selectableSearchString = '#'+that.$container.attr('id')+' .ms-elem-selectable:not(.ms-selected)',
-                      selectionSearchString = '#'+that.$container.attr('id')+' .ms-elem-selection.ms-selected';
-
-                  that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
-                  .on('keydown', function(e){
-                    if (e.which === 40){
-                      that.$selectableUl.focus();
-                      return false;
-                    }
-                  });
-
-                  that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
-                  .on('keydown', function(e){
-                    if (e.which == 40){
-                      that.$selectionUl.focus();
-                      return false;
-                    }
-                  });
-                },
-                afterSelect: function(){
-                  this.qs1.cache();
-                  this.qs2.cache();
-                },
-                afterDeselect: function(){
-                  this.qs1.cache();
-                  this.qs2.cache();
-                }
-              });
-			    });
-			</script>
->>>>>>> origin/master

@@ -4,87 +4,75 @@ $PageIds = OtarEncrypt($key,$PageIds);
 $ListedUserAccess = $UserAccess['content'];
 ?>
 <div class="cl-mcont">
-<div class="page-head">
-<ol class="breadcrumb">
-<li><a href="/admin">Dashboard</a></li>
-<li><a href="/admin/UserAccess">User Access</a></li>
-<li class="active"><?php echo $UserAccess['name']; ?></li>
-</ol></div>
-
-		
-<div class="row">
-<div class="col-sm-12 col-md-12">
-<div class="tab-container">
-<ul class="nav nav-tabs">
+    <div class="page-head">
+        <ol class="breadcrumb">
+            <li><a href="/admin">Dashboard</a></li>
+            <li><a href="/admin/UserAccess">User Access</a></li>
+            <li class="active"><?php echo $UserAccess['name']; ?></li>
+        </ol>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="tab-container">
+                <ul class="nav nav-tabs">
 <?php if($UserSiteAccess['grantaccess'] == "1"){ ?>
-<li class="active"><a href="#access" data-toggle="tab">User Access</a></li>
+                    <li class="active"><a href="#access" data-toggle="tab">User Access</a></li>
 <?php }else{ ?>
-<li class="active"><a href="#basic" data-toggle="tab">Error 403 (Not Authorized)</a></li>
-
+                    <li class="active"><a href="#basic" data-toggle="tab">Error 403 (Not Authorized)</a></li>
 <?php } ?>
-</ul>
-<div class="tab-content">
-<div class="tab-pane <?php if($UserSiteAccess['grantaccess'] != "1"){ echo "active"; } ?> cont" id="basic">
-<div class="row">
-<form role="form" method='post' action='/Process/UserAccess' enctype="multipart/form-data">
-<div class="col-sm-12 col-md-12">
-<div class="col-sm-6 col-md-6">
-<div class="header"><h3>ERROR 403 FORBIDDEN!</h3>
-<br><br>
-You are not authorized to view this page.
-</div></div>
-
-
-<br><br><br></div>
-</div></div>
-
-
-
-<div class="tab-pane <?php if($UserSiteAccess['grantaccess'] == "1"){ echo "active"; } ?>" id="access">
-<div class="row">
-
-<div class="col-sm-12 col-md-12">
-<div class="header"><h3>Set User Access Level</h3></div>
-
-<div class="col-sm-6 col-md-6">
-<div class="form-group">
-<label class="col-sm-3 control-label">Title</label>
-<div class="col-sm-6">
-<input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $UserAccess['name']; ?>'>
-</div></div><br><br>
-<div class="form-group">
-<label class="col-sm-3 control-label">Access</label>
-<div class="col-sm-6">
-<select class="form-control" name='accesslevel'>
-<option value="<?php if($UserAccess['category'] == ""){ echo "1"; } ?>">Select Below</option>
-<option value="1" <?php if($UserAccess['category'] == "1"){ echo "selected='selected'"; } ?>>Administrator</option>
+                </ul>
+                <div class="tab-content">
+                    <form role="form" method='post' action='/Process/UserAccess' enctype="multipart/form-data">
+<?php if($UserSiteAccess['grantaccess'] == "1"){ ?>
+                        <div class="tab-pane active" id="access">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12">
+                                    <div class="header">
+                                        <h3>Set User Access Level</h3>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Title</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $UserAccess['name']; ?>'>
+                                            </div>
+                                        </div>
+                                        <br><br>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Access</label>
+                                            <div class="col-sm-6">
+                                                <select class="form-control" name='accesslevel'>
+                                                    <option value="<?php if($UserAccess['category'] == ""){ echo "1"; } ?>">Select Below</option>
+                                                    <option value="1" <?php if($UserAccess['category'] == "1"){ echo "selected='selected'"; } ?>>Administrator</option>
 <?php if($CurrentUser["info"]["access"] == "0"){ ?>
-<option value="0" <?php if($UserAccess['category'] == "0"){ echo "selected='selected'"; } ?>>Developer</option>
+                                                    <option value="0" <?php if($UserAccess['category'] == "0"){ echo "selected='selected'"; } ?>>Developer</option>
 <?php } ?>
-<option value="4" <?php if($UserAccess['category'] == "4"){ echo "selected='selected'"; } ?>>Registered User</option>
-<option value="2" <?php if($UserAccess['category'] == "2"){ echo "selected='selected'"; } ?>>Super Administrator</option>
-<option value="3" <?php if($UserAccess['category'] == "3"){ echo "selected='selected'"; } ?>>Writer</option>
-</select></div></div>
-</div>
+                                                    <option value="4" <?php if($UserAccess['category'] == "4"){ echo "selected='selected'"; } ?>>Registered User</option>
+                                                    <option value="2" <?php if($UserAccess['category'] == "2"){ echo "selected='selected'"; } ?>>Super Administrator</option>
+                                                    <option value="3" <?php if($UserAccess['category'] == "3"){ echo "selected='selected'"; } ?>>Writer</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Status</label>
+                                            <div class="col-sm-6">
+                                                <select class="form-control" name='active'>
+                                                    <option value="<?php if($UserAccess['active'] == ""){ echo "1"; } ?>">Select Below</option>
+                                                    <option value="1" <?php if($UserAccess['active'] == "1"){ echo "selected='selected'"; } ?>>Active</option>
+                                                    <option value="0" <?php if($UserAccess['active'] == "0"){ echo "selected='selected'"; } ?>>In-Active</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br><br>
+                                <div class="col-sm-12 col-md-12">
+                                    <hr>
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="form-group">
 
-<div class="col-sm-6 col-md-6">
-<div class="form-group">
-<label class="col-sm-3 control-label">Status</label>
-<div class="col-sm-6">
-<select class="form-control" name='active'>
-<option value="<?php if($UserAccess['active'] == ""){ echo "1"; } ?>">Select Below</option>
-<option value="1" <?php if($UserAccess['active'] == "1"){ echo "selected='selected'"; } ?>>Active</option>
-<option value="0" <?php if($UserAccess['active'] == "0"){ echo "selected='selected'"; } ?>>In-Active</option>
-</select></div></div></div>
-
-</div>
-<br><br>
-
-<div class="col-sm-12 col-md-12">
-<hr>
-<div class="content">
-<div class="col-sm-3 col-md-3">
-<div class="form-group">
 <?php $TotalSocial = "0";
 $query = "SELECT * FROM cwoptions WHERE type='access' AND active='1' AND trash='0'";
 $result = mysql_query($query) or die(mysql_error());
@@ -102,23 +90,29 @@ $Split2 = $Half + 1;
 $query = "SELECT * FROM cwoptions WHERE type='access' AND active='1' AND trash='0' ORDER BY name LIMIT 0,$Split1";
 $result = mysql_query($query) or die(mysql_error());
 while($row = mysql_fetch_array($result)){
-$name = strtolower($row['name']);
-$VerifyAccess = $row['content'];
-if(is_array($ListedUserAccess)){
-    $Active = array_search($VerifyAccess,$ListedUserAccess);
-}else{
-    $Active = 0;
-}
+    $name = strtolower($row['name']);
+    $VerifyAccess = $row['content'];
+    if(is_array($ListedUserAccess)){
+        $Active = array_search($VerifyAccess,$ListedUserAccess);
+    }else{
+        $Active = 0;
+    }
 ?>
-<label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
-<div class="col-sm-6">
-<div class="input-group">
-<label class="radio-inline"> <input class="check" type="radio" value="1" name="siteaccess[<?php echo $row['content']; ?>]" <?php if($ListedUserAccess[$VerifyAccess] == "1"){echo "checked=''"; } ?>> Allowed</label> 
-<label class="radio-inline"> <input class="check" type="radio" value="0" name="siteaccess[<?php echo $row['content']; ?>]" <?php if($ListedUserAccess[$VerifyAccess] == "0" OR $ListedUserAccess[$VerifyAccess] == ""){echo "checked=''"; } ?>> Denied</label> 
-</div></div><br><br><br><?php } ?>
-</div></div>
-<div class="col-sm-3 col-md-3">
-<div class="form-group">
+                                            <p>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
+                                                    <div class="col-sm-6">
+                                                        <input class="check" type="radio" value="1" name="siteaccess[<?php echo $row['content']; ?>]" <?php if($ListedUserAccess[$VerifyAccess] == "1"){echo "checked"; } ?>> Allowed 
+                                                        <input class="check" type="radio" value="0" name="siteaccess[<?php echo $row['content']; ?>]" <?php if($ListedUserAccess[$VerifyAccess] == "0" OR $ListedUserAccess[$VerifyAccess] == ""){echo "checked"; } ?>> Denied</label> 
+                                                    </div>
+                                                </div>
+                                            </p>
+                                            <br><br>
+<?php } ?>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="form-group">
 <?php
 $Split2 = $Split2 - 1;
 $TotalAccess = $TotalAccess - 2;
@@ -132,34 +126,57 @@ if(is_array($ListedUserAccess)){
 }else{
     $Active = 0;
 }
-?>
-<label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
-<div class="col-sm-6">
-<div class="input-group">
-<label class="radio-inline"> <input class="check" type="radio" value="1" name="siteaccess[<?php echo $row['content']; ?>]" <?php if($ListedUserAccess[$VerifyAccess] == "1"){echo "checked=''"; } ?>> Allowed</label> 
-<label class="radio-inline"> <input class="check" type="radio" value="0" name="siteaccess[<?php echo $row['content']; ?>]" <?php if($ListedUserAccess[$VerifyAccess] == "0" OR $ListedUserAccess[$VerifyAccess] == ""){echo "checked=''"; } ?>> Denied</label> 
-</div></div><br><br><br><?php } ?>
-</div></div>
-</div></div></div>
-</div>
-</div></div>
-</div></div>
-		
-		
-		
-		
-		
-		
+?>                                          
+                                            <p>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
+                                                    <div class="col-sm-6">
+                                                        <input class="check" type="radio" value="1" name="siteaccess[<?php echo $row['content']; ?>]" <?php if($ListedUserAccess[$VerifyAccess] == "1"){echo "checked"; } ?>> Allowed 
+                                                        <input class="check" type="radio" value="0" name="siteaccess[<?php echo $row['content']; ?>]" <?php if($ListedUserAccess[$VerifyAccess] == "0" OR $ListedUserAccess[$VerifyAccess] == ""){echo "checked"; } ?>> Denied</label> 
+                                                    </div>
+                                                </div>
+                                            </p>
+                                            <br><br>
+<?php } ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+<?php }else{ ?>
+                        <div class="tab-pane active cont" id="basic">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12">
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="header">
+                                            <h3>ERROR 403 FORBIDDEN!</h3>
+                                            <br><br>
+                                            You are not authorized to view this page.
+                                        </div>
+                                    </div>
+                                    <br><br><br>
+                                </div>
+                            </div>
+                        </div>
+<?php } ?>
+                    </form>
+                </div>
+            </div>
+        </div>	
+	</div>	
+</div>	
 
 		
 		
 		
 <div class="row">
-<div class="col-sm-12 col-md-12">
-<div class="block-flat">
-<button class="btn btn-primary" type="submit">Submit</button>
-<button class="btn btn-default">Cancel</button>
-</div></div></div>
+    <div class="col-sm-12 col-md-12">
+        <div class="block-flat">
+            <button class="btn btn-primary" type="submit">Submit</button>
+            <button class="btn btn-default">Cancel</button>
+        </div>
+    </div>
+</div>
 
 
 <input type="hidden" name="passphrase" value="<?php echo $ListedUser['password']; ?>">

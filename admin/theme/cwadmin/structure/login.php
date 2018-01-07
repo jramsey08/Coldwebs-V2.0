@@ -11,16 +11,21 @@ window.location = "<?php echo "$Domain/$Redirect"; ?>"
 <body class="texture">
 <div id="cl-wrapper" class="login-container">
 	<div class="middle-login">
-
-
-<?php if($_GET['error'] != ""){ ?>
+<?php
+if($_GET['error'] == "na"){
+    $Err="<strong>Error!</strong> This account is not allowed to log-in. Please visit our <a href='/Contact'>Contact Us</a> page to find out why.";
+}
+if($_GET['error'] == "log"){
+    $Err="<strong>Error!</strong> Please Sign-in to access this page";
+}
+if($_GET['error'] != ""){ ?>
 <div class="alert alert-danger">
-  <strong>Error!</strong> This account is not allowed to log-in. Please visit our <a href='/Contact'>Contact Us</a> page to find out why.
+<?php echo $Err; ?>
 </div>
 <?php } ?>
 		<div class="block-flat">
 			<div class="header">							
-				<h3 class="text-center"><img class="logo-img" src="<?php echo "$THEME/uploads/cwlogo.png"; ?>" alt="logo"/></h3>
+				<h3 class="text-center"><img class="logo-img" src="/<?php echo "$THEME/uploads/cwlogo.png"; ?>" alt="logo"/></h3>
 			</div>
 			<div>
                 
@@ -46,9 +51,14 @@ window.location = "<?php echo "$Domain/$Redirect"; ?>"
 
 					</div>
 					<div class="foot">
-						<button class="btn btn-default" data-dismiss="modal" type="button">Register</button>
-						<button class="btn btn-primary" data-dismiss="modal" type="submit">Log me in</button>
+					    <center>
+    						<button class="btn btn-default" data-dismiss="modal" type="button">Register</button>
+    						<button class="btn btn-primary" data-dismiss="modal" type="submit">Log me in</button>
+    						<br>
+    						<a href="/Password-Recovery">Reset Account Password</a>
+    					</center>
 					</div>
+                    <input type='hidden' name='redirect' value='<?php echo $_GET['redirect']; ?>'>
 				</form>
 			</div>
 		</div>

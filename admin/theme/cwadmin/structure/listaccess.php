@@ -66,17 +66,10 @@ $PageIds = OtarEncrypt($key, $PageIds);
 
 
 
-<<<<<<< HEAD
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-switch.min.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/select2.min.js" ></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-slider.js" ></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/loader.min.js"></script>	
-=======
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.switch/bootstrap-switch.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.select2/select2.min.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.slider/js/bootstrap-slider.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/fuelux/loader.min.js"></script>	
->>>>>>> origin/master
 <script src="js/modernizr.js" type="text/javascript"></script>
 <script type="text/javascript">
   $("#credit_slider").slider().on("slide",function(e){

@@ -40,24 +40,20 @@
 
 <tbody>
 <?php
-$Query = "SELECT * FROM page_template WHERE trash='0'"; 
+$Query = "SELECT * FROM page_template WHERE trash='0' AND webid='$WebId'"; 
 $Result = mysql_query($Query) or die(mysql_error());
 while($Row = mysql_fetch_array($Result)){ 
 $ArticleId = OtarEncrypt($key,$Row['id']);
 $Row = PbUnSerial($Row);
-$query = "SELECT * FROM page_settings WHERE article='$ArticleId'"; 
+$query = "SELECT * FROM page_settings WHERE article='$ArticleId' AND tempid='$Row[id]' AND webid='$WebId'"; 
 $result = mysql_query($query) or die(mysql_error());
 $row = mysql_fetch_array($result);
 $row = PbUnSerial($row);
-$qUery = "SELECT * FROM page_structure WHERE url='$Row[url]' AND urltype='$Row[urltype]' AND end='$Row[end]' AND urlid='$Row[urlid]' AND template='$Row[template]'"; 
-$rEsult = mysql_query($qUery) or die(mysql_error());
-$rOw = mysql_fetch_array($rEsult);
-$rOw = PbUnSerial($rOw);
-$qUerY = "SELECT * FROM articles WHERE id='$Row[article]'";
+$qUerY = "SELECT * FROM articles WHERE id='$ArticleId' AND webid='$WebId'";
 $rEsulT = mysql_query($qUerY) or die(mysql_error());
 $rOW = mysql_fetch_array($rEsulT);
 $rOW = PbUnSerial($rOW);
-$ArticleName = $rOW['content']['name'];
+$ArticleName = $rOW['name'];
 if($ArticleName == ""){ $ArticleName = $rOw['name']; }
 if($ArticleName == ""){ $ArticleName = $Row['name']; }
 if($row['admin'] == "1"){ }else{ ?>
@@ -72,10 +68,6 @@ if($row['admin'] == "1"){ }else{ ?>
 <button data-toggle="dropdown" class="btn btn-xs btn-primary dropdown-toggle" type="button"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>
 <ul role="menu" class="dropdown-menu">
 <li><a href="/admin/Pages/<?php echo $ArticleId; ?>">Edit</a></li>
-<li><a href="#">Copy</a></li>
-<li><a href="#">Details</a></li>
-<li class="divider"></li>
-<li><a href="/Process/Delete/Pages/<?php echo $ArticleId; ?>">Remove</a></li>
 </ul></div></td>
 </tr>
 <?php }} ?>									
@@ -93,20 +85,16 @@ if($row['admin'] == "1"){ }else{ ?>
 	</div> 
 	
 </div>
-<input type='hidden' name='redirect' value='<?php echo $Array["siteinfo"]["domain"]; ?>/admin/Pages'>
+<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/Pages'>
 </form>
 
 
 
-<<<<<<< HEAD
+
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.datatables.min.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>
-=======
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.jeditable/jquery.jeditable.mini.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/jquery.datatables.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/bootstrap-adapter/js/datatables.js"></script>
->>>>>>> origin/master
+
 <script type="text/javascript">
       //Add dataTable Functions
       var functions = $('<div class="btn-group">
