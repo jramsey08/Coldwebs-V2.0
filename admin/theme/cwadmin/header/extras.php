@@ -1,6 +1,6 @@
 <style>
 .sidebar-logo {
-background: #7761a7 url(/admin/theme/cwadmin/uploads/cwlogo.png) no-repeat 15px 19px;
+background: #80b3ff url(/admin/theme/cwadmin/uploads/cwlogo.png) no-repeat 15px 19px;
 padding: 15px 20px;
 display: block;
 height: 64px;
