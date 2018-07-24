@@ -19,13 +19,13 @@
                                             <ul>
 <?php
 $Query = "SELECT * FROM messages WHERE trash='0' AND type='inbox' AND webid='$WebId' ORDER BY date DESC LIMIT 0,3"; 
-$Result = mysql_query($Query) or die(mysql_error());
-while($Tmessage = mysql_fetch_array($Result)){
-    $Tmessage = PbUnserial($Tmessage);
+$Result = mysqli_query($CwDb,$Query);
+while($Tmessage = mysqli_fetch_assoc($Result)){
+    $Tmessage = CwOrganize($Tmessage,$Array);
     $query = "SELECT * FROM users WHERE id='$Tmessage[user]'"; 
-    $result = mysql_query($query) or die(mysql_error());
-    $User = mysql_fetch_array($result);
-    $User = PbUnserial($User);
+    $result = mysqli_query($CwDb,$query);
+    $User = mysqli_fetch_assoc($result);
+    $User = CwOrganize($User,$Array);
     if($User["content"]["img"] == ""){
         $User["content"]["img"] = "/admin/theme/cwadmin/uploads/avatar.png";
     }
@@ -63,13 +63,25 @@ while($Tmessage = mysql_fetch_array($Result)){
                                         <div class="content" tabindex="0" style="right: -15px;">
                                             <ul>
 <?php
-$Query = "SELECT * FROM cw_alerts WHERE trash='0' AND user='$Current_Admin' AND webid='$WebId' ORDER BY date DESC LIMIT 0,3";
-$Result = mysql_query($Query) or die(mysql_error());
-while($Alerts = mysql_fetch_array($Result)){
+if($UserSiteAccess['notification'] == "1"){
+    if($UserSiteAccess['cross_domain'] == "1"){
+        $Query = "SELECT * FROM cw_alerts WHERE trash='0' ORDER BY date DESC LIMIT 0,3";
+    }else{
+        $Query = "SELECT * FROM cw_alerts WHERE trash='0' AND webid='$WebId' ORDER BY date DESC LIMIT 0,3";
+    }
+}else{
+    if($UserSiteAccess['cross_domain'] == "1"){
+        $Query = "SELECT * FROM cw_alerts WHERE trash='0' AND user='$Current_Admin' ORDER BY date DESC LIMIT 0,3";
+    }else{
+        $Query = "SELECT * FROM cw_alerts WHERE trash='0' AND user='$Current_Admin' AND webid='$WebId' ORDER BY date DESC LIMIT 0,3";
+    }
+}
+$Result = mysqli_query($CwDb,$Query);
+while($Alerts = mysqli_fetch_assoc($Result)){
     $Alerts = CwOrganize($Alerts,$Array);
 ?>
                                                 <li>
-                                                    <a href="#/Notification/<?php echo OtarDecrypt($key,$Alerts["id"]); ?>">
+                                                    <a href="/admin/Tracker/Notification/<?php echo OtarEncrypt($key,$Alerts['id']); ?>">
                                                         <i class="fa fa-cloud-upload info"></i>
                                                         <b><?php echo $Alerts["other"]["message"]; ?></b> 
                                                         <span class="date"><?php echo date("F / d / Y h:i:s A", $Alerts["date"]); ?></span>
@@ -83,7 +95,7 @@ while($Alerts = mysql_fetch_array($Result)){
                                         </div>
                                     </div>
                                     <ul class="foot">
-                                        <li><a href="#">View all activity </a></li>
+                                        <li><a href="/admin/Tracker/Notification/">View all activity </a></li>
                                     </ul>           
                                 </li>
                             </ul>

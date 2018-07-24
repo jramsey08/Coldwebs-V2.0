@@ -16,15 +16,15 @@ function YouAreHere($Array){
     <ul><li><a href="<?php echo "$SiteInfo[domain]"; ?>">Home</a></li> 
     <?php  if($Array['dynamicsetup'] == 1){ $Article = $Dynamic_Article;}
 $query = "SELECT * FROM articles WHERE id='$Article[id]' AND active='1' AND trash='0'";
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb.$query);
+$row = mysqli_fetch_assoc($result);
+$row = CwOrganize($row,$Array);
 if($row['content']['name'] == ""){ $row['content']['name'] = $Article['content']['name']; }
 if($row['category'] == ""){ $row[category] = "self"; }
 if($row['category'] == "self"){ echo "<li>$row[content][name]</li>"; }else{
 $Query = "SELECT * FROM articles WHERE id='$row[category]' AND active='1' AND trash='0'";
-$Result = mysql_query($Query) or die(mysql_error());
-$Row = mysql_fetch_array($Result);
+$Result = mysql_query($CwDb,$Query);
+$Row = mysqli_fetch_assoc($Result);
 echo "<li><a href='$SiteInfo[domain]/$Row[url]'>$Row[name]</a></li> 
 <li>$row[name]</li>"; } echo "</ul></nav>";
 }
@@ -40,6 +40,12 @@ function vimeo($Code,$Width,$Height){
     if($Height == ""){ $Height = "270"; } ?>
     <iframe src="//player.vimeo.com/video/<?php echo $Code; ?>" width="<?php echo $Width; ?>" height="<?php echo $Height; ?>" frameborder="0" autoplay webkitallowfullscreen mozallowfullscreen     allowfullscreen></iframe><?php
 }
+
+function spotify($Code,$Width,$Height){
+    if($Width == ""){ $Width = "670"; }
+    if($Height == ""){ $Height = "270"; } ?>
+<iframe src="https://embed.spotify.com/?uri=spotify:<?php echo $Code; ?>" style="display:block; margin:0 auto; width:<?php echo $Width; ?>px; height:<?php echo $Height; ?>px;" frameborder="0" allowtransparency="true"></iframe>
+<?php }
 
 function code($Code,$Width,$Height){
     echo $Code;
@@ -90,14 +96,14 @@ function PullArticles($Array){
     <th>Settings</th>
     </tr></thead><tbody>    
     <?php $Query = "SELECT * FROM articles WHERE category!='self' AND trash='0'"; 
-    $Result = mysql_query($Query) or die(mysql_error());
-    while($Row = mysql_fetch_array($Result)){
+    $Result = mysqli_query($CwDb.$Query);
+    while($Row = mysqli_fetch_assoc($Result)){
     $ArticleCat = $Row['category'];
     $ArticleId = $Row['id'];
     $ArticleId = OtarEncrypt($key,$ArticleId);
     $query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0'"; 
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result); 
+    $result = mysqli_query($CwDb.$query);
+    $row = mysqli_fetch_assoc($result); 
     if($Row['hits'] == ""){ $Row['hits'] = 0; } ?>
     <tr class="gradeX">
     <td><a href="/Articles/<?php echo $ArticleId; ?>"><?php echo $Row['name']; ?></a></td>

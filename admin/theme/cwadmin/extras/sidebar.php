@@ -23,22 +23,23 @@
                         </div>
                     </div>
                 </div>
+<?php if($Restrict["status"] != "1"){ ?>
                 <ul class="cl-vnavigation">
                     <li class="active"><a href="/admin"><i class="fa"></i><span>Dashboard</span></a></li>
 <?php
 $query = "SELECT * FROM admin WHERE type='menu' AND active='1' AND category='self' AND trash='0' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-    $row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+    $row = CwOrganize($row,$Array);
     $rowAccess = $row['access'];
     if($UserSiteAccess["$rowAccess"] == "1"  OR $rowAccess == ""){
 ?>
-                    <li><a href="#"><i class="fa"></i><span><?php echo $row['name']; ?></span></a>
+                    <li><a href="/admin/<?php echo $row["url"]; ?>"><i class="fa"></i><span><?php echo $row['name']; ?></span></a>
 <?php
 $Query = "SELECT * FROM admin WHERE type='menu' AND active='1' AND category='$row[id]' AND trash='0' ORDER BY name";
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-    $Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+    $Row = CwOrganize($Row,$Array);
     $RowAccess = $Row['access'];
     $Count = $Count + 1;
 if($Count == "1"){
@@ -58,6 +59,7 @@ if($Count >= "1"){
 $Count = "0";
 } ?>
                 </ul>
+<?php } ?>
             </div>
         </div>
     </div>
