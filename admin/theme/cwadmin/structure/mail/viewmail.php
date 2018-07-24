@@ -3,8 +3,8 @@ include("$THEME/extras/inboxside.php");
 $MessageId = $_GET["type"];
 $MessageId = OtarDecrypt($key,$MessageId);
 $query = "SELECT * FROM messages WHERE id='$MessageId' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
+$result = mysqli_query($CwDb,$query);
+$row = mysqli_fetch_assoc($result);
 $Message = CwOrganize($row,$Array);
 if($Message["admin"] == "1"){
     if($UserSiteAccess['adminmessages'] == "1"){

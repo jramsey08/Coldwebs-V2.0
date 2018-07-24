@@ -68,9 +68,9 @@ if($Article['content']['name'] == ""){
 <select class="form-control" name='postcat'>
 <option value="<?php echo $Article['other']['category']; ?>">Select Below</option>
 <?php  $query = "SELECT * FROM articles WHERE type='category' AND active='1' AND trash='0' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+$row = CwOrganize($row,$Array);
 echo "<option value='$row[id]'"; if($row['id'] == $Article['other']['category']){ echo "selected=selected"; }; ?>><?php echo $row['content']['name']; ?></option> <?php } ?>
 </select></div></div><br><br>
 
@@ -181,9 +181,9 @@ $Count = $Count + 1; ?>
 <select class="form-control" name='gallery'>
 <option value="<?php echo $Article['other']['gallery']; ?>">Select Below</option>
 <?php $query = "SELECT * FROM articles WHERE type='gallery' AND active='1' AND trash='0' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query) ;
+while($row = mysqli_fetch_assoc($result)){
+$row = CwOrganize($row,$Array);
 echo "<option value='$row[id]'"; if($row['id'] == $Article['other']['gallery']){ echo "selected=selected"; }; ?>><?php echo $row['content']['name']; ?></option> <?php } ?>
 </select></div></div><br><br>
 <div class="form-group">
@@ -211,8 +211,8 @@ echo "<option value='$row[id]'"; if($row['id'] == $Article['other']['gallery']){
 <tbody class="no-border-y">
 <?php $GalleryId = $Article['other']['gallery'];
 $query = "SELECT * FROM images WHERE album='$GalleryId' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ ?>
+$result = mysqli_query($CwDb,$query) ;
+while($row = mysqli_fetch_assoc($result)){ ?>
 <tr>
 <td><img src='<?php echo $row[img]; ?>' height="200" width="200"></td>
 <td style="width:30%;"><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="1" value='<?php echo $row["list"]; ?>'></td>
@@ -307,9 +307,9 @@ while($row = mysql_fetch_array($result)){ ?>
 <select class="form-control" name='double[0][article]'>
 <option value="<?php echo $Double['0']['category']; ?>">Select Below</option>
 <?php  $query = "SELECT * FROM articles WHERE type='post' AND active='1' AND trash='0' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+$row = CwOrganize($row,$Array);
 echo "<option value='$row[id]'"; if($row[id] == $Double['0']['article']){ echo "selected=selected"; }; ?>><?php echo $row['content']['name']; ?></option> <?php } ?>
 </select></div></div><br><br>
 <div class="form-group">
@@ -318,9 +318,9 @@ echo "<option value='$row[id]'"; if($row[id] == $Double['0']['article']){ echo "
 <select class="form-control" name='double[0][category]'>
 <option value="<?php echo $Double['1']['category']; ?>">Select Below</option>
 <?php  $query = "SELECT * FROM articles WHERE category='self' AND type='category' AND active='1' AND trash='0' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query) ;
+while($row = mysqli_fetch_assoc($result)){
+$row = CwOrganize($row,$Array);
 echo "<option value='$row[id]'"; if($row['id'] == $Double['0']['category']){ echo "selected=selected"; }; ?>><?php echo $row['content']['name']; ?></option> <?php } ?>
 </select></div></div><br><br>
 <div class="form-group">
@@ -329,9 +329,9 @@ echo "<option value='$row[id]'"; if($row['id'] == $Double['0']['category']){ ech
 <select class="form-control" name='double[0][gallery]'>
 <option value="<?php echo $Double[0][gallery]; ?>">Select Below</option>
 <?php  $query = "SELECT * FROM articles WHERE type='gallery' AND active='1' AND trash='0' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+$row = CwOrganize($row,$Array);
 echo "<option value='$row[id]'"; if($row['id'] == $Double['0']['gallery']){ echo "selected=selected"; }; ?>><?php echo $row['content']['name']; ?></option> <?php } ?>
 </select></div></div><br><br>
 <div class="form-group">
@@ -373,9 +373,9 @@ echo "<option value='$row[id]'"; if($row['id'] == $Double['0']['gallery']){ echo
 <select class="form-control" name='double[1][article]'>
 <option value="<?php echo $Double['1']['category']; ?>">Select Below</option>
 <?php $query = "SELECT * FROM articles WHERE type='post' AND active='1' AND trash='0' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query) ;
+while($row = mysqli_fetch_assoc($result)){
+$row = CwOrganize($row,$Array);
 echo "<option value='$row[id]'"; if($row['id'] == $Double['1']['article']){ echo "selected=selected"; }; ?>><?php echo $row['content']['name']; ?></option> <?php } ?>
 </select></div></div><br><br>
 <div class="form-group">
@@ -384,9 +384,9 @@ echo "<option value='$row[id]'"; if($row['id'] == $Double['1']['article']){ echo
 <select class="form-control" name='double[1][category]'>
 <option value="<?php echo $Double['1']['category']; ?>">Select Below</option>
 <?php  $query = "SELECT * FROM articles WHERE category='self' AND type='category' AND active='1' AND trash='0' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+$row = CwOrganize($row,$Array);
 echo "<option value='$row[id]'"; if($row['id'] == $Double['1']['category']){ echo "selected=selected"; }; ?>><?php echo $row['content']['name']; ?></option> <?php } ?>
 </select></div></div><br><br>
 <div class="form-group">
@@ -395,9 +395,9 @@ echo "<option value='$row[id]'"; if($row['id'] == $Double['1']['category']){ ech
 <select class="form-control" name='double[1][gallery]'>
 <option value="<?php echo $Double['1']['gallery']; ?>">Select Below</option>
 <?php  $query = "SELECT * FROM articles WHERE type='gallery' AND active='1' AND trash='0' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query) ;
+while($row = mysqli_fetch_assoc($result)){
+$row = CwOrganize($row,$Array);
 echo "<option value='$row[id]'"; if($row['id'] == $Double['1']['gallery']){ echo "selected=selected"; }; ?>><?php echo $row['content']['name']; ?></option> <?php } ?>
 </select></div></div><br><br>
 <div class="form-group">

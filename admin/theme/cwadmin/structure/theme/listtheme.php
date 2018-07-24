@@ -51,20 +51,20 @@ include("../theme/$ThemeId[0]/settings.php");
 <tbody>
 <?php
 $Query = "SELECT * FROM articles WHERE category='$ThemeId[2]' AND type='function' AND trash='0' AND webid='$WebId'"; 
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-    $Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+    $Row = CwOrganize($Row,$Array);
     $QuerY = "SELECT * FROM page_function WHERE article='$Row[id]' AND webid='$WebId'"; 
-    $ResulT = mysql_query($QuerY) or die(mysql_error());
-    $RoW = mysql_fetch_array($ResulT);
+    $ResulT = mysqli_query($CwDb,$QuerY);
+    $RoW = mysqli_fetch_assoc($ResulT);
     $Shortcode = $RoW['shortcode'];
     $ArticleCat = $Row['category'];
     $artFunId = $Row['id'];
     $artFunId = OtarEncrypt($key,$artFunId);
     $query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0' AND webid='$WebId'";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
-    $row = PbUnSerial($row); 
+    $result = mysqli_query($CwDb,$query);
+    $row = mysqli_fetch_assoc($result);
+    $row = CwOrganize($row,$Array); 
 ?>
 <tr class="odd gradeX">
 <td><?php echo $Row['content']['name']; ?></td>

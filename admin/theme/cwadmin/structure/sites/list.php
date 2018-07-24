@@ -1,9 +1,9 @@
 <?php
 $WebsiteId = OtarDecrypt($key,$_GET[type]);
 $Query = "SELECT * FROM info WHERE id='$WebsiteId'";
-$Result = mysql_query($Query) or die(mysql_error());
-$Website = mysql_fetch_array($Result);
-$Website = PbUnSerial($Website);
+$Result = mysqli_query($CwDb,$Query);
+$Website = mysqli_fetch_assoc($Result);
+$Website = CwOrganize($Website,$Array);
 ?>
 <div class="cl-mcont">
     <div class="page-head">
@@ -33,9 +33,9 @@ $Website = PbUnSerial($Website);
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-sm-12 col-md-12">
-                                    
+
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">Name</label>
                                         <div class="col-sm-6">
@@ -50,24 +50,18 @@ $Website = PbUnSerial($Website);
                                         </div>
                                     </div>
                                     <br><br>
-                                
+
                                     <div class="form-group">
                                         <label class="col-sm-3 control-label">Website Type</label>
                                         <div class="col-sm-6">
                                             <select class="form-control" name='type'>
-                                                <option value="<?php echo $Website['info']['type']; ?>">Select Below</option>
+                                                <option value="<?php if(is_array($Website['info'])){ echo $Website['info']['type']; } ?>">Select Below</option>
                                             </select>
                                         </div>
                                     </div>
                                     <br><br>
-                                        
-                                        
-                                         
-                                        
-                                        
-                                        
 
-                                    
+
                                 </div>
                             </div>
                         </div>

@@ -37,8 +37,8 @@ if($UserSiteAccess['adminmessages'] == "1"){
 }else{
     $query = "SELECT * FROM messages WHERE admin='0' AND user='$Current_Admin_Id' AND type='inbox' AND trash='0' AND webid='$WebId' ORDER BY id DESC"; 
 }
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ ?>
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){ ?>
                         <div class="item">
                             <div>
                                 <input type="checkbox" name="[<?php echo $row['id']; ?>]" />

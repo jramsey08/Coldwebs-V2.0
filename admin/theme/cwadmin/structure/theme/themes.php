@@ -30,7 +30,7 @@
                         <tbody>
 <?php
 $ThemePath = "../theme/";
-$Templates = Pulltheme($ThemePath,"0");
+$Templates = Pulltheme("../theme/","0",$WebId);
 if(is_array($Templates)){
     foreach($Templates as $Template){
         $TempId = OtarEncrypt($key,$Template); ?>

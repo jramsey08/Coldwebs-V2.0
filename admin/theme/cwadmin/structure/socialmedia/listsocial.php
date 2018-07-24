@@ -1,15 +1,18 @@
 <div class="cl-mcont">
-<div class="page-head">
-<ol class="breadcrumb">
-<li><a href="/admin">Dashboard</a></li>
-<li><a href="/admin/SocialMedia">Social Media</a></li>
-<li class="active"><?php echo $Article['content']['name']; ?></li>
-</ol></div>		
+    <div class="page-head">
+        <ol class="breadcrumb">
+            <li><a href="/admin">Dashboard</a></li>
+            <li><a href="/admin/SocialMedia">Social Media</a></li>
+            <li class="active"><?php echo $Article['content']['name']; ?></li>
+        </ol>
+    </div>		
+
 <div class="row">		
 <div class="col-sm-12 col-md-9">
 <div class="tab-container">
 <ul class="nav nav-tabs">
 <li class="active"><a href="#basic" data-toggle="tab">Basic Info</a></li>
+<li><a href="#extra" data-toggle="tab">Extra Info</a></li>
 </ul>
 <div class="tab-content">
 <div class="tab-pane active cont" id="basic">
@@ -59,8 +62,67 @@
 
 </div></div>
 
-</div></div>
+
+
+
+
+<div class="tab-pane" id="extra">
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="header">
+                <h3>Extra Configurations</h3>
+            </div>
+            <div class="content">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Auth Code</label>
+                    <div class="col-sm-9">
+                        <input type="text" name='auth' placeholder="Enter Access Code" class="form-control" value='<?php echo $Article['other']['auth']; ?>'>
+                    </div>
+                </div>
+                <br><br>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Music Artist</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name='artist'>
+                            <option value="<?php echo $Article['other']["artist"]; ?>">Select Below</option>
+<?php
+$query = "SELECT * FROM articles WHERE type='post-artist' AND active='1' AND trash='0' AND webid='$WebId' ORDER BY RAND() LIMIT 0,4";
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+    $row = CwOrganize($row,$Array);
+    echo "<option value='$row[id]'"; if($row['id'] == $Article['other']["artist"]){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option>
+<?php } ?>
+                        </select>
+                    </div>
+                </div>
+                <br><br>
+            </div>
+        </div>
+    </div>
 </div>
+
+
+
+
+</div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
 <div class="col-sm-3 col-md-3">
 <div class="panel panel-default">
 <div class="panel-heading">

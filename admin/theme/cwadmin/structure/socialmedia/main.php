@@ -38,29 +38,15 @@
 <tbody>
 <?php
 $Query = "SELECT * FROM articles WHERE type='social' AND trash='0' AND webid='$WebId'";
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-$Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+$Row = CwOrganize($Row,$Array);
 $ArticleCat = $Row['category'];
 $ArticleId = $Row['id'];
 $ArticleId = OtarEncrypt($key,$ArticleId);
-$query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0' AND webid='$WebId'"; 
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
-$row = PbUnSerial($row); 
 if($Row['hits'] == ""){
     $Row['hits'] = "0";
 }
-if($UserSiteAccess['editauthor'] == "0"){
-    if($Row['other']['author'] == $Current_Author){
-        $Show = "1";
-    }else{
-        $Show = "0";
-    }
-}else{
-    $Show = "1";
-}
-if($Show == "1"){
 ?>
 <tr class="odd gradeX">
 <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
@@ -79,7 +65,7 @@ if($Show == "1"){
 <li><a href="/admin/<?php echo $_GET['url']; ?>/<?php echo $ArticleId; ?>">Edit</a></li>
 </ul></div></td>
 </tr>
-<?php }} ?>									
+<?php } ?>									
 </tbody>
 </table>							
 </div>
@@ -94,7 +80,7 @@ if($Show == "1"){
 	</div> 
 	
 </div>
-<input type='hidden' name='redirect' value='<?php echo $Array["siteinfo"]["domain"]; ?>/admin/SocialMedia'>
+<input type='hidden' name='redirect' value='http://<?php echo $Array["siteinfo"]["domain"]; ?>/admin/SocialMedia'>
 </form>
 
 

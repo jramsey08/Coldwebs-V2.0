@@ -2,7 +2,7 @@
     <div class="page-head">
         <ol class="breadcrumb">
             <li><a href="/admin">Dashboard</a></li>
-            <li><a href="/admin/Cw-Invoices">Introll Invoicse</a></li>
+            <li><a href="/admin/Cw-Invoice">Introll Invoicse</a></li>
             <li class="active">Website Invoice</li>
         </ol>
     </div>
@@ -25,5 +25,5 @@ $Incoming = OtarEncrypt($PB_Access,$Incoming);
 
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery-ui.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable.mini.js"></script>
-<script type="text/javascript" src="/admin/theme/header/js/datatables.min.js""></script>
+<script type="text/javascript" src="/admin/theme/header/js/datatables.min.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>

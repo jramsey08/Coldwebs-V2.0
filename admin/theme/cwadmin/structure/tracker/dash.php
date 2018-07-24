@@ -1,7 +1,3 @@
-Editing:  
-/home/cwdemo/public_html/admin/theme/cwadmin/structure/ecommerce/dashboard.php
- Encoding:    Re-open Use Code Editor     Close  Save Changes
-
 <div class="cl-mcont">
 <div class="row">
       
@@ -145,10 +141,9 @@ $row = PbUnSerial($row); ?>
 </tr></thead>
 <tbody><?php
 $Query = "SELECT * FROM users WHERE email!='' AND webid='$WebId' ORDER BY id DESC LIMIT 0,5"; 
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-    if($Row['content'] == ""){ }else{ $Row['content'] = unserialize($Row['content']); }
-    if($Row['info'] == ""){ }else{ $Row['info'] = unserialize($Row['info']); } 
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+    $Row = CwOrganize($Row,$Array);
     if($Row['info']['access'] == "0"){
     }else{
         $Access = CwUserAccess($Row['info']['access']);
