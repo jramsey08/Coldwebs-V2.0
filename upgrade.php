@@ -8,10 +8,7 @@ include("api/pblast/config.php");
 $Request = $_GET['req'];
 
 
-if($Request == ""){
-}else{
-
-
+if($Request != ""){
 
     $Request = OtarDecrypt($key,$Request);
     $ExternalFile = $Request['file'];

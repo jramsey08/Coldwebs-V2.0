@@ -28,10 +28,7 @@ include("config/userinfo.php");
 <label>Country </label>
 <select name="country" class="required" id="subscriber_country">
 <option value=""></option>
-<?php
-$query = "SELECT * FROM opn_country WHERE status='1' ORDER BY NAME ASC";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ ?>
+<?php while($row = Cw_Fetch("SELECT * FROM opn_country WHERE status='1' ORDER BY NAME ASC",$Array)){?>
 <option value="<?php echo $row['iso_code_3']; ?>"><?php echo $row['name']; ?></option>
 <?php } ?>
 </select> <?php echo $Current_Admin; ?>

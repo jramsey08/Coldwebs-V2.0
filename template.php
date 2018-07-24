@@ -14,9 +14,7 @@
 $time_start_Template = microtime_float();
 
 // SEARCH THE PAGE_STRUCTURE TABLE TO LOCATE THE DOMAIN INFORMATION PROVIDED. \\
-$query = "SELECT * FROM page_template WHERE url='$Get_Url'AND active='1' AND trash='0' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
+$row = Cw_Fetch("SELECT * FROM page_template WHERE url='$Get_Url'AND active='1' AND trash='0' AND webid='$WebId'",$Array);
 if($row['active'] == "1"){
     $Page_Structure_Article = $row['article'];
     $Page_Template = $row['template'];
@@ -29,9 +27,7 @@ if($row['active'] == "1"){
         $THEME = "theme/$theme";
         $Array['page']['template'] = $row;
 // SEARCH THE PAGE_SETTINGS TABLE TO GATHER ANY SETTINGS THAT NEEDS TO BE APPLIED TO THE PAGE BEFORE THE DISPLAY. \\
-        $query = "SELECT * FROM page_settings WHERE tempid='$row[id]' AND type='page' AND template='$Page_Template' AND webid='$WebId'";
-        $result = mysql_query($query) or die(mysql_error());
-        $row = mysql_fetch_array($result);
+        $row = Cw_Fetch("SELECT * FROM page_settings WHERE tempid='$row[id]' AND type='page' AND template='$Page_Template' AND webid='$WebId'",$Array);
         $Login_Required = $row['secure'];
         $View_Ads = $row['ads'];
         $Structure_Type = $row['structure'];
@@ -50,7 +46,6 @@ if($row['active'] == "1"){
     }
 }
 
-
 //INCLUDE IMPORTANT THEME INFORMATION \\
 if($theme == ""){
     $theme = $SiteInfo['theme'];
@@ -63,27 +58,22 @@ if(file_exists($filename)){
 
 
 $Page_Id = $Array['page']['settings']['article'];
-$query = "SELECT * FROM articles WHERE id='$Page_Id' AND date_created<$Date AND active='1' AND trash='0' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
-$row = CwOrganize($row,$Array);
+$row = Cw_Fetch("SELECT * FROM articles WHERE id='$Page_Id' AND date_created<$Date AND active='1' AND trash='0' AND webid='$WebId'",$Array);
 if($row['type'] == "page"){
     $ActiveArticle = $row;
     $Cat_Override = $row['other']['catoveride'];
 }else{
 
 // SEARCH THE ARTICLES TABLE FOR INFORMATION NEEDED TO PULL THE REQUESTED CATEGORY INFORMATION \\
-    $query = "SELECT * FROM articles WHERE id='$Page_Structure_Article' AND active='1' AND trash='0' and type='category' AND webid='$WebId' AND date_created<$Date OR 
+    $CategoryInfo = Cw_Fetch("SELECT * FROM articles WHERE id='$Page_Structure_Article' AND active='1' AND trash='0' and type='category' AND webid='$WebId' AND date_created<$Date OR 
     url='$Get_Url' AND active='1' AND trash='0' and type='category' AND webid='$WebId' AND date_created<$Date OR url='$Get_Url' AND active='1' AND type='root' AND trash='0' AND webid='$WebId' AND date_created<$Date OR 
     id='$Page_Structure_Article' AND active='1' AND trash='0' and type='prodcat' AND webid='$WebId' AND date_created<$Date OR 
-    url='$Get_Url' AND active='1' AND trash='0' and type='prodcat' AND webid='$WebId' AND date_created<$Date OR url='$Get_Url' AND active='1' AND type='root' AND trash='0' AND webid='$WebId' AND date_created<$Date";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
-    $row = CwOrganize($row,$Array);
-    $CategoryInfo = $row;
-    if($CategoryInfo['other']['structure'] == ""){
-    }else{
-        $Structure_Type = $CategoryInfo['other']['structure'];
+    url='$Get_Url' AND active='1' AND trash='0' and type='prodcat' AND webid='$WebId' AND date_created<$Date OR url='$Get_Url' AND active='1' AND type='root' AND trash='0' AND webid='$WebId' AND date_created<$Date",$Array);
+    if(is_array($CategoryInfo['other'])){
+        if($CategoryInfo['other']['structure'] == ""){
+        }else{
+            $Structure_Type = $CategoryInfo['other']['structure'];
+        }
     }
     $CategoryId = $CategoryInfo['id'];
     $Array['category'] = $CategoryInfo; 
@@ -93,34 +83,31 @@ if($row['type'] == "page"){
 
 
 // SEARCH THE ARTICLES TABLE FOR INFORMATION NEEDED TO PULL THE REQUESTED POST INFORMATION \\
-    if($Cw_Multiple_Cat['active'] == "1"){
+    if($Cw_Multiple_Cat == "1"){
         if($CategoryInfo["id"] == ""){
-            $query = "SELECT * FROM articles WHERE id='$Page_Structure_Article' AND active='1' AND trash='0' AND webid='$WebId' AND date_created<$Date OR 
-            url='$Get_Type' AND  active='1' AND trash='0' AND webid='$WebId' AND date_created<$Date";
+            $PostInfo = Cw_Fetch("SELECT * FROM articles WHERE id='$Page_Structure_Article' AND active='1' AND trash='0' AND webid='$WebId' AND date_created<$Date OR 
+            url='$Get_Type' AND active='1' AND trash='0' AND webid='$WebId' AND date_created<$Date",$Array);
         }else{
-            $query = "SELECT * FROM articles WHERE active='1' AND id='$Page_Structure_Article' AND trash='0' AND category LIKE '%-" .     
-            $CategoryId . "-%' AND webid='$WebId' AND date_created<$Date OR url='$Get_Type' AND category LIKE '%-" . $CategoryId . "-%' AND active='1' AND trash='0' AND webid='$WebId' AND date_created<$Date";
+            $PostInfo = Cw_Fetch("SELECT * FROM articles WHERE active='1' AND id='$Page_Structure_Article' AND trash='0' AND category LIKE '%-" .     
+            $CategoryId . "-%' AND webid='$WebId' AND date_created<$Date OR url='$Get_Type' AND category LIKE '%-" . $CategoryId . "-%' AND active='1' AND trash='0' AND webid='$WebId' AND date_created<$Date",$Array);
         }
     }else{
         if($CategoryInfo["id"] == ""){
-            $query = "SELECT * FROM articles WHERE url='$Get_Type' AND active='1' AND trash='0' AND webid='$WebId' AND date_created<$Date OR url='$Get_Type' AND type LIKE 'post-%' AND webid='$WebId' AND date_created<$Date";
+            if($Get_Type != ""){
+                $PostInfo = Cw_Fetch("SELECT * FROM articles WHERE url='$Get_Type' AND active='1' AND trash='0' AND webid='$WebId' AND  date_created<$Date OR url='$Get_Type' AND type LIKE 'post-%' AND webid='$WebId' AND date_created<$Date",$Array);
+            }else{
+                
+            }
         }else{
-            $query = "SELECT * FROM articles WHERE url='$Get_Type' AND category='$CategoryId' AND active='1' AND trash='0' AND webid='$WebId' AND date_created<$Date";
+            $PostInfo = Cw_Fetch("SELECT * FROM articles WHERE url='$Get_Type' AND category='$CategoryId' AND active='1' AND trash='0' AND webid='$WebId' AND date_created<$Date",$Array);
         }
     }
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
-    $row = CwOrganize($row,$Array);
-    $PostInfo = $row;
-    if($Cw_Multiple_Cat['active'] == "1"){
+    if($Cw_Multiple_Cat == "1"){
         if($CategoryInfo['id'] == ""){
             if(is_array($PostInfo["category"])){
                 $PostInfo["category"] = $PostInfo["category"]["0"];
                 $PostInfo["category"] = str_replace("-", "", "$PostInfo[category]");
-                $query = "SELECT * FROM articles WHERE id='$PostInfo[category]' AND webid='$WebId'";
-                $result = mysql_query($query) or die(mysql_error());
-                $CategoryInfo = mysql_fetch_array($result);
-                $CategoryInfo = CwOrganize($CategoryInfo,$Array);
+                $CategoryInfo = Cw_Fetch("SELECT * FROM articles WHERE id='$PostInfo[category]' AND webid='$WebId'",$Array);
             }
         }
     }
@@ -178,22 +165,20 @@ if(is_array($PostInfo['other'])){
     if(array_key_exists('author', $PostInfo['other'])){
         $Author_Id = $ActiveArticle['other']['author'];
     }
-    if(array_key_exists('artist', $PostInfo['other'])){
-        $Artist_Id = $ActiveArticle['other']['artist'];
+    if($ActiveArticle['type'] != "post-artist"){
+        if(array_key_exists('artist', $PostInfo['other'])){
+            $Artist_Id = $ActiveArticle['other']['artist'];
+        }
+    }else{
+        $Artist_Id = $ActiveArticle['id'];
     }
 }
 
 if($Artist_Id != ""){
-    $query = "SELECT * FROM articles WHERE id='$Artist_Id' AND active='1' AND trash='0' AND type='post-artist' AND webid='$WebId'";
-    $result = mysql_query($query) or die(mysql_error());
-    $Artist = mysql_fetch_array($result);
-    $Artist = CwOrganize($Artist,$Array);
+    $Artist = Cw_Fetch("SELECT * FROM articles WHERE id='$Artist_Id' AND active='1' AND trash='0' AND type='post-artist' AND webid='$WebId'",$Array);
 }
 
-$query = "SELECT * FROM articles WHERE id='$Get_Type' AND active='1' AND trash='0' AND type='author' AND webid='$WebId' OR url='$Get_Type' AND active='1' AND trash='0' AND type='author' AND webid='$WebId' OR id='$Author_Id' AND active='1' AND trash='0' AND type='author' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
-$row = CwOrganize($row,$Array);
+$row = Cw_Fetch("SELECT * FROM articles WHERE id='$Get_Type' AND active='1' AND trash='0' AND type='author' AND webid='$WebId' OR url='$Get_Type' AND active='1' AND trash='0' AND type='author' AND webid='$WebId' OR id='$Author_Id' AND active='1' AND trash='0' AND type='author' AND webid='$WebId'",$Array);
 if($row['content']['img'] == ""){
     $row['content']['img'] = "/uploads/images/default-user-icon-profile.png";
 }
@@ -204,20 +189,12 @@ if($Get_Url == "author"){
 }
 
 if($OverRight['cwmedia'] == "1"){
-    $query = "SELECT * FROM articles WHERE url='$Get_Type' AND type='$OverRight[cwmediatype]' AND active='1' AND trash='0' AND webid='$WebId' AND date_created<$Date OR 
-    id='$Get_Type' AND type='$OverRight[cwmediatype]' AND active='1' AND trash='0' AND webid='$WebId' AND date_created<$Date OR url='$Get_Type' AND active='1' AND trash='0' AND webid='$WebId' AND date_created<$Date";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
-    $row = CwOrganize($row,$Array);
-    $ActiveArticle = $row;
+    $ActiveArticle = Cw_Fetch("SELECT * FROM articles WHERE url='$Get_Type' AND type='$OverRight[cwmediatype]' AND active='1' AND trash='0' AND webid='$WebId' AND date_created<$Date OR 
+    id='$Get_Type' AND type='$OverRight[cwmediatype]' AND active='1' AND trash='0' AND webid='$WebId' AND date_created<$Date OR url='$Get_Type' AND active='1' AND trash='0' AND webid='$WebId' AND date_created<$Date",$Array);
 }
 
 if($OverRight['preview'] == "1"){
-    $query = "SELECT * FROM articles WHERE id='$Get_Type' AND trash='0' AND webid='$WebId'";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
-    $row = CwOrganize($row,$Array);
-    $ActiveArticle = $row;
+    $ActiveArticle = Cw_Fetch("SELECT * FROM articles WHERE id='$Get_Type' AND trash='0' AND webid='$WebId'",$Array);
     if($row['other']['structure'] == ""){
         $OverRight['file'] = "default";
     }else{
@@ -227,9 +204,7 @@ if($OverRight['preview'] == "1"){
 
 // CATEGORY CHECK \\
     if($Get_Type == ""){
-        $query = "SELECT * FROM articles WHERE url='$Get_Url' AND active='1' AND trash='0' AND type LIKE '%cat%' AND webid='$WebId'";
-        $result = mysql_query($query) or die(mysql_error());
-        $row = mysql_fetch_array($result);
+        $row = Cw_Fetch("SELECT * FROM articles WHERE url='$Get_Url' AND active='1' AND trash='0' AND type LIKE '%cat%' AND webid='$WebId'",$Array);
         if($row['id'] != ""){
             $row = CwOrganize($row,$Array);
             $ActiveArticle = $row;
@@ -297,8 +272,7 @@ if($ActiveArticle['type'] == "root"){
         
 // SETS THE DATE FOR ANY ARTICLE THAT HAS FAILED TO SET ONE \\
         if($ActiveArticle['date'] == ""){
-            $result = mysql_query("UPDATE articles SET date='$Date' WHERE id='$ActiveArticle[id]' AND webid='$WebId'") 
-            or die(mysql_error()); 
+            $result = Cw_Query("UPDATE articles SET date='$Date' WHERE id='$ActiveArticle[id]' AND webid='$WebId'"); 
         }
 
 // DEFAULT COMING SOON PAGE \\
@@ -410,11 +384,12 @@ if($ActiveArticle['type'] == "root"){
     if($theme == ""){$THEME = "theme/cwdefault"; }
 
     if($Login_Required == ""){
-        $Login_Required = $ActiveArticle["other"]["secure"];
+        if(is_array($ActiveArticle["other"])){
+            $Login_Required = $ActiveArticle["other"]["secure"];
+        }
     }
     $Array["postimagessizes"] = $StructureImgSizes;
     $Array["productimages"] = $ProductImgSizes;
-    
 
 
 // CONNECT TO THE APPROPRIATE THEME AND STRUCTURE \\

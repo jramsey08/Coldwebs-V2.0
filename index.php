@@ -28,10 +28,7 @@ if($_GET['url'] == "Process" OR $_GET['url'] == "process"){
 // SETS THE OFFLINE ARTICLE INFO \\
              #$Offline_Article_Id = $Array['siteinfo']['other']['article'];
 $Offline_Article_Id = "3";
-             $query = "SELECT * FROM articles WHERE id='$Offline_Article_Id'";
-             $result = mysql_query($query) or die(mysql_error());
-             $row = mysql_fetch_array($result);
-             $row = PbUnSerial($row);
+             $row = Cw_Fetch("SELECT * FROM articles WHERE id='$Offline_Article_Id'",$Array);
              $Offline_Article = $row;
              $Structure_Type = $OfflineTheme;
              $THEME = "theme/$Structure_Type";
