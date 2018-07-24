@@ -14,9 +14,9 @@ $Website_Url_Auth = WebsiteUrlAuth();
 
 // UNCOMMENT VARIABLES TO MANUALLY SET THE DATABASE INFORMATION. ALL COMMENTED VARIABLES WILL BE SET VIA COLDWEBS.COM \
 $Website_Host = 'localhost'; 
-$Website_Database = 'thehyst_coldweb';  
-$Website_Username = 'thehyst_coldweb'; 
-$Website_Password = 'MGS0[VWI2ah$'; 
+$Website_Database = '';  
+$Website_Username = ''; 
+$Website_Password = ''; 
 
 function CwDb(){
     $CwDb = mysqli_connect("127.0.0.1", "thehyst_coldweb", "MGS0[VWI2ah$", "thehyst_coldweb");
