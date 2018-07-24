@@ -10,10 +10,10 @@ $Date = strtotime("now");
 
 
 $query = "SELECT * FROM cw_request WHERE active='1' AND trash='0' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
+$result = mysqli_query($CwDb, $query);
 if(!is_bool($result)){
-    while($row = mysql_fetch_array($result)){
-        $row = PbUnSerial($row);
+    while($row = mysqli_fetch_assoc($result)){
+        $row = CwOrganize($row,$Array);
         $Id = $row['id'];
         $ReqId = OtarEncrypt($key,$row[id]);
         if($row["expire"] > $Date){
@@ -29,7 +29,7 @@ if(!is_bool($result)){
                     "Reply-To: noreply@$Domain" . "\r\n" .
                     'X-Mailer: PHP/' . phpversion();
                 mail($to, $subject, $message, $headers);
-                $result = mysql_query("UPDATE cw_request SET active='3' WHERE id='$Id'") 
+                $result = mysqli_query($CwDb,"UPDATE cw_request SET active='3' WHERE id='$Id'") 
                 or die(mysql_error());
             }
 
@@ -47,7 +47,7 @@ if(!is_bool($result)){
 
 }
 
-$result = mysql_query("UPDATE cw_request SET active='0' WHERE expire < $Date AND webid='$WebId'") 
+$result = mysqli_query($CwDb,"UPDATE cw_request SET active='0' WHERE expire < $Date AND webid='$WebId'") 
 or die(mysql_error());
 
 

@@ -1,6 +1,6 @@
 <?php 
 
-$url = 'http://niczmusic.com/cron/session.php';
+$url = 'http://thehyst.com/cron/session.php';
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $url . $body);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
