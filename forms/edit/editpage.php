@@ -11,10 +11,8 @@ if($Login == "1"){
 			foreach($Articles as $value){
 			    $Post = Cw_Quick_Info("page_template", $WebId, $value, $Array);
 				$Other = $Post['article'];
-				$result = mysql_query("UPDATE page_template SET trash='1' WHERE id='$value' AND webid='$WebId'") 
-				or die(mysql_error());
-				$result = mysql_query("UPDATE articles SET trash='1' WHERE id='$Other' AND webid='$WebId'") 
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE page_template SET trash='1' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+				$result = mysqli_query($CwDb,"UPDATE articles SET trash='1' WHERE id='$Other' AND webid='$WebId'") or die(mysqli_error());
         // TRACKS CHANGES MADE FROM USERS \\
                 $Info = array();
                 $Info["id"] = $value;
@@ -33,14 +31,10 @@ if($Login == "1"){
 			foreach($Articles as $value){
 			    $Post = Cw_Quick_Info("page_template", $WebId, $value, $Array);
 				$Other = $Post['article'];
-				$result = mysql_query("UPDATE page_template SET active='1' WHERE id='$value' AND webid='$WebId'") 
-				or die(mysql_error());
-				$result = mysql_query("UPDATE page_template SET trash='0' WHERE id='$value' AND webid='$WebId'") 
-				or die(mysql_error());
-				$result = mysql_query("UPDATE articles SET active='1' WHERE id='$Other' AND webid='$WebId'") 
-				or die(mysql_error());
-				$result = mysql_query("UPDATE articles SET trash='0' WHERE id='$Other' AND webid='$WebId'") 
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE page_template SET active='1' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+				$result = mysqli_query($CwDb,"UPDATE page_template SET trash='0' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+				$result = mysqli_query($CwDb,"UPDATE articles SET active='1' WHERE id='$Other' AND webid='$WebId'") or die(mysqli_error());
+				$result = mysqli_query($CwDb,"UPDATE articles SET trash='0' WHERE id='$Other' AND webid='$WebId'") or die(mysqli_error());
 		// TRACKS CHANGES MADE FROM USERS \\
                 $Info = array();
                 $Info["id"] = $value;
@@ -60,10 +54,8 @@ if($Login == "1"){
 			foreach($Articles as $value){
 				$Post = Cw_Quick_Info("page_template", $WebId, $value, $Array);
 				$Other = $Post['article'];
-				$result = mysql_query("UPDATE page_template SET active='0' WHERE id='$value' AND webid='$WebId'") 
-				or die(mysql_error());
-				$result = mysql_query("UPDATE articles SET active='0' WHERE id='$Other' AND webid='$WebId'") 
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE page_template SET active='0' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+				$result = mysqli_query($CwDb,"UPDATE articles SET active='0' WHERE id='$Other' AND webid='$WebId'") or die(mysqli_error());
 		// TRACKS CHANGES MADE FROM USERS \\
                 $Info = array();
                 $Info["id"] = $value;

@@ -21,10 +21,8 @@ if($Login == "1"){
                     array_push($Other['history'],$Status);
                 }
                 $Other = serialize($Other);
-		        $result = mysql_query("UPDATE trans SET other='$Other' WHERE id='$value' AND webid='$WebId'") 
-			    or die(mysql_error());
-		        $result = mysql_query("UPDATE trans SET status='1' WHERE id='$value' AND webid='$WebId'") 
-			    or die(mysql_error());
+		        $result = mysqli_query($CwDb,"UPDATE trans SET other='$Other' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+		        $result = mysqli_query($CwDb,"UPDATE trans SET status='1' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
 		// TRACKS CHANGES MADE FROM USERS \\
                 $Info = array();
                 $Info["id"] = $value;
@@ -52,10 +50,8 @@ if($Login == "1"){
                     array_push($Other['history'],$Status);
                 }
                 $Other = serialize($Other);
-		        $result = mysql_query("UPDATE trans SET other='$Other' WHERE id='$value' AND webid='$WebId'") 
-			    or die(mysql_error());
-		        $result = mysql_query("UPDATE trans SET status='2' WHERE id='$value' AND webid='$WebId'") 
-			    or die(mysql_error());
+		        $result = mysqli_query($CwDb,"UPDATE trans SET other='$Other' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+		        $result = mysqli_query($CwDb,"UPDATE trans SET status='2' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
 		// TRACKS CHANGES MADE FROM USERS \\
                 $Info = array();
                 $Info["id"] = $value;
@@ -83,10 +79,8 @@ if($Login == "1"){
                     array_push($Other['history'],$Status);
                 }
                 $Other = serialize($Other);
-		        $result = mysql_query("UPDATE trans SET other='$Other' WHERE id='$value' AND webid='$WebId'") 
-			    or die(mysql_error());
-		        $result = mysql_query("UPDATE trans SET status='3' WHERE id='$value' AND webid='$WebId'") 
-			    or die(mysql_error());
+		        $result = mysqli_query($CwDb,"UPDATE trans SET other='$Other' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+		        $result = mysqli_query($CwDb,"UPDATE trans SET status='3' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
 		// TRACKS CHANGES MADE FROM USERS \\
                 $Info = array();
                 $Info["id"] = $value;
@@ -114,10 +108,8 @@ if($Login == "1"){
                     array_push($Other['history'],$Status);
                 }
                 $Other = serialize($Other);
-		        $result = mysql_query("UPDATE trans SET other='$Other' WHERE id='$value' AND webid='$WebId'") 
-			    or die(mysql_error());
-		        $result = mysql_query("UPDATE trans SET status='4' WHERE id='$value' AND webid='$WebId'") 
-			    or die(mysql_error());
+		        $result = mysqli_query($CwDb,"UPDATE trans SET other='$Other' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+		        $result = mysqli_query($CwDb,"UPDATE trans SET status='4' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
 		// TRACKS CHANGES MADE FROM USERS \\
                 $Info = array();
                 $Info["id"] = $value;
@@ -145,10 +137,8 @@ if($Login == "1"){
                     array_push($Other['history'],$Status);
                 }
                 $Other = serialize($Other);
-		        $result = mysql_query("UPDATE trans SET other='$Other' WHERE id='$value' AND webid='$WebId'") 
-			    or die(mysql_error());
-		        $result = mysql_query("UPDATE trans SET status='5' WHERE id='$value' AND webid='$WebId'") 
-			    or die(mysql_error());
+		        $result = mysqli_query($CwDb,"UPDATE trans SET other='$Other' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+		        $result = mysqli_query($CwDb,"UPDATE trans SET status='5' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
 		// TRACKS CHANGES MADE FROM USERS \\
                 $Info = array();
                 $Info["id"] = $value;
@@ -176,10 +166,8 @@ if($Login == "1"){
                     array_push($Other['history'],$Status);
                 }
                 $Other = serialize($Other);
-		        $result = mysql_query("UPDATE trans SET other='$Other' WHERE id='$value' AND webid='$WebId'") 
-			    or die(mysql_error());
-		        $result = mysql_query("UPDATE trans SET status='6' WHERE id='$value' AND webid='$WebId'") 
-			    or die(mysql_error());
+		        $result = mysqli_query($CwDb,"UPDATE trans SET other='$Other' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+		        $result = mysqli_query($CwDb,"UPDATE trans SET status='6' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
 	    // TRACKS CHANGES MADE FROM USERS \\
                 $Info = array();
                 $Info["id"] = $value;
@@ -207,10 +195,8 @@ if($Login == "1"){
                     array_push($Other['history'],$Status);
                 }
                 $Other = serialize($Other);
-		        $result = mysql_query("UPDATE trans SET other='$Other' WHERE id='$value' AND webid='$WebId'") 
-			    or die(mysql_error());
-		        $result = mysql_query("UPDATE trans SET status='7' WHERE id='$value' AND webid='$WebId'") 
-			    or die(mysql_error());
+		        $result = mysqli_query($CwDb,"UPDATE trans SET other='$Other' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+		        $result = mysqli_query($CwDb,"UPDATE trans SET status='7' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
 	    // TRACKS CHANGES MADE FROM USERS \\
                 $Info = array();
                 $Info["id"] = $value;

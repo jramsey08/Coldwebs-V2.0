@@ -9,10 +9,8 @@ if($Login == "1"){
 
 		if($Get_Id == "delete"){
 			foreach($Articles as $value){
-				#$result = mysql_query("UPDATE articles SET trash='1' WHERE id='$value' AND webid='$WebId'") 
-				#or die(mysql_error());
-				#$result = mysql_query("UPDATE images SET trash='1' WHERE album='$value' AND webid='$WebId'")
-				#or die(mysql_error());
+				#$result = mysqli_query($CwDb,"UPDATE articles SET trash='1' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+				#$result = mysqli_query($CwDb,"UPDATE images SET trash='1' WHERE album='$value' AND webid='$WebId'")or die(mysqli_error());
 			}
 		}
 
@@ -22,8 +20,7 @@ if($Login == "1"){
 				$Stats = $Post['info'];
 				$Stats['status'] = "1";
 				$Stats = serialize($Stats);
-				$result = mysql_query("UPDATE users SET info='$Stats' WHERE id='$value' AND webid='$WebId'") 
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE users SET info='$Stats' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
 		// TRACKS CHANGES MADE FROM USERS \\
                 $Info = array();
                 $Info["id"] = $value;
@@ -44,8 +41,7 @@ if($Login == "1"){
 				$Stats = $Post['info'];
 				$Stats['status'] = "3";
 				$Stats = serialize($Stats);
-				$result = mysql_query("UPDATE users SET info='$Stats' WHERE id='$value' AND webid='$WebId'") 
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE users SET info='$Stats' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
 		// TRACKS CHANGES MADE FROM USERS \\
                 $Info = array();
                 $Info["id"] = $value;
@@ -66,8 +62,7 @@ if($Login == "1"){
 				$Stats = $Post['info'];
 				$Stats['status'] = "0";
 				$Stats = serialize($Stats);
-				$result = mysql_query("UPDATE users SET info='$Stats' WHERE id='$value' AND webid='$WebId'") 
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE users SET info='$Stats' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
 		// TRACKS CHANGES MADE FROM USERS \\
                 $Info = array();
                 $Info["id"] = $value;

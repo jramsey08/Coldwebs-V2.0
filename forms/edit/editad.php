@@ -12,11 +12,9 @@ if($Login == "1"){
 		if($Get_Id == "delete"){
 			foreach($Articles as $value){
 			    $Post = Cw_Quick_Info("cw_ads", $WebId, $value, $Array);
-				$result = mysql_query("UPDATE cw_ads SET trash='1' WHERE id='$value' AND webid='$WebId'") 
-				or die(mysql_error());
-				$result = mysql_query("UPDATE cw_ads SET active='0' WHERE id='$value' AND webid='$WebId'") 
-				or die(mysql_error());
-				$row = Cw_Quick_Info("cw_ads", $WebId, $value, $Array);
+				$result = mysqli_query($CwDb,"UPDATE cw_ads SET trash='1' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+				$result = mysqli_query($CwDb,"UPDATE cw_ads SET active='0' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+				$row = Cw_Quicki_Info($CwDb,"cw_ads", $WebId, $value, $Array);
 				$row['domain'] = $Website_Url_Auth;
 				Cw_Update_Ad($row,$Array);
 		// TRACKS CHANGES MADE FROM USERS \\
@@ -36,10 +34,8 @@ if($Login == "1"){
 		if($Get_Id == "active"){
 			foreach($Articles as $value){
 			    $Post = Cw_Quick_Info("cw_ads", $WebId, $value, $Array);
-				$result = mysql_query("UPDATE cw_ads SET active='1' WHERE id='$value' AND webid='$WebId'") 
-				or die(mysql_error());
-				$result = mysql_query("UPDATE cw_ads SET trash='0' WHERE id='$value' AND webid='$WebId'") 
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE cw_ads SET active='1' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+				$result = mysqli_query($CwDb,"UPDATE cw_ads SET trash='0' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
                 $row = Cw_Quick_Info("cw_ads", $WebId, $value, $Array);
 				$row['domain'] = $Website_Url_Auth;
 				Cw_Update_Ad($row,$Array);
@@ -60,10 +56,8 @@ if($Login == "1"){
 		if($Get_Id == "inactive"){
 			foreach($Articles as $value){
 			    $Post = Cw_Quick_Info("cw_ads", $WebId, $value, $Array);
-				$result = mysql_query("UPDATE cw_ads SET active='0' WHERE id='$value' AND webid='$WebId'") 
-				or die(mysql_error());
-				$result = mysql_query("UPDATE cw_ads SET trash='0' WHERE id='$value' AND webid='$WebId'") 
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE cw_ads SET active='0' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
+				$result = mysqli_query($CwDb,"UPDATE cw_ads SET trash='0' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
 				$row = Cw_Quick_Info("cw_ads", $WebId, $value, $Array);
 				$row['domain'] = $Website_Url_Auth;
 				Cw_Update_Ad($row,$Array);
