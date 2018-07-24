@@ -8,6 +8,9 @@ if($Website_Db_Setup == "" OR $Website_Db_Setup == "0"){
 
 // CW-LOGIN VERIFICATION \\
     include("../forms/logincheck.php");
+    
+// Mothly Sales \\
+    include("config/stats.php");
 
 // LOAD USER ACCOUNT INFORMATION \\
     include("../config/userinfo.php");

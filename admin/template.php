@@ -8,8 +8,8 @@ if($Login == "1"){
                 $Force_Url = substr($Force_Url, 1);
                 $Force_Url = rtrim($Force_Url,"/");
                 $query = "SELECT * FROM articles WHERE url='$Force_Url' AND type='task' AND trash='0' AND webid='$WebId'";
-                $result = mysql_query($query) or die(mysql_error());
-                $row = mysql_fetch_array($result);
+                $result = mysqli_query($CwDb,$query);
+                $row = mysqli_fetch_assoc($result);
                 $Task_Active = $row['active'];
                 if($Task_Active != "1"){
                     $Get_Url = "welcome";
@@ -45,27 +45,18 @@ if($Login == "1"){
             #print_r($PageInfo);
         }
         $query = "SELECT * FROM articles WHERE id='$ArticleId' AND trash='0'";
-        $result = mysql_query($query) or die(mysql_error());
-        $row = mysql_fetch_array($result);
+        $result = mysqli_query($CwDb,$query);
+        $row = mysqli_fetch_assoc($result);
         $row = CwOrganize($row,$Array);
-        if(is_array($row['other'])){
-            if(in_array("tags",$row[other])){
-                if($row['other']['tags'] == ""){
-                    $row['other']['tags'] = $Array['siteinfo']['other']['tags'];
-                }
-            }
-        }else{
-            $row['other'] = array();
-        }
-        if($Cw_Multiple_Cat['active'] == "1"){
+        if($Cw_Multiple_Cat == "1"){
             if(is_array($row['category'])){
                 $row['category'] = unserialize($row['category']);
             }
         }
         if($Get_Url == "advertisement"){
             $query = "SELECT * FROM cw_ads WHERE id='$ArticleId' AND trash='0'";
-            $result = mysql_query($query) or die(mysql_error());
-            $row = mysql_fetch_array($result);
+            $result = mysqli_query($CwDb,$query);
+            $row = mysqli_fetch_assoc($result);
             $row = CwOrganize($row,$Array);
         }
         $Article = $row;
@@ -73,28 +64,48 @@ if($Login == "1"){
         $Article_Id = $row['id'];
         if($Get_Url == "cwaccess"){
             $query = "SELECT * FROM cwoptions WHERE id='$ArticleId' AND trash='0'";
-            $result = mysql_query($query) or die(mysql_error());
-            $row = mysql_fetch_array($result);
+            $result = mysqli_query($CwDb,$query);
+            $row = mysqli_fetch_assoc($result);
             $Article = $row;
         }
         if($Get_Url == "ecommerce-orders"){
             $query = "SELECT * FROM trans WHERE id='$ArticleId' AND trash='0'";
-            $result = mysql_query($query) or die(mysql_error());
-            $row = mysql_fetch_array($result);
+            $result = mysqli_query($CwDb,$query);
+            $row = mysqli_fetch_assoc($result);
             $Trans = CwOrganize($row,$Array);
         }
         if($Get_Url == "useraccess"){
             $query = "SELECT * FROM cwoptions WHERE id='$ArticleId' AND trash='0'";
-            $result = mysql_query($query) or die(mysql_error());
-            $row = mysql_fetch_array($result);
+            $result = mysqli_query($CwDb,$query);
+            $row = mysqli_fetch_assoc($result);
             $UserAccess = CwOrganize($row,$Array);
         }
         if($Get_Url == "offline"){
             $query = "SELECT * FROM articles WHERE id='3'";
-            $result = mysql_query($query) or die(mysql_error());
-            $row = mysql_fetch_array($result);
+            $result = mysqli_query($CwDb,$query);
+            $row = mysqli_fetch_assoc($result);
             $Article = CwOrganize($row,$Array);
         }
+        if($Get_Type == "notification"){
+            $Get_Id = OtarDecrypt($key,$_GET["id"]);
+            $query = "SELECT * FROM cw_alerts WHERE id='$Get_Id'";
+            $result = mysqli_query($CwDb,$query);
+            $row = mysqli_fetch_assoc($result);
+            $Notification = CwOrganize($row,$Array);
+            $Notification = Cw_Filter_Array($Notification);
+            $Notification = Cw_Alerts($Notification);
+        }
+        if($Get_Type == "session"){
+            $Get_Id = OtarDecrypt($key,$_GET["id"]);
+            $query = "SELECT * FROM tracker WHERE id='$Get_Id'";
+            $result = mysqli_query($CwDb,$query);
+            $row = mysqli_fetch_assoc($result);
+            $PullSession = CwOrganize($row,$Array);
+            $PullSession = Cw_Filter_Array($PullSession);
+            $PullSession = GetSessionInfo($PullSession);            
+        }        
+        
+        
 // DETECT AND LOAD MOBILE THEME \\
         if($Mobile_Phone == "1"){
             include("$THEME/settings.php");    
@@ -105,34 +116,22 @@ if($Login == "1"){
         }
          $ProductId = OtarDecrypt($key,$_GET['type']);
          $QuEry = "SELECT * FROM articles WHERE trash='0' AND id='$ProductId'";
-         $ReSult = mysql_query($QuEry) or die(mysql_error());
-         $ProductInfo = mysql_fetch_array($ReSult);
+         $ReSult = mysqli_query($CwDb,$QuEry);
+         $ProductInfo = mysqli_fetch_assoc($ReSult);
          $ProductInfo = CwOrganize($ProductInfo,$Array);
 
 // FIND TRANSFERED ARTICLES INFORMATION \\       
-         $TransferId = OtarDecrypt($key,$_GET['type']);
-         $QuEry = "SELECT * FROM transfer WHERE trash='0' AND id='$TransferId'"; 
-         $ReSult = mysql_query($QuEry) or die(mysql_error());
-         $TransferInfo = mysql_fetch_array($ReSult);
+        $TransferId = OtarDecrypt($key,$_GET['type']);
+        $QuEry = "SELECT * FROM transfer WHERE trash='0' AND id='$TransferId'"; 
+        $ReSult = mysqli_query($CwDb,$QuEry);
+        $TransferInfo = mysqli_fetch_assoc($ReSult);
 
-// GIVES A TOUR OF THE DASHBOARD \\
-         if($Get_Url == ""){
-              #if($Array['userinfo']['other']['tour'] == "0"){
-              #     $Structure_Type = "tour";
-              #     $NewOther = $Array['userinfo']['other'];
-              #     $NewOther['tour'] = "1";
-              #     $NewOther = serialize($NewOther);
-              #     $result = mysql_query("UPDATE users SET other='$NewOther' WHERE id='$Current_Admin_Id' AND webid='$WebId'") 
-              #     or die(mysql_error()); 
-              #     $NewOther = "";
-              #}
-         }
 // PULLS SELECTED USER INFORMATION \\
-        if($Get_Url == "users" AND $Get_Type!="" OR $Get_Url == "force" AND $Get_Type!=""){
+        if($Get_Url == "users" AND $Get_Type!="" OR $Get_Url == "force" AND $Get_Type!="" OR $Get_Url == "ecommerce-customer"){
             $UserListedId = OtarDecrypt($key,$_GET['type']);
             $QuERY = "SELECT * FROM users WHERE id='$UserListedId' AND webid='$_COOKIE[manual_webid]'"; 
-            $ReSuLT = mysql_query($QuERY) or die(mysql_error());
-            $ListedUser = mysql_fetch_array($ReSuLT);
+            $ReSuLT = mysqli_query($CwDb,$QuERY);
+            $ListedUser = mysqli_fetch_assoc($ReSuLT);
             $ListedUser = CwOrganize($ListedUser,$Array);
             if($Current_Admin_Access >= $ListedUser['info']['access']){
                 $ListedUser = array();
@@ -152,6 +151,14 @@ if($Login == "1"){
         $THEME = $OverRight['theme'];
         $Structure_Type = $OverRight['file'];
     }
+// GIVES A TOUR OF THE DASHBOARD \\
+        if($Array['userinfo']['other']['tour'] != "1"){
+           $Structure_Type = "tour";
+           $NewOther = $Array['userinfo']['other'];
+           $NewOther['tour'] = "1";
+           $NewOther = serialize($NewOther);
+           $result = mysqli_query($CwDb,"UPDATE users SET other='$NewOther' WHERE id='$Current_Admin_Id' AND webid='$WebId'");
+        } 
     $filename = "$THEME/structure/$Structure_Type.php";
     $default_theme = "theme/cwadmin/structure/$Structure_Type.php";
     $error_file = "$THEME/structure/404.php";
@@ -181,6 +188,12 @@ if($Login == "1"){
     }
 // PULLS PAGE/ARTICLE INFO \\    
     include("config/pageinfo.php");
+    
+    if($Restrict["status"] == "1"){
+        if($Restrict["state"] == "invoice" AND $Get_Url != "cw-invoice"){
+            $Structure_Type = "introll/invoice";
+        }
+    }
     
     include("config/structure.php");
    if($Website_Offline == "1"){

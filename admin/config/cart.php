@@ -2,8 +2,8 @@
 
 $OrderId = OtarDecrypt($key,$_GET["type"]);
 $query = "SELECT * FROM trans WHERE active='1' AND trash='0' AND user='$Current_Admin_Id' AND id='$OrderId' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-$OrderInfo = $row = mysql_fetch_array($result);
+$result = mysqli_query($CwDb,$query);
+$OrderInfo = $row = mysqli_fetch_assoc($result);
 $OrderInfo = CwOrganize($OrderInfo,$Array);
 $OrderOther = $OrderInfo["other"];
 $BillingInfo = $OrderOther["billing"];

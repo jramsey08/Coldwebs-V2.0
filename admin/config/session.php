@@ -38,9 +38,9 @@ $Session['id'] = $_COOKIE["_CwSess"];
 $Log_Session = $_COOKIE["_CwSess"];
 $_SESSION["sessiongenerate"] = $Session_Generate;
 $query = "SELECT * FROM login_session WHERE session='$Session_Generate' AND trash='0' AND ipaddress='$Current_Ip' AND active='1' AND webid='$_COOKIE[_CwOrgWebId]'";
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
+$result = mysqli_query($CwDb,$query) ;
+$row = mysqli_fetch_assoc($result);
 $Current_Admin = $row['userid'];
 $_SESSION["current_user"] = $Current_Admin;
-#print_r($_SESSION);
+
 ?>

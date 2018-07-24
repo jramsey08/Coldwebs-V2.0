@@ -18,8 +18,8 @@ if($Get_Url == "users" AND $Get_Type!="" OR $Get_Url == "force" AND $Get_Type!="
 
 if($PageInfo["id"] == ""){
     $QuEry = "SELECT * FROM admin WHERE url='$Get_Url'"; 
-    $ReSult = mysql_query($QuEry) or die(mysql_error());
-    $PageInfo = mysql_fetch_array($ReSult);
+    $ReSult = mysqli_query($CwDb,$QuEry) ;
+    $PageInfo = mysqli_fetch_assoc($ReSult);
 }
 
 if($PageInfo["name"] == ""){

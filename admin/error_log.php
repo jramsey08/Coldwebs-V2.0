@@ -35,8 +35,7 @@ if(file_exists($urls)){
         }else{
             if(preg_match("/constant/",$string)){
             }else{
-            #mysql_query("INSERT INTO error_log (error, id, date)
-                    #VALUES ('$string', '$newcode', '$Date')"); 
+                mysqli_query($CwDb,"INSERT INTO error_log (error, id, date)VALUES ('$string', '$newcode', '$Date')"); 
             }
         }
     }

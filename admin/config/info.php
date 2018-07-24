@@ -18,18 +18,18 @@ $Full_Url = "http://$Website";
 
 // WEBSITE GENERAL INFORMATION \\
 $query = "SELECT * FROM info WHERE domain LIKE '%$Website%'";
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query);
+$row = mysqli_fetch_assoc($result);
+$row = CwOrganize($row,$Array);
 
 if($_COOKIE["manual_webid"] == ""){
     $WebId = $row['id'];
 }else{
     $WebId = $_COOKIE["manual_webid"];
     $query = "SELECT * FROM info WHERE id='$WebId'";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
-    $row = PbUnSerial($row);
+    $result = mysqli_query($CwDb,$query);
+    $row = mysqli_fetch_assoc($result);
+    $row = CwOrganize($row,$Array);
 }
 
 if($WebId == ""){
@@ -73,6 +73,11 @@ if($View_site == "1"){
     if($View_site == "0"){
         $View_site = "1";
     }
+}
+
+$Restrict = $row['status']["restrict"];
+if(!is_array($Restrict)){
+    $Restrict = array();
 }
 
 $Cw_Show_Date = Cw_Settings("hide_date", $Array);

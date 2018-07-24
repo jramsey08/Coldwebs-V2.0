@@ -2,15 +2,15 @@
 $DecryptId = OtarDecrypt($key,$_GET['type']);
 
 $query = "SELECT * FROM admin WHERE type='menu' AND id='$DecryptId'";
-$result = mysql_query($query) or die(mysql_error());
-$Menu = mysql_fetch_array($result);
+$result = mysqli_query($CwDb,$query);
+$Menu = mysqli_fetch_assoc($result);
 $Menu = CwOrganize($Menu,$Array);
 
 
 
 $query = "SELECT * FROM admin WHERE type='menu' AND url='$Get_Url' AND active='1' AND trash='0'";
-$result = mysql_query($query) or die(mysql_error());
-$Manual = mysql_fetch_array($result);
+$result = mysqli_query($CwDb,$query);
+$Manual = mysqli_fetch_assoc($result);
 $Manual = CwOrganize($Manual,$Array);
 $Manual_Access = $Manual['access'];
 $Manual['url'] = strtolower($Manual['url']);

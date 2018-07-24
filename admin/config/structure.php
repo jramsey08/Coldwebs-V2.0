@@ -12,8 +12,8 @@
      if($Get_Url == "functions"){
           $Id = OtarDecrypt($key,$SearchUrl);
           $QuerY = "SELECT * FROM page_function WHERE id='$Id' AND trash='0' AND webid='$WebId'";
-          $ResulT = mysql_query($QuerY) or die(mysql_error());
-          $RoW = mysql_fetch_array($ResulT);
+          $ResulT = mysqli_query($CwDb,$QuerY);
+          $RoW = mysqli_fetch_assoc($ResulT);
           $StructureTheme = $RoW['template'];
           if($RoW['id'] == ""){
                $Article = OtarDecrypt($key,$_GET['id']);
@@ -22,8 +22,8 @@
      }
      if($StructureTheme == "" OR $StructureTheme == "cwadmin"){
          $Query = "SELECT * FROM info WHERE id='$WebId' ORDER BY name";
-         $Result = mysql_query($Query) or die(mysql_error());
-         $Row = mysql_fetch_array($Result);
+         $Result = mysqli_query($CwDb,$Query);
+         $Row = mysqli_fetch_assoc($Result);
          $StructureTheme = $Row['theme'];
          if(!file_exists("../theme/$StructureTheme/settings.php")){
              $StructureTheme = "cwdefault";

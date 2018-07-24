@@ -24,6 +24,15 @@ if($UserSiteAccess['editfunctions'] == "1"){
     }
 }
 
+if($Get_Url == "team"){
+    $OverRight['theme'] = $THEME;
+    if($Get_Type == ""){ 
+        $OverRight['file'] = "team";
+    }else{
+        $OverRight['file'] = "listteam";
+    }
+}
+
 if($UserSiteAccess['setaccess'] == "1"){
     if($Get_Url == "cwaccess"){
         $OverRight['theme'] =  $THEME;
@@ -281,11 +290,36 @@ if($UserSiteAccess['viewanalytics'] == "1"){
 #}
 
     if($Get_Url == "imgrotate"){
-        $OverRight['theme'] = "theme/cwadmin";
+        $OverRight['theme'] = $THEME;
         $OverRight['file'] = "images/rotate";
     }
 
 
+
+    if($Get_Url == "tracker"){
+        $OverRight['theme'] = $THEME;
+        if($Get_Type == ""){
+            $OverRight['file'] = "tracker/dash";
+        }
+        if($Get_Type == "notification"){
+            if($Get_Id == ""){
+                $OverRight['file'] = "tracker/notification";
+            }else{
+                $OverRight['file'] = "tracker/listnot";
+            }
+        }
+        if($Get_Type == "session"){
+            if($Get_Id == ""){
+                $OverRight['file'] = "tracker/session";
+            }else{
+                if($Get_End == ""){
+                    $OverRight['file'] = "tracker/listsess";
+                }else{
+                    $OverRight['file'] = "tracker/extrasess";
+                }
+            }
+        }
+    }
 
 
 
@@ -315,6 +349,94 @@ if($UserSiteAccess['ecommerce'] == "1"){
             $OverRight['file'] = "ecommerce/payment";
         }else{
             $OverRight['file'] = "ecommerce/listpayment";
+        }
+    }
+    if($Get_Url == "ecommerce-attributes"){
+        $OverRight['theme'] = $THEME;
+        if($Get_Type == ""){ 
+            $OverRight['file'] = "ecommerce/attributes";
+        }else{
+            $OverRight['file'] = "ecommerce/listatt";
+        }
+    }
+    if($Get_Url == "ecommerce-products"){
+        $OverRight['theme'] = $THEME;
+        if($Get_Type == ""){ 
+            $OverRight['file'] = "ecommerce/products";
+        }else{
+            $OverRight['file'] = "ecommerce/listproduct";
+        }
+    }
+    if($Get_Url == "ecommerce-orders"){
+        $OverRight['theme'] = $THEME;
+        if($Get_Type == ""){ 
+            $OverRight['file'] = "ecommerce/orders";
+        }else{
+            $OverRight['file'] = "ecommerce/listorder";
+        }
+    }
+    if($Get_Url == "ecommerce-category"){
+        $OverRight['theme'] = $THEME;
+        if($Get_Type == ""){ 
+            $OverRight['file'] = "ecommerce/cat";
+        }else{
+            $OverRight['file'] = "ecommerce/listcat";
+        }
+    }
+    if($Get_Url == "ecommerce-supplier"){
+        $OverRight['theme'] = $THEME;
+        if($Get_Type == ""){
+            $OverRight['file'] = "ecommerce/supplier";
+        }else{
+            $OverRight['file'] = "ecommerce/listsupplier";
+        }
+    }
+    if($Get_Url == "ecommerce-brand"){
+        $OverRight['theme'] = $THEME;
+        if($Get_Type == ""){ 
+            $OverRight['file'] = "ecommerce/brand";
+        }else{
+            $OverRight['file'] = "ecommerce/listbrand";
+        }
+    }
+    if($Get_Url == "ecommerce-customer"){
+        $OverRight['theme'] = $THEME;
+        if($Get_Type == ""){ 
+            $OverRight['file'] = "ecommerce/customer";
+        }else{
+            $OverRight['file'] = "ecommerce/listcustomer";
+        }
+    }    
+    if($Get_Url == "ecommerce-settings"){
+        $OverRight['theme'] = $THEME;
+        if($Get_Type == ""){ 
+            $OverRight['file'] = "ecommerce/settings";
+        }
+    }
+    if($Get_Url == "ecommerce-import"){
+        $OverRight['theme'] = $THEME;
+        if($Get_Type == ""){ 
+            $OverRight['file'] = "ecommerce/import";
+        }
+    }
+    if($Get_Url == "ecommerce-pending"){
+        $OverRight['theme'] = $THEME;
+        if($Get_Type == ""){ 
+            $OverRight['file'] = "ecommerce/pending";
+        }
+    }
+    if($Get_Url == "ecommerce-trash"){
+        $OverRight['theme'] = $THEME;
+        if($Get_Type == ""){ 
+            $OverRight['file'] = "ecommerce/trash";
+        }
+    }
+    if($Get_Url == "ecommerce-tax"){
+        $OverRight['theme'] = $THEME;
+        if($Get_Type == ""){ 
+            $OverRight['file'] = "ecommerce/tax";
+        }else{
+            $OverRight['file'] = "ecommerce/listtax";
         }
     }
 }

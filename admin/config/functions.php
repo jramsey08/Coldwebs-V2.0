@@ -1,4 +1,16 @@
 <?php
+function Cw_Fetch($query,$Array){
+    $CwDb = CwDb();
+    $result = mysqli_query($CwDb,$query) or die(mysqli_error());
+	$row = mysqli_fetch_assoc($result);
+	$row = CwOrganize($row,$Array);
+	return $row;
+}
+function Cw_Query($query){
+    $CwDb = CwDb();
+    mysqli_query($CwDb,$query) or die(mysqli_error());
+}
+
 function Advertisement($width, $height, $Array){
     if($Array["manual_webid"] == ""){
         $WebId = $Array['webid'];
@@ -19,33 +31,23 @@ function Advertisement($width, $height, $Array){
     echo $content;
 }
 
-function TotalVisitors($Array){
-    if($Array["manual_webid"] == ""){
-        $WebId = $Array['webid'];
-    }else{
-        $WebId = $Array["manual_webid"];
-    }
-    $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker WHERE admin!='1' AND webid='$WebId'"; 
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
-    $row['COUNT(ipaddress)'];
-    echo number_format("$row[1]");
-}
 
 function OrderTotal($Array){
+    $CwDb = CwDb();
     if($Array["manual_webid"] == ""){
         $WebId = $Array['webid'];
     }else{
         $WebId = $Array["manual_webid"];
     }
     $query = "SELECT id, COUNT(id) FROM trans WHERE active='1' AND trash='0' AND webid='$WebId'"; 
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($CwDb,$query);
+    $row = mysqli_fetch_assoc($result);
     $row['COUNT(id)'];
     echo number_format("$row[1]");
 }
 
 function MonthlyVisitors($Array){
+    $CwDb = CwDb();
     if($Array["manual_webid"] == ""){
         $WebId = $Array['webid'];
     }else{
@@ -53,61 +55,51 @@ function MonthlyVisitors($Array){
     }
     $Date = date("m.y");
     $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker WHERE date3='$Date' AND admin!='1' AND webid='$WebId'";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($CwDb,$query);
+    $row = mysqli_fetch_assoc($result);
     $row['COUNT(ipaddress)'];
     echo number_format("$row[1]");
 }
 
-function TodayVisitors($Array){
+function MonthlySales($Array){
+    $CwDb = CwDb();
     if($Array["manual_webid"] == ""){
         $WebId = $Array['webid'];
     }else{
         $WebId = $Array["manual_webid"];
     }
-    $Date = date("m-d-y");
-    $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker WHERE date2='$Date' AND admin!='1' AND webid='$WebId'";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
-    $row['COUNT(ipaddress)'];
-    echo number_format("$row[1]");
-}
-
-function LiveVisitor($Array){
-    if($Array["manual_webid"] == ""){
-        $WebId = $Array['webid'];
-    }else{
-        $WebId = $Array["manual_webid"];
-    }
-    $query = "SELECT id, COUNT(id) FROM ws_sessions WHERE active='1' AND webid='$WebId'";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
+    $Date = date("m.y");
+    $query = "SELECT id, COUNT(id) FROM trans WHERE date<'$Last' AND date > '$First' AND webid='$WebId'";
+    $result = mysqli_query($CwDb,$query);
+    $row = mysqli_fetch_assoc($result);
     $row['COUNT(id)'];
     echo number_format("$row[1]");
 }
 
 function TotalCountry($Array){
+    $CwDb = CwDb();
     if($Array["manual_webid"] == ""){
         $WebId = $Array['webid'];
     }else{
         $WebId = $Array["manual_webid"];
     }
     $query = "SELECT ipaddress, COUNT(ipaddress) FROM tracker GROUP BY country WHERE admin!='1' AND webid='$WebId'";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($CwDb,$query);
+    $row = mysqli_fetch_assoc($result);
     $row['COUNT(country)'];
     echo number_format("$row[1]");
 }
 
 function PostsCount($Array){
+    $CwDb = CwDb();
     if($Array["manual_webid"] == ""){
         $WebId = $Array['webid'];
     }else{
         $WebId = $Array["manual_webid"];
     }
     $query = "SELECT type, COUNT(id) FROM articles WHERE type='post' AND trash='0' AND webid='$WebId'";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($CwDb,$query);
+    $row = mysqli_fetch_assoc($result);
     $row['COUNT(country)'];
     echo number_format("$row[1]");
 }
@@ -133,6 +125,7 @@ function RandomCode($Amount){
 }
 
 function Category($Array){
+    $CwDb = CwDb();
     if($Array["manual_webid"] == ""){
         $WebId = $Array['webid'];
     }else{
@@ -140,8 +133,8 @@ function Category($Array){
     }
     $Article = $Array['dynamicarticle'];
     $query = "SELECT * FROM articles WHERE id='$Article[category]' AND active='1' AND trash='0' AND webid='$WebId'"; 
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($CwDb,$query);
+    $row = mysqli_fetch_assoc($result);
     return $row; 
 }
 
@@ -266,7 +259,7 @@ function OtarEncrypt($key, $Otar){
     return $Otar;
 }
 
-function Pulltheme($ThemePath,$ThemeAdmin){
+function Pulltheme($ThemePath,$ThemeAdmin,$WebId){
     if($ThemePath == ""){
         $ThemePath = "../../../theme/";
     }
@@ -277,10 +270,15 @@ function Pulltheme($ThemePath,$ThemeAdmin){
                 $Name = $result;
                 include("$ThemePath/$result/settings.php");
                 if($TEMPLATEADMINTHEME == $ThemeAdmin){
-                    if($TEMPLATENAME == ""){ }else{
-                        $TEMPLATENAME = Array($Name, $TEMPLATENAME, $TEMPLATEID);
-                        $ThemeArray[] = $TEMPLATENAME;
-                        $TEMPLATENAME = "";
+                    if(is_array($TEMPLATEAUTHTHEME)){
+                        if(in_array("any",$TEMPLATEAUTHTHEME) OR in_array($WebId,$TEMPLATEAUTHTHEME)){
+                            if($TEMPLATENAME == ""){ }else{
+                                $TEMPLATENAME = Array($Name, $TEMPLATENAME, $TEMPLATEID);
+                                $ThemeArray[] = $TEMPLATENAME;
+                                $TEMPLATENAME = "";
+                            }
+                            $TEMPLATEAUTHTHEME = "";
+                        }
                     }
                 }
         }
@@ -289,6 +287,7 @@ return $ThemeArray;
 }
 
 function PullPageInfo($Array){
+    $CwDb = CwDb();
     if($Array["manual_webid"] == ""){
         $WebId = $Array['webid'];
     }else{
@@ -297,8 +296,8 @@ function PullPageInfo($Array){
     $Url = $Array['urlinfo']['type'];
     $Id = OtarDecrypt($Array['key'],$Url);
     $qUEry = "SELECT * FROM page_template WHERE id='$Id' AND trash='0' AND webid='$WebId'"; 
-    $reSUlt = mysql_query($qUEry) or die(mysql_error());
-    $row = mysql_fetch_array($reSUlt);
+    $reSUlt = mysqli_query($CwDb,$qUEry);
+    $row = mysqli_fetch_assoc($reSUlt);
         $UrlUrl = $row['url'];
         $UrlType = $row['urltype'];
         $UrlId = $row['urlid'];
@@ -309,21 +308,22 @@ function PullPageInfo($Array){
         $row['active'] = "0";
     }
     $query = "SELECT * FROM page_settings WHERE article='$Article' AND tempid='$row[id]' AND webid='$WebId'";
-    $result = mysql_query($query) or die(mysql_error());
-    $RoW = mysql_fetch_array($result);
+    $result = mysqli_query($CwDb,$query);
+    $RoW = mysqli_fetch_assoc($result);
     $row['pagesettings'] = $RoW;
     $QUeRy = "SELECT * FROM page_function WHERE page='$Article' AND template='$Template' AND webid='$WebId'";
-    $rEsULT = mysql_query($QUeRy) or die(mysql_error());
-    $rOL = mysql_fetch_array($rEsULT);
+    $rEsULT = mysqli_query($CwDb,$QUeRy);
+    $rOL = mysqli_fetch_assoc($rEsULT);
     $row['pagefunction'] = $rOL;
     $qUerY = "SELECT * FROM articles WHERE id='$Article' AND webid='$WebId'";
-    $rEsulT = mysql_query($qUerY) or die(mysql_error());
-    $rOW = mysql_fetch_array($rEsulT);
+    $rEsulT = mysqli_query($CwDb,$qUerY);
+    $rOW = mysqli_fetch_assoc($rEsulT);
     $row['pagearticle'] = $rOW;
 return $row;
 }
 
 function SessionUser($Array){
+    $CwDb = CwDb();
     if($Array["manual_webid"] == ""){
         $WebId = $Array['webid'];
     }else{
@@ -337,8 +337,8 @@ function SessionUser($Array){
     }else{
         $User = 1;
         $query = "SELECT * FROM login_session WHERE userid='$AccountId' AND active='1' AND session='$Log_Session' AND session_generate='$Session_Generate' AND webid='$WebId'";
-        $result = mysql_query($query) or die(mysql_error());
-        $row = mysql_fetch_array($result);
+        $result = mysqli_query($CwDb,$query);
+        $row = mysqli_fetch_assoc($result);
         $Find_Account = $row['userid'];
         if($Find_Account == ""){
             $User = 0;
@@ -359,17 +359,29 @@ return $video_id;
 }
 
 function Hosting_Size($Array){
+    $DomainFolder = UploadFolder();
+    $CwDb = CwDb();
     if($Array["manual_webid"] == ""){
         $WebId = $Array['webid'];
     }else{
         $WebId = $Array["manual_webid"];
     }
-    $file_directory = '../';
+    $file_directory = "../uploads/$DomainFolder/";
     $output = exec('du -sk ' . $file_directory);
-    $filesize = trim(str_replace($file_directory, '', $output)) * 1024;
-    $q = mysql_query("SHOW TABLE STATUS");  
-    $size = 0;  
-    while($row = mysql_fetch_array($q)) {  
+    $Total = trim(str_replace($file_directory, '', $output)) * 1024;
+    $file_directory = "../uploads/";
+    $output = exec('du -sk ' . $file_directory);
+    $Uploads = trim(str_replace($file_directory, '', $output)) * 1024;  
+    $file_directory = "../theme";
+    $output = exec('du -sk ' . $file_directory);
+    $Theme = trim(str_replace($file_directory, '', $output)) * 1024;  
+    $file_directory = "../";
+    $output = exec('du -sk ' . $file_directory);
+    $Main = trim(str_replace($file_directory, '', $output)) * 1024;
+    $filesize = $Main + $Total - $Uploads - $Theme;
+    $q = mysqli_query($CwDb,"SHOW TABLE STATUS");
+    $size = 0;
+    while($row = mysqli_fetch_assoc($q)) {  
         $DbSize += $row["Data_length"] + $row["Index_length"];  
     }
     $filesize = $filesize + $DbSize;
@@ -427,7 +439,69 @@ function CwOrganize($Content,$Array){
     $Content = PbUnSerial($Content);
     $Content = PbFilter($Content);
     #$Content = CwFilterImg($Content,$Array);
+    if($Content["type"] == "post-product"){
+        $Content = Cw_Ecommerce_Default($Content,$Array);
+    }
+    if($Content["type"] == "post-product"){
+    }
 return $Content;
+}
+
+function Cw_Alerts($Article){
+    $CwDb = CwDb();
+    $User = $Article["user"];
+    $query = "SELECT * FROM users WHERE id='$User'";
+    $result = mysqli_query($CwDb,$query);
+    $row = mysqli_fetch_assoc($result);
+    $row = CwOrganize($row,$Array);
+    $Article["user"] = $row["name"];
+    if($row["info"]["first_name"] != ""){
+        if($Article["user"] == ""){
+            $Article["user"] = $row["info"]["first_name"] . " " . $row["info"]["last_name"];
+        }
+    }
+    if($Article["user"] == ""){
+        $Article["user"] = $row["username"];
+    }
+    if($Article["user"] == ""){
+        $Article["user"] = $row["email"];
+    }
+    $Session = $Article["other"]["tracker"]; 
+    $query = "SELECT * FROM tracker WHERE session='$Session' ORDER BY id DESC";
+    $result = mysqli_query($CwDb,$query);
+    $row = mysqli_fetch_assoc($result);
+    $Article["other"]["tracker"] = $row["id"];
+return $Article;
+}
+
+function GetSessionInfo($Article){
+    $CwDb = CwDb();
+    $User = $Article["user"];
+    $query = "SELECT * FROM users WHERE id='$User'";
+    $result = mysqli_query($CwDb,$query) ;
+    $row = mysqli_fetch_assoc($result);
+    $row = CwOrganize($row,$Array);
+    $Article["user"] = $row["name"];
+    if($row["info"]["first_name"] != ""){
+        if($Article["user"] == ""){
+            $Article["user"] = $row["info"]["first_name"] . " " . $row["info"]["last_name"];
+        }
+    }
+    if($Article["user"] == ""){
+        $Article["user"] = $row["username"];
+    }
+    if($Article["user"] == ""){
+        $Article["user"] = $row["email"];
+    } 
+    if($Article["user"] == ""){
+        $Article["user"] = "Guest Visitor";
+    } 
+    $query = "SELECT * FROM tracker_load WHERE sessid='$Article[id]'";
+    $result = mysqli_query($CwDb,$query);
+    $row = mysqli_fetch_assoc($result);
+    $row = CwOrganize($row);
+    $Article["tracker_load"] = $row;
+return $Article;
 }
 
 function CwFilterImg($Content,$Array){
@@ -466,6 +540,28 @@ function CwFilterImg($Content,$Array){
 return $Content;
 }
 
+function Cw_Ecommerce_Default($Article,$Array){
+    $Price = $Article['content']['prodprice'];
+    $Purchase = $Article['other']['resell']['price'];
+    if($Price == "" OR $Price <= "0"){
+        $Percent = "0";
+    }else{
+        $Percent = $Purchase/$Price;
+        $Percent = "1" - $Percent;
+        $Percent = $Percent * "100";
+        $Percent = number_format("$Percent", 2);
+        $Percent = $Percent - "10";
+    }
+    $Article['other']['wholesale']['percent'] =  $Percent;
+    if($Article['content']['newprice'] == ""){
+        $Article['content']['newprice'] = $Article['content']['prodprice'];
+    }
+    if($Article["content"]["img"] == ""){
+       $Article["content"]["img"] = "http://www.foxy-press.com/wp-content/plugins/foxypress/img/default-product-image.jpg";
+    }
+return $Article;
+}
+
 function CwFilerAddress($Type,$Content){
     if(is_array($Content["$Type"])){
         if(is_array($Content["$Type"]["address"])){
@@ -481,8 +577,25 @@ return $Content;
 }
 
 function PbFilter($Content){
-    $Content = CwFilerAddress("other",$Content);
-    $Content = CwFilerAddress("info",$Content);
+    if(is_array($Content["other"])){
+        if(array_key_exists("tags",$Content["other"])){
+            if($Content['other']['tags'] == ""){
+                $Content['other']['tags'] = $Array['siteinfo']['other']['tags'];
+            }
+        }
+        $Content = CwFilerAddress("other",$Content);
+        if(array_key_exists("artist", $Content["other"])){
+            if($Content["other"]["artist"] != ""){
+                $Content["other"]["artist"] = str_replace('%-', '', $Content["other"]["artist"]);
+                $Content["other"]["artist"] = str_replace('-%', '', $Content["other"]["artist"]);
+            }
+        }
+    }else{
+        $Content['other'] = array();
+    }
+    if(is_array($Content["info"])){
+        $Content = CwFilerAddress("info",$Content);
+    }
     if($Content["type"] == "post-event"){
         if($Content["content"]["external"] == ""){
             $Content["content"]["tickets"] = "/$_GET[url]/$Content[url]";
@@ -490,9 +603,12 @@ function PbFilter($Content){
             $Content["content"]["tickets"] = $Content["content"]["external"];
         }
     }
-    if($Content["other"]["artist"] != ""){
-        $Content["other"]["artist"] = str_replace('%-', '', $Content["other"]["artist"]);
-        $Content["other"]["artist"] = str_replace('-%', '', $Content["other"]["artist"]);
+    if($Content["type"] == "social"){
+        if(is_array($Content["info"])){
+            if($Content["other"]["auth"] == ""){
+                $Content["other"]["auth"] = $Content["info"]["access_token"];
+            }
+        }
     }
 return $Content;
 }
@@ -580,14 +696,15 @@ function CwLimitBrowser($Array){
 }
 
 function CwCartTotal($Cart){
+    $CwDb = CwDb();
     if($Array["manual_webid"] == ""){
         $WebId = $Array['webid'];
     }else{
         $WebId = $Array["manual_webid"];
     }
     $query = "SELECT * FROM cw_cart WHERE active='1' AND trash='0' AND session='$Cart'";
-    $result = mysql_query($query) or die(mysql_error());
-    while($row = mysql_fetch_array($result)){
+    $result = mysqli_query($CwDb,$query);
+    while($row = mysqli_fetch_assoc($result)){
         $CwCart['id'] = $row['id'];
         $CwCart['session'] = $row['session'];
         $CwCart['cart'] = $row['cart'];
@@ -818,16 +935,16 @@ function verifyFormToken($form) {
     	return $token;
 }
 
-function Cw_Settings($Search, $Array){
+function Cw_Settings($Search,$Array){
+    $CwDb = CwDb();
     if($Array["manual_webid"] == ""){
         $WebId = $Array['webid'];
     }else{
         $WebId = $Array["manual_webid"];
     }
-    $Query = "SELECT * FROM cwoptions WHERE type='settings' AND name='$Search' AND trash='0'";
-    $Result = mysql_query($Query) or die(mysql_error());
-    $Row = mysql_fetch_array($Result);
-return $Row;
+    $row = Cw_Fetch("SELECT * FROM info WHERE id='$WebId'",$Array);
+    $Result = $row["other"]["cwsettings"][$Search];
+return $Result;
 }
 
 function Settings_Name_Filter($Name){
@@ -837,14 +954,15 @@ function Settings_Name_Filter($Name){
 }
 
 function Cw_Load_Avg($Page,$Date,$Other,$Array){
+    $CwDb = CwDb();
     if($Array["manual_webid"] == ""){
         $WebId = $Array['webid'];
     }else{
         $WebId = $Array["manual_webid"];
     }
     $Query = "SELECT * FROM tracker_load WHERE webid='$WebId'";
-    $Result = mysql_query($Query) or die(mysql_error());
-    while($Row = mysql_fetch_array($Result)){
+    $Result = mysqli_query($CwDb,$Query);
+    while($Row = mysqli_fetch_assoc($Result)){
         $Speed = $Speed + $Row['loadtime'];
         $Count = $Count + 1;
     }
@@ -869,10 +987,40 @@ function ReportError(){
 }
 
 function Cw_Quick_Info($Type,$WebId,$Id,$Array){
+    $CwDb = CwDb();
     $query = "SELECT * FROM $Type WHERE id='$Id' AND webid='$WebId'";
-	$result = mysql_query($query) or die(mysql_error());
-	$row = mysql_fetch_array($result);
+	$result = mysqli_query($CwDb,$query);
+	$row = mysqli_fetch_assoc($result);
 	$row = CwOrganize($row,$Array);
 return $row;
+}
+
+function Cw_Filter_Array($Content){
+    if(is_array($Content)){
+        foreach($Content as $key => $value){
+            if(is_numeric($key)) {
+                unset($Content[$key]);  
+            }
+        }
+    }
+    return $Content;
+}
+
+function UploadFolder(){
+    $Name = $_SERVER['HTTP_HOST'];
+    $Name = explode(".", $Name);
+    $Domain = $Name["0"];
+    $filename = "../uploads/$Domain";
+    if (!file_exists("$filename")){
+        mkdir("$filename", 0777, true);
+        mkdir("../uploads/$Domain/images/", 0777, true);
+        mkdir("../uploads/$Domain/media/", 0777, true);
+        mkdir("../uploads/$Domain/transfer/", 0777, true);
+        mkdir("../uploads/$Domain/source/", 0777, true);
+        mkdir("../uploads/$Domain/temp/", 0777, true);
+        mkdir("../uploads/$Domain/transfer/", 0777, true);
+        mkdir("../uploads/$Domain/update/", 0777, true);
+    }
+return $Domain;
 }
 ?>

@@ -13,8 +13,8 @@ include("../../config/database.php");
 <option value=''>Select Below</option>
 <?php 
 $query = "SELECT * FROM sport_team WHERE type='team' AND cat='$_GET[id]' AND trash='0' AND active='1'  ORDER BY name";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
 ?>
 <option value='<?php echo $row['id']; ?>'><?php echo $row['name']; ?></option>
 <?php } ?>
@@ -28,8 +28,8 @@ while($row = mysql_fetch_array($result)){
 <option value=''>Select Below</option>
 <?php 
 $query = "SELECT * FROM sport_team WHERE type='team' AND cat='$_GET[id]' AND trash='0' AND active='1'  ORDER BY name";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
 ?>
 <option value='<?php echo $row['id']; ?>'><?php echo $row['name']; ?></option>
 <?php } ?>
