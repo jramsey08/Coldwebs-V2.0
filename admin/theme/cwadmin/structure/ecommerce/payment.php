@@ -1,4 +1,5 @@
-<?php  include("$THEME/structure/ecommerce/sidebar.php"); ?>
+<?php include("$THEME/structure/ecommerce/top_header.php"); ?>
+
 
     <form name='editarticle' id='edittable' method='post'><br>
         <div class="content">
@@ -9,7 +10,7 @@
                             <div class="header">							
                                 <h3>Payment Options
                                     <div align="right">
-                                        <button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
+                                        <button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" style="background-color:#0969f7;color:white;" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
                                     </div>
                                 </h3>			
                             </div>
@@ -35,15 +36,15 @@
                                         <tbody>
 <?php
 $Query = "SELECT * FROM cwoptions WHERE type='payment' AND webid='$WebId' AND trash='0' ORDER BY name";
-$Result = mysql_query($Query) or die(mysql_error());
-while($Payment = mysql_fetch_array($Result)){
+$Result = mysqli_query($CwDb,$Query);
+while($Payment = mysqli_fetch_assoc($Result)){
     $Payment = CwOrganize($Payment,$Array);
     $ArticleId = $Payment['id'];
     $ArticleId = OtarEncrypt($key,$ArticleId);
     $ProvId = $Payment["content"]["provider"];
     $query = "SELECT * FROM cwoptions WHERE type='payment_provider' AND id='$ProvId' AND webid='$WebId'";
-    $result = mysql_query($query) or die(mysql_error());
-    $Provider = mysql_fetch_array($result);
+    $result = mysqli_query($CwDb,$query);
+    $Provider = mysqli_fetch_assoc($result);
     $Provider = CwOrganize($Provider,$Array);
 ?>
                                             <tr class="odd gradeX">

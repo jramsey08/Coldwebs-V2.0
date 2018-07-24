@@ -1,14 +1,23 @@
-<?php  include("$THEME/structure/ecommerce/sidebar.php"); ?>
 <?php
+include("$THEME/structure/ecommerce/top_header.php");
+
 $ArticleId = OtarDecrypt($key,$_GET["type"]);
 $query = "SELECT * FROM cwoptions WHERE id='$ArticleId'";
-$result = mysql_query($query) or die(mysql_error());
-$Article = mysql_fetch_array($result);
+$result = mysqli_query($CwDb,$query);
+$Article = mysqli_fetch_assoc($result);
 $Article = CwOrganize($Article,$Array);
 ?>
 
 <div class="content">
     <div class="cl-mcont">
+                <div class="page-head">
+                    <ol class="breadcrumb">
+                        <li><a href="/admin">Dashboard</a></li>
+                        <li><a href="/admin/Ecommerce">Ecommerce</a></li>
+                        <li><a href="/admin/Ecommerce-Delivery">Delivery</a></li>
+                        <li class="active"><?php echo $Article['name']; ?></li>
+                    </ol>
+                </div>
         <div class="page-head">
             <form role="form" method='post' action='/Process/Ecommerce/Delivery' enctype="multipart/form-data">		
                 <div class="row">
@@ -45,8 +54,8 @@ $Article = CwOrganize($Article,$Array);
                                                                 <option value="<?php echo $Article['content']['carrier']; ?>">Select Below</option>
 <?php 
 $query = "SELECT * FROM cwoptions WHERE  type='delivery_carrier' AND active='1' AND trash='0' AND webid='$WebId' ORDER BY name";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
     $row = CwOrganize($row,$Array);
 ?>
                                                                 <option value="<?php echo $row['id']; ?>" <?php if($row['id'] == $Article['content']['carrier']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option>

@@ -1,4 +1,6 @@
 <?php
+include("$THEME/structure/ecommerce/top_header.php");
+
 if($Current_Admin_Access >= $ListedUser['info']['access']){
     $ListedUser = array();
 }
@@ -23,8 +25,6 @@ $ListedUserAccess = $ListedUser['info']['siteaccess'];
                 <li class="active"><a href="#basic" data-toggle="tab">Basic Info</a></li>
                 <?php if($UserSiteAccess['grantaccess'] == "1"){ ?><li><a href="#access" data-toggle="tab">Extra Access</a></li><?php } ?>
                 <li><a href="#gallery" data-toggle="tab">Gallery</a></li>
-                <li><a href="#media" data-toggle="tab">Media/Video</a></li>
-                <li><a href="#social" data-toggle="tab">Social Media</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active cont" id="basic">
@@ -57,7 +57,7 @@ $ListedUserAccess = $ListedUser['info']['siteaccess'];
                                             </div>
                                         </div>
                                         <br><br>
-<h3>Change Account Password:</h3> 
+                                        <h3>Change Account Password:</h3> 
                                         <hr>
 <?php if($ListedUser['id'] == ""){ 
 }else{ 
@@ -92,21 +92,9 @@ if($Current_Admin_Access == "0"){
                                             <label class="col-sm-3 control-label">Account Type</label>
                                             <div class="col-sm-6">
                                                 <select class="form-control" name='access'>
-                                                    <option value="<?php if($ListedUser['info']['access'] == ""){ echo "1"; } ?>">Select Below</option>
-<?php $query = "SELECT * FROM cwoptions WHERE type='useraccess' AND active='1' AND trash='0' ORDER by category";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$row = PbUnSerial($row); 
-if($row['category'] == "0"){
-    if($Current_Admin_Access == "0"){
-        $Show = "1";
-    }
-}else{
-    $Show = "1";
-}
-if($Show == "1"){ ?>
-                                                    <option value="<?php echo $row['category']; ?>" <?php if($row['category'] == $ListedUser['info']['access']){ echo "selected=selected"; } ?>><?php echo $row['name']; ?></option>
-<?php }} ?>
+                                                    <option value="4">Select Below</option>
+                                                    <option value="4" selected>Customer</option>
+                                                    <option value="3">Grant Extra Access</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -131,9 +119,9 @@ if($Show == "1"){ ?>
                                                 <select class="form-control" name='webid'>
 <?php 
 $query = "SELECT * FROM info ORDER by name";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-    $row = CwOrganize($row);
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+    $row = CwOrganize($row,$Array);
 ?>
                                                     <option value='<?php echo $row["id"]; ?>' <?php if($ListedUser['other']['webid'] == $row["id"]){ echo "selected='selected'"; } ?>><?php echo $row["name"]; ?></option>
 <?php } ?>
@@ -193,9 +181,9 @@ while($row = mysql_fetch_array($result)){
 <th style="width:40%;"><strong>Delete</strong></th>
 </tr></thead>
 <tbody class="no-border-y">
-<?php $query = "SELECT * FROM images WHERE album='$PostId' AND trash='0' AND webid='$WebId' AND active='1' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ ?>
+<?php $query = "SELECT * FROM images WHERE album='$PostId' AND album!='' AND trash='0' AND webid='$WebId' AND active='1' ORDER BY list";
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){ ?>
 <tr>
 <td><a href="/admin/ImgRotate/<?php echo OtarEncrypt($key, $row['id']); ?>"><img class='ImgSrc' src='<?php echo $row['img']; ?>' height="200" width="200"></a></td>
 <td style="width:10%;" class='ImageOrder'><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="10" value='<?php echo $row["list"]; ?>'></td>
@@ -208,90 +196,7 @@ while($row = mysql_fetch_array($result)){ ?>
 </div></div></div></div>
 </div>
 
-<div class="tab-pane" id="media">
-<div class="col-sm-12 col-md-12">
-<div class="header"><h3>Audio / Video Integration</h3>
-</div></div>
-<div class="row">
-<div class="col-sm-6 col-md-6">
-<div class="content">
-<div class="form-group">
-<label class="col-sm-3 control-label">Media Type</label>
-<div class="col-sm-6">
-<select class="form-control" name='codetype'>
-<option value='' <?php if($Article['content']['codetype'] == ""){ echo "selected='selected'"; } ?>>Select Video Format</option>
-<option value='youtube' <?php if($Article['content']['codetype'] == "youtube"){ echo "selected='selected'"; } ?>>Youtube</option>
-<option value='vimeo' <?php if($Article['content']['codetype'] == "vimeo"){ echo "selected='selected'"; } ?>>Vimeo</option>
-<option value='code' <?php if($Article['content']['codetype'] == "code"){ echo "selected='selected'"; } ?>>Embed Code</option>
-<option value='videofile' <?php if($Article['content']['codetype'] == "videofile"){ echo "selected='selected'"; } ?>>Video File (*Uploaded)</option>
-<option value='audiofile' <?php if($Article['content']['codetype'] == "audiofile"){ echo "selected='selected'"; } ?>>Audio File (*Uploaded)</option>
-</select></div></div><br><br>
-<div class="form-group">
-<label class="col-sm-3 control-label">Upload Media(*)</label>
-<div class="col-sm-6">
-<div class="fileinput fileinput-new" data-provides="fileinput">
-<span class="btn btn-primary btn-file">
-<span class="fileinput-new">Select file(s)</span>
-<span class="fileinput-exists">Change</span><input type="file" name="mediafile[]"></span>
-<a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">&times;</a>
-</div></div></div>
-</div></div>
-<div class="col-sm-6 col-md-6">
-<div class="form-group">
-<label class="col-sm-3 control-label">Embed Code</label>
-<div class="col-sm-6">
-<textarea name='code' class="form-control"><?php echo $Article['content']['code']; ?></textarea>
-</div></div></div>
-</div></div>
 
-<div class="tab-pane" id="social">
-<div class="row">
-<div class="col-sm-12 col-md-12">
-<div class="header"><h3>Social Media Integration</h3></div>
-<div class="content">
-<div class="col-sm-6 col-md-6">
-<div class="form-group">
-<?php
-$query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-    $TotalSocial = $TotalSocial + 1;
-}
-if ($TotalSocial % 2 == 0) {
-}else{
-    $TotalSocial = $TotalSocial + 1;
-}
-$Half = $TotalSocial / 2;
-$Split1 = $Half;
-$Split2 = $Half + 1;
-$query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0' LIMIT 0,$Split1";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$name = strtolower($row['name']);
-$Social = $Article['other']['social']; ?>
-<label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
-<div class="col-sm-6">
-<div class="input-group">
-<span class="input-group-addon">@</span>
-<input type="text" class="form-control" name="social[<?php echo $name; ?>]" value="<?php echo isset_get($Social,$name); ?>" placeholder="Username / Url">
-</div></div><br><br><br>
-<?php } echo "</div></div>"; ?>
-<div class="col-sm-6 col-md-6">
-<div class="form-group">
-<?php $query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0' LIMIT $Split2,$TotalSocial";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$name = strtolower($row['name']);
-$Social = $Article['other']['social']; ?>
-<label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
-<div class="col-sm-6">
-<div class="input-group">
-<span class="input-group-addon">@</span>
-<input type="text" class="form-control" name="social[<?php echo $name; ?>]" value="<?php echo isset_get($Social,$name); ?>" placeholder="Username / Url">
-</div></div><br><br><br>
-<?php } echo "</div></div>"; ?>
-</div></div></div>
-</div>
 
 
 <?php
@@ -307,8 +212,8 @@ if($ListedUser['info']['access'] == "0"){
 <div class="form-group">
 <?php $TotalSocial = "0";
 $query = "SELECT * FROM cwoptions WHERE type='access' AND active='1' AND trash='0'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
     $TotalAccess = $TotalAccess + 1;
 }
 
@@ -320,8 +225,8 @@ $Half = $TotalAccess / 2;
 $Split1 = $Half;
 $Split2 = $Half + 1;
 $query = "SELECT * FROM cwoptions WHERE type='access' AND active='1' AND trash='0' ORDER BY name LIMIT 0,$Split1";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
 $name = strtolower($row['name']);
 $Social = $Article['other']['social'];
 $VerifyAccess = $row['content'];
@@ -344,8 +249,8 @@ if(is_array($ListedUserAccess)){
 $Split2 = $Split2 - 1;
 $TotalAccess = $TotalAccess - 2;
 $query = "SELECT * FROM cwoptions WHERE type='access' AND active='1' AND trash='0' ORDER BY name LIMIT $Split2,$TotalAccess";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
 $name = strtolower($row['name']);
 $Social = $Article['other']['social'];
 $VerifyAccess = $row['content'];

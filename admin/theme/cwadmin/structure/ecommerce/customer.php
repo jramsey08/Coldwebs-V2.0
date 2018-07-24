@@ -1,3 +1,7 @@
+<?php include("$THEME/structure/ecommerce/top_header.php"); ?>
+
+
+
         <form name='edituser' id='edituser' method='post'>
             <div class="cl-mcont">
                 <div class="page-head">
@@ -13,7 +17,7 @@
                             <div class="header">							
                                 <h3>Customers
                                     <div align="right">
-                                        <button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
+                                        <button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" style="background-color:#0969f7;color:white;" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
                                     </div>
                                 </h3>			
                             </div><br>
@@ -40,19 +44,17 @@
                                         <tbody>
 <?php
 $Query = "SELECT * FROM users WHERE webid='$WebId'"; 
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-    $Row = PbUnSerial($Row);
-    $UserId = OtarEncrypt($key,$Row[id]);
-    if($Access >= "4"){
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+    $Row = CwOrganize($Row,$Array);
+    $UserId = OtarEncrypt($key,$Row["id"]);
+    if($Row['info']['access'] == "4"){
         $Access = CwUserAccess($Row['info']['access']);
         $Status = CwUserStatus($Row['info']['status']);
         $Img = $Row['info']['img'];
         if($Img == ""){
             $Img = "theme/cwadmin/uploads/default-avatar.png";
         }
-        if($Current_Admin_Access >= $Row['info']['access']){
-        }else{
 ?>
                                             <tr class="odd gradeX">
                                                 <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
@@ -74,7 +76,7 @@ while($Row = mysql_fetch_array($Result)){
                                                     </div>
                                                 </td>
                                             </tr>
-<?php }}} ?>									
+<?php }} ?>									
                                         </tbody>
                                     </table>							
                                 </div>

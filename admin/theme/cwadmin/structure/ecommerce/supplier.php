@@ -1,3 +1,7 @@
+<?php include("$THEME/structure/ecommerce/top_header.php"); ?>
+
+
+
         <form name='editarticle' id='edittable' method='post'><br>
             <div class="cl-mcont">
                 <div class="page-head">
@@ -13,7 +17,7 @@
                             <div class="header">							
                                 <h3>Suppliers
                                     <div align="right">
-                                        <button type="button" onclick="window.location.href='./<?php echo $_GET["url"]; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
+                                        <button type="button" onclick="window.location.href='./<?php echo $_GET["url"]; ?>/New'" style="background-color:#0969f7;color:white;" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
                                     </div>
                                     <center>
                                         <button type='submit' formaction="#/Process/EditArticle/Delete" style="background-color: red; color: white;" class="btn btn-trans"><i class="fa "></i> Delete </button>
@@ -39,9 +43,9 @@
 <?php
 $Count = "";
 $Query = "SELECT * FROM cwoptions WHERE type='supplier' AND trash='0' AND webid='$WebId'";
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-$Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+$Row = CwOrganize($Row,$Array);
 $ArticleId = $Row['id'];
 $ArticleId = OtarEncrypt($key,$ArticleId);
 ?>
@@ -80,9 +84,9 @@ $ArticleId = OtarEncrypt($key,$ArticleId);
 
 
 
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.jeditable/jquery.jeditable.mini.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/jquery.datatables.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/bootstrap-adapter/js/datatables.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable.mini.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.datatables.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>
 <script type="text/javascript">
       //Add dataTable Functions
       var functions = $('<div class="btn-group">
@@ -174,7 +178,7 @@ $ArticleId = OtarEncrypt($key,$ArticleId);
       var oTable = $('#datatable3').dataTable();
        
       /* Apply the jEditable handlers to the table */
-      oTable.$('td').editable( 'http://condorthemes.com/flatdream/js/jquery.datatables/examples/examples_support/editable_ajax.php', {
+      oTable.$('td').editable( '/admin/theme/cwadmin/header/editable_ajax.php', {
           "callback": function( sValue, y ) {
               var aPos = oTable.fnGetPosition( this );
               oTable.fnUpdate( sValue, aPos[0], aPos[1] );
@@ -191,8 +195,8 @@ $ArticleId = OtarEncrypt($key,$ArticleId);
 </script>
 
 
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/masonry.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.magnific-popup/dist/jquery.magnific-popup.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/masonry.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.magnific-popup.min.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){

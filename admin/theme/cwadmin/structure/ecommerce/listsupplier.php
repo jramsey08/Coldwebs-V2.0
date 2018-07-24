@@ -1,8 +1,12 @@
+<?php include("$THEME/structure/ecommerce/top_header.php"); ?>
+
+
+
 <?php
 $SupId = OtarDecrypt($key,$_GET['type']);
 $query = "SELECT * FROM cwoptions WHERE id='$SupId'";
-$result = mysql_query($query) or die(mysql_error());
-$Supplier = mysql_fetch_array($result);
+$result = mysqli_query($CwDb,$query);
+$Supplier = mysqli_fetch_assoc($result);
 $Supplier = CwOrganize($Supplier,$Array);
 ?>
     <form role="form" action='/Process/Ecommerce/Supplier' enctype="multipart/form-data">
@@ -132,27 +136,27 @@ $Supplier = CwOrganize($Supplier,$Array);
 
 
 
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jasny.bootstrap/extend/js/jasny-bootstrap.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/moment.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/daterangepicker.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.touchspin/bootstrap-touchspin/bootstrap.touchspin.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.switch/bootstrap-switch.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.select2/select2.min.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.slider/js/bootstrap-slider.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.icheck/icheck.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jasny-bootstrap.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/moment.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/daterangepicker.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap.touchspin.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-colorpicker.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-switch.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/select2.min.js" ></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-slider.js" ></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/icheck.min.js"></script>
 
 
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.summernote/dist/summernote.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/src/bootstrap-wysihtml5.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/summernote.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/wysihtml5-0.3.0.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-wysihtml5.js"></script>
 
 
 
 
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/masonry.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.magnific-popup/dist/jquery.magnific-popup.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/masonry.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.magnific-popup.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
       

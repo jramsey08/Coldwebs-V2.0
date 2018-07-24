@@ -1,4 +1,6 @@
 <?php
+include("$THEME/structure/ecommerce/top_header.php");
+
 if($Get_Type == "new"){
     $ProductInfo["content"] = array();
     $ProductInfo["other"] = array();
@@ -12,7 +14,7 @@ if($Get_Type == "new"){
         <ol class="breadcrumb">
             <li><a href="/admin">Dashboard</a></li>
             <li><a href="/admin/Ecommerce">Ecommerce</a></li>
-            <li><a href="/admin/Products">Products</a></li>
+            <li><a href="/admin/Ecommerce-Products">Products</a></li>
             <li class="active"><?php echo $ProductInfo['name']; ?></li>
         </ol>
     </div>
@@ -25,6 +27,7 @@ if($Get_Type == "new"){
                     <li><a href="#attributes" data-toggle="tab">Attributes</a></li>
                     <li><a href="#uploads" data-toggle="tab">Uploader</a></li>
                     <li><a href="#reseller" data-toggle="tab">ReSeller Program</a></li>
+                    <li><a href="#wholesale" data-toggle="tab">Wholesale</a></li>
                     <li><a href="#extra" data-toggle="tab">Extra Info</a></li>
                 </ul>
                 <div class="tab-content">
@@ -43,14 +46,14 @@ if($Get_Type == "new"){
                                     <div class="col-sm-6 col-md-6">
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Title</label>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-9">
                                                 <input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $ProductInfo['name']; ?>'>
                                             </div>
                                         </div>
                                         <br><br>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Url</label>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-9">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">@</span>
                                                     <input type="text" class="form-control" name='url' value="<?php echo $ProductInfo['url']; ?>" placeholder="Example: site.com/'URL'">
@@ -60,7 +63,7 @@ if($Get_Type == "new"){
                                         <br><br>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Price</label>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-9">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">$</span>
                                                     <input type="text" class="form-control" name='prodprice' value="<?php echo $ProductInfo['content']['prodprice']; ?>" placeholder="Example: $'100.00'">
@@ -69,7 +72,7 @@ if($Get_Type == "new"){
                                         </div><br><br>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Sale Price</label>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-9">
                                                 <div class="input-group">
                                                     <span class="input-group-addon">$</span>
                                                     <input type="text" class="form-control" name='newprice' value="<?php echo $ProductInfo['content']['newprice']; ?>" placeholder="Example: $'100.00'">
@@ -78,7 +81,7 @@ if($Get_Type == "new"){
                                         </div><br><br>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Qty</label>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-9">
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" name='qty' value="<?php echo $ProductInfo['content']['qty']; ?>" placeholder="Example: '100'">
                                                 </div>
@@ -87,7 +90,7 @@ if($Get_Type == "new"){
                                         <br><br>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">SKU</label>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-9">
                                                 <div class="input-group">
                                                     <input type="text" class="form-control" name='sku' value="<?php echo $ProductInfo['other']['sku']; ?>" placeholder="Enter SKU'">
                                                 </div>
@@ -97,15 +100,22 @@ if($Get_Type == "new"){
                                     </div>
                                     <div class="col-sm-6 col-md-6">
                                         <div class="form-group">
+                                            <label class="col-sm-3 control-label">Date</label>
+                                            <div class="col-sm-9">
+                                                <input type="date" name='date_created' placeholder="Enter Title" class="form-control" value='<?php echo date("Y-m-d",$Article['date_created']); ?>'>
+                                            </div>
+                                        </div>
+                                        <br><br>
+                                        <div class="form-group">
                                             <label class="col-sm-3 control-label">Category Type</label>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-9">
                                                 <select class="form-control" name='cattype' onchange="catType(this.value)">
                                                     <option value="" <?php if($ProductInfo['shortcode'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
 <?php
 $Query = "SELECT * FROM admin WHERE type='prodcat' AND trash='0' AND active='1' ORDER BY name";
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-    $Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_array($Result)){
+    $Row = CwOrganize($Row,$Array);
 ?>
                                                     <option value="<?php echo $Row["id"]; ?>" <?php if($ProductInfo['shortcode'] == $Row[id]){ echo "selected='selected'"; }; ?>><?php echo $Row["name"]; ?></option>
                                                 <?php } ?>
@@ -116,13 +126,13 @@ while($Row = mysql_fetch_array($Result)){
                                         <div id="showCatType">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">Category</label>
-                                                <div class="col-sm-6">
+                                                <div class="col-sm-9">
                                                     <select class="form-control" name='category'>
                                                         <option>Select Below</option>
 <?php  $query = "SELECT * FROM articles WHERE category='$ProductInfo[shortcode]' AND type='prodcat' AND active='1' AND trash='0'"; 
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+$row = CwOrganize($row,$Array);
 echo "<option value='$row[id]'"; if($row['id'] == $ProductInfo['category']){ echo "selected='selected'"; }; ?>><?php echo $row['name']; ?></option> <?php }
 ?>
                                                     </select>
@@ -132,7 +142,7 @@ echo "<option value='$row[id]'"; if($row['id'] == $ProductInfo['category']){ ech
                                         </div> 
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Condition</label>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-9">
                                                 <select class="form-control" name='condition'>
                                                     <option value="" <?php if($ProductInfo['content']['condition'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
                                                     <option value="New" <?php if($ProductInfo['content']['condition'] == "New"){ echo "selected='selected'"; }; ?>>New</option>
@@ -145,7 +155,7 @@ echo "<option value='$row[id]'"; if($row['id'] == $ProductInfo['category']){ ech
                                         <br><br>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Featured</label>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-9">
                                                 <select class="form-control" name='feat'>
                                                     <option value='0' <?php if($ProductInfo['feat'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
                                                     <option value='0' <?php if($ProductInfo['feat'] == "0"){ echo "selected='selected'"; } ?>>No</option>
@@ -156,13 +166,13 @@ echo "<option value='$row[id]'"; if($row['id'] == $ProductInfo['category']){ ech
                                         <br><br>
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label">Brand</label>
-                                            <div class="col-sm-6">
+                                            <div class="col-sm-9">
                                                 <select class="form-control" name='brand'>
                                                     <option value="" <?php if($ProductInfo['content']['brand'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
 <?php
 $query = "SELECT * FROM cwoptions WHERE type='brand' AND trash='0' AND webid='$WebId' ORDER BY name";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ 
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){ 
     $row = CwOrganize($row,$Array);
 ?>
                                                     <option value="<?php echo $row["id"]; ?>" <?php if($ProductInfo['content']['brand'] == $row["id"]){ echo "selected='selected'"; } ?>><?php echo $row["name"]; ?></option>
@@ -211,7 +221,7 @@ while($row = mysql_fetch_array($result)){
         <div class="col-sm-12 col-md-12">
             <?php $GalRand = "Galupload-" . RandomCode("50"); ?>
             <input type="hidden" name='galrand' value='<?php echo $GalRand; ?>'>
-            <iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' scrolling='no' frameborder="0" height="600" width="720" ></iframe>
+            <iframe class="dropzone-frame" src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' frameborder="0" height="600" width="720" ></iframe>
         </div>
     </div>
 </div>
@@ -243,12 +253,6 @@ while($row = mysql_fetch_array($result)){
         <div class="col-md-12">
             <div class="header"><h3></h3></div>
             <div class="content">
-                
-                
-                
-                
-                
-                
                 <div class="table-responsive">
                     <table class="table no-border hover">
                         <thead class="no-border">
@@ -264,12 +268,11 @@ while($row = mysql_fetch_array($result)){
                             </tr>
                         </thead>
                         <tbody class="no-border-y">
-<?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND trash='0' AND webid='$WebId' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ 
-if($Article['id'] == ""){
-    exit;
-} ?>
+<?php
+$query = "SELECT * FROM images WHERE album='$Article[id]' AND trash='0' AND webid='$WebId' AND album !='' ORDER BY list";
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+?>
                             <tr>
                                 <td><a href="/admin/ImgRotate/<?php echo OtarEncrypt($key, $row['id']); ?>"><img class='ImgSrc' src='<?php echo $row['img']; ?>' height="200" width="200"></a></td>
                                 <td style="width:70%;"><input type='text' name="TrackName[<?php echo $row['id']; ?>]" value='<?php echo $row['name']; ?>'></td>
@@ -281,10 +284,6 @@ if($Article['id'] == ""){
                                 <td><input type="checkbox" name="removegal[]" value="<?php echo $row['id']; ?>"></td>
                             </tr>
 <?php } ?>
-
-
-
-
                         </tbody>            
                     </table>
                 </div>                
@@ -324,37 +323,45 @@ if($Article['id'] == ""){
 
 
 <div class="tab-pane cont" id="attributes">
-<div class="row">
-<div class="col-sm-12 col-md-12">
-<div class="header"><h3>Attributes</h3></div>
-<div class="content">
-<div class="col-sm-6 col-md-6">
-<div class="form-group">
-<label class="col-sm-3 control-label">Size</label>
-<div class="col-sm-6">
-<select class="form-control" name='size[]' multiple>
-<option value=''>Select Below</option>
-<?php $query = "SELECT * FROM cwoptions WHERE category='size' AND trash='0' AND active='1'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ ?>
-<option value='<?php echo $row['id']; if(in_array($row['id'], $Article['content']['size'])){ echo "'selected='selected"; }?>'><?php echo $row[name]; ?></option>
-<?php } ?></select></div></div><br><br><br><br>
-<div class="form-group">
-<label class="col-sm-3 control-label">Color</label>
-<div class="col-sm-6">
-<select class="form-control" name='color[]' multiple>
-<option value=''>Select Below</option>
-<?php $query = "SELECT * FROM cwoptions WHERE category='color' AND trash='0' AND active='1'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ ?>
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="header"><h3>Attributes</h3></div>
+                <div class="content">
+                    <div class="col-sm-6 col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Size</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" name='size[]' multiple>
+<?php $query = "SELECT * FROM cwoptions WHERE category='size' AND trash='0' AND active='1' AND webid='$WebId'";
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){ ?>
+                                    <option value='<?php echo $row['id']; if(is_array($Article['content']['size'])){if(in_array($row['id'], $Article['content']['size'])){ echo "'selected='selected"; }} ?>'><?php echo $row["name"]; ?></option>
+<?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <br><br><br><br>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Color</label>
+                            <div class="col-sm-9">
+                                <select class="form-control" name='color[]' multiple>
+<?php $query = "SELECT * FROM cwoptions WHERE category='color' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY name";
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){ ?>
 <?php if(is_array($Article["content"]["color"])){ ?>
-    <option value='<?php echo $row[id]; ?>' <?php if(in_array($row['id'], $Article['content']['color'])){ echo "selected='selected'"; }?>><?php echo $row['name']; ?></option>
+                                    <option value='<?php echo $row[id]; ?>' <?php if(in_array($row['id'], $Article['content']['color'])){ echo "selected='selected'"; }?>><?php echo $row['name']; ?></option>
 <?php }else{ ?>
-    <option value='<?php echo $row[id]; ?>' <?php if($row['id'] == $Article['content']['color']){ echo "selected='selected'"; }?>><?php echo $row['name']; ?></option>
-<?php }} ?></select></div></div><br><br><br><br>
-</div></div>
-</div></div>
-</div>
+                                    <option value='<?php echo $row[id]; ?>' <?php if($row['id'] == $Article['content']['color']){ echo "selected='selected'"; }?>><?php echo $row['name']; ?></option>
+<?php }} ?>
+                                </select>
+                            </div>
+                        </div>
+                        <br><br><br><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -373,14 +380,14 @@ while($row = mysql_fetch_array($result)){ ?>
                             <div class="col-sm-6 col-md-6">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Product Tags</label>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-9">
                                         <input class="tags" type="hidden" name='tags' value="<?php echo $ProductInfo['other']['tags']; ?>" />
                                     </div>
                                 </div>
                                 <br><br>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Page Structure</label>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-9">
                                         <select class="form-control" name='structure'>
 <?php
 $PageType = $ProductInfo['type'];
@@ -412,18 +419,18 @@ if(is_array($ThemeArray['structure']["$PageType"])){
                 <div class="row">
                     <div class="col-sm-12 col-md-12">
                         <div class="header">
-                            <h3>ReSeller/Dropship Settings</h3>
+                            <h3>ReSeller/Dropship/ Settings</h3>
                         </div>
                         <div class="col-sm-12 col-md-12">
                             <div class="col-sm-6 col-md-6">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Supplier</label>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-9">
                                         <select class="form-control" name='supplier'>
 <?php
 $query = "SELECT * FROM cwoptions WHERE type='supplier' AND trash='0' AND webid='$WebId' ORDER BY name";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ 
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){ 
     $row = CwOrganize($row,$Array);
 ?>
                                             <option value="<?php echo $row["id"]; ?>" <?php if($ProductInfo['other']['supplier'] == $row["id"]){ echo "selected='selected'"; } ?>><?php echo $row["name"]; ?></option>
@@ -434,7 +441,7 @@ while($row = mysql_fetch_array($result)){
                                 <br><br>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Type</label>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-9">
                                         <select class="form-control" name='suppliertype'>
                                             <option value="resell" <?php if($ProductInfo['other']['suppliertype'] == "resell"){ echo "selected='selected'"; } ?>>Manual ReSell</option>
                                             <option value="dropship" <?php if($ProductInfo['other']['suppliertype'] == "dropship"){ echo "selected='selected'"; } ?>>Drop Shipping</option>
@@ -442,11 +449,20 @@ while($row = mysql_fetch_array($result)){
                                     </div>
                                 </div>
                                 <br><br>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Product Url</label>
+                                    <div class="col-sm-9">
+                                        <div class="input-group">
+                                            <span class="input-group-addon"><a target="_blank" href="<?php echo $ProductInfo['other']['resell']['url']; ?>">@</a></span>
+                                            <input type="text" class="form-control" name='resell[url]' value="<?php echo $ProductInfo['other']['resell']['url']; ?>" placeholder="Enyter MSRP'">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-sm-6 col-md-6">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Purchase Price</label>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-9">
                                         <div class="input-group">
                                             <span class="input-group-addon">$</span>
                                             <input type="text" class="form-control" name='resell[price]' value="<?php echo $ProductInfo['other']['resell']['price']; ?>" placeholder="Enter Price'">
@@ -456,27 +472,27 @@ while($row = mysql_fetch_array($result)){
                                 <br><br>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">MSRP</label>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-9">
                                         <div class="input-group">
                                             <span class="input-group-addon">$</span>
-                                            <input type="text" class="form-control" name='resell[msrp]' value="<?php echo $ProductInfo['other']['resell']['msrp']; ?>" placeholder="Enyter MSRP'">
+                                            <input type="text" class="form-control" name='resell[msrp]' value="<?php echo $ProductInfo['other']['resell']['msrp']; ?>" placeholder="Enter MSRP'">
                                         </div>
                                     </div>
                                 </div>
                                 <br><br>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">Average Price</label>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-9">
                                         <div class="input-group">
                                             <span class="input-group-addon">$</span>
-                                            <input type="text" class="form-control" name='resell[avgprice]' value="<?php echo $ProductInfo['other']['resell']['avgprice']; ?>" placeholder="Enyter MSRP'">
+                                            <input type="text" class="form-control" name='resell[avgprice]' value="<?php echo $ProductInfo['other']['resell']['avgprice']; ?>" placeholder="Average Price'">
                                         </div>
                                     </div>
                                 </div>
                                 <br><br>
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label">SKU</label>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-9">
                                         <div class="input-group">
                                             <span class="input-group-addon">#</span>
                                             <input type="text" class="form-control" name='resell[sku]' value="<?php echo $ProductInfo['other']['resell']['sku']; ?>" placeholder="Enter Sku'">
@@ -495,6 +511,41 @@ while($row = mysql_fetch_array($result)){
 
 
 
+
+            <div class="tab-pane" id="wholesale">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">
+                        <div class="header">
+                            <h3>Wholesale Settings</h3>
+                        </div>
+                        <div class="col-sm-12 col-md-12">
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Wholesale Price</label>
+                                    <div class="col-sm-9">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">$</span>
+                                            <input type="text" class="form-control" name='wholesale[price]' value="<?php echo $ProductInfo['other']['wholesale']['price']; ?>" placeholder="Enter Price'">
+                                        </div>
+                                    </div>
+                                </div>
+                                <br><br>
+                            </div>
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">Sale Percentage</label>
+                                    <div class="col-sm-9">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name='wholesale[percent]' value="<?php echo $ProductInfo['other']['wholesale']['percent']; ?>%" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br><br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
 
@@ -515,18 +566,17 @@ while($row = mysql_fetch_array($result)){
             <h4 class="panel-title">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
                     <i class="fa "></i>Status
-                </a>
+                </a>m
             </h4>
         </div>
         <div id="collapseOne" class="panel-collapse collapse in">
             <div class="form-group">
                 <br>
-                <label class="col-sm-3 control-label">Active</label>
-                <div class="col-sm-6">
+                <div class="col-sm-12">
                     <select class="form-control" name='active'>
-                        <option value="<?php if($Article['active'] == ""){ echo "1"; } ?>">Select Below</option>
-                        <option value="1" <?php if($Article['active'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
-                        <option value="0" <?php if($Article['active'] == "0"){ echo "selected='selected'"; } ?>>No</option>
+                        <option value="1" <?php if($Article['active'] == "1"){ echo "selected='selected'"; } ?>>Active</option>
+                        <option value="0" <?php if($Article['active'] == "0"){ echo "selected='selected'"; } ?>>In-Active</option>
+                        <option value="3" <?php if($Article['active'] == "3" OR $Article['active'] == ""){ echo "selected='selected'"; } ?>>Pending</option>
                     </select>
                 </div>
             </div>
@@ -555,7 +605,7 @@ while($row = mysql_fetch_array($result)){
                 <div class="content">
                     <div class="form-group">
                         <label class="col-sm-3 control-label">Type</label>
-                        <div class="col-sm-6">
+                        <div class="col-sm-9">
                             <div class="fileinput fileinput-new" data-provides="fileinput">
                                 <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;"><img src="<?php if($ProductInfo['content']['img'] == ""){ echo "http://placehold.it/190x140/7761A7/ffffff"; }else{ echo $Article['content']['img']; } ?>" alt="..."></div>
                                 <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
@@ -584,22 +634,20 @@ while($row = mysql_fetch_array($result)){
 
         </div>
     </div>
-
-
-
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <div class="block-flat">
-                <button class="btn btn-primary" type="submit">Submit</button>
-                <button class="btn btn-default">Cancel</button>
-            </div>
-        </div>
-    </div>
+    
+    <input type="hidden" name="resell[product_id]" value="<?php echo $ProductInfo['other']['resell']["product_id"]; ?>">
     <input type="hidden" name="imgtype" value="post-product">
     <input type="hidden" name="userid" value="<?php echo $Array['userinfo']['id']; ?>">
     <input type="hidden" name="img" value="<?php echo $ProductInfo['content']['img']; ?>">
     <input type="hidden" name="id" value="<?php echo $ProductInfo['id']; ?>">
     <input type="hidden" name="imgsizes" value="<?php echo OtarEncrypt($key,$ProductImgSizes); ?>">
+<?php
+$Query = "SELECT * FROM articles WHERE type='post-product' AND trash='0' AND active='3' AND id!='$ActiveArticle[id]'";
+$Result = mysqli_query($CwDb,$Query);
+$Row = mysqli_fetch_assoc($Result);
+if($Row["id"] != ""){ ?>
+    <input type="hidden" name="morepending" value="1">
+<?php } ?>
     </form>	
 </div>
 

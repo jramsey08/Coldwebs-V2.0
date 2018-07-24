@@ -5,7 +5,7 @@
                 <ol class="breadcrumb">
                     <li><a href="/admin">Dashboard</a></li>
                     <li><a href="/admin/Ecommerce">Ecommerce</a></li>
-                    <li class="active">Products</li>
+                    <li class="active">Pending</li>
                 </ol>
             </div>
             <div class="row">
@@ -13,14 +13,14 @@
                     <div class="block-flat">
                         <div class="header">							
                             <h3>
-                                E-Commerce Products
+                                Pending Products
                                 <div align="right">
-                                    <button type="button" style="background-color:#0969f7;color:white;" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
+                                    <button type="button" style="background-color:#0969f7;color:white;" onclick="window.location.href='./Ecommerce-Products/<?php echo $_GET['url']; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
                                     <button type="button" style="background-color:#0969f7;color:white;" onclick="window.location.href='./Ecommerce-Import'" class="btn btn-flat"><i class="fa fa-upload"></i> Import</button>
-                                    <button type="button" style="background-color:#0969f7;color:white;" onclick="window.location.href='./Ecommerce-Pending'" class="btn btn-flat"><i class="fa fa-pause"></i> Pending</button>
+                                    <button type="button" style="background-color:#0969f7;color:white;" onclick="window.location.href='./Ecommerce-Products'" class="btn btn-flat"><i class="fa fa-check-square-o"></i> Active</button>
                                     <button type="button" style="background-color:#0969f7;color:white;" onclick="window.location.href='./Ecommerce-Trash'" class="btn btn-flat"><i class="fa fa-trash"></i> Trash</button>
                                 </div>
-                            </h3>			
+                            </h3>
                         </div>
                         <br>
                         <center>
@@ -35,15 +35,12 @@
                                         <tr>
                                             <th></th>
                                             <th>Name</th>
-                                            <th>Page Views</th>
-                                            <th>Price</th>
-                                            <th>Status</th>
                                             <th>Settings</th>
                                         </tr>
                                     </thead>
                                     <tbody>
 <?php
-$Query = "SELECT * FROM articles WHERE type='post-product' AND trash='0' AND active!='3' AND webid='$WebId' ORDER BY date_created DESC"; 
+$Query = "SELECT * FROM articles WHERE type='post-product' AND active='3' AND trash='0' AND webid='$WebId' ORDER BY date_created DESC"; 
 $Result = mysqli_query($CwDb,$Query);
 while($Row = mysqli_fetch_assoc($Result)){
     $Row = CwOrganize($Row,$Array);
@@ -58,9 +55,6 @@ while($Row = mysqli_fetch_assoc($Result)){
                                         <tr class="odd gradeX">
                                             <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
                                             <td><?php echo $Row['name']; ?></td>
-                                            <td><?php echo $Row['hits']; ?></td>
-                                            <td><?php echo number_format($Row['content']['prodprice']); ?></td>
-                                            <td><?php echo StatusName($Row['active']); ?></td>
                                             <td class="center"> 
                                                 <div class="btn-group">
                                                     <button class="btn btn-default btn-xs" type="button">Actions</button>
@@ -70,13 +64,11 @@ while($Row = mysqli_fetch_assoc($Result)){
                                                     </button>
                                                     <ul role="menu" class="dropdown-menu">
                                                         <li><a href="/admin/Ecommerce-Products/<?php echo $ArticleId; ?>">Edit</a></li>
-                                                        <li class="divider"></li>
-                                                        <li><a href="/Process/Delete/Product/<?php echo $ArticleId; ?>">Remove</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
                                         </tr>
-<?php } ?>									
+<?php } ?>
                                     </tbody>
                                 </table>							
                             </div>
@@ -87,7 +79,7 @@ while($Row = mysqli_fetch_assoc($Result)){
       	</div>
 	</div> 
 </div>
-<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/ECommerce-Products'>
+<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/Ecommerce-Pending'>
 </form>
 <script type="text/javascript" src="<?php echo "$THEME/header/js/datatables.min.js" ?>"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>

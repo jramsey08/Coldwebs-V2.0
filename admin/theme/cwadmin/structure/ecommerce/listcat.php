@@ -1,3 +1,7 @@
+<?php include("$THEME/structure/ecommerce/top_header.php"); ?>
+
+
+
 <?php
 $PageIds['article'] = $Article['id'];
 $PageIds = OtarEncrypt($key,$PageIds);
@@ -51,9 +55,9 @@ $PageIds = OtarEncrypt($key,$PageIds);
 <option value='' <?php if($Article['category'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
 <?php
 $Query = "SELECT * FROM admin WHERE type='prodcat' AND trash='0' AND active='1' ORDER BY name";
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-    $Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+    $Row = CwOrganize($Row,$Array);
 ?>
 <option value='<?php echo $Row["id"]; ?>' <?php if($Article['category'] == $Row["id"]){ echo "selected='selected'"; } ?>><?php echo $Row["name"]; ?></option>
 <?php } ?>
@@ -117,8 +121,8 @@ while($Row = mysql_fetch_array($Result)){
 </tr></thead>
 <tbody class="no-border-y">
 <?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ ?>
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){ ?>
 <tr>
 <td><img src='<?php echo $row[img]; ?>' height="200" width="200"></td>
 <td style="width:30%;"><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="1" value='<?php echo $row["list"]; ?>'></td>
@@ -187,9 +191,10 @@ $PageType = $Article['type'];
 $CurrentLayout = $Article['other']['structure'];
 $Layouts = $ThemeArray['structure'][$PageType];
 echo "<option value='default'"; if( $PageInfo['template'] == 'default'){ echo "selected=selected"; } echo ">Default</option>"; 
+if(is_array($ThemeArray['structure']["$PageType"])){
 foreach($ThemeArray['structure']["$PageType"] as $Layout=>$x_value){ 
     echo "<option value='$Layout'"; if( $CurrentLayout == $Layout){ echo "selected=selected"; } echo ">$Layout</option>"; 
-}  ?>
+}}  ?>
 </select></div></div>
 </div></div></div></div>
 
@@ -310,27 +315,27 @@ function formSubmitter(formTag, messageTag){
 
 
 
- </script> <script type="text/javascript" src="http://condorthemes.com/flatdream/js/jasny.bootstrap/extend/js/jasny-bootstrap.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/moment.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/daterangepicker.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.touchspin/bootstrap-touchspin/bootstrap.touchspin.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.switch/bootstrap-switch.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.select2/select2.min.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.slider/js/bootstrap-slider.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.icheck/icheck.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jasny-bootstrap.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/moment.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/daterangepicker.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap.touchspin.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-colorpicker.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-switch.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/select2.min.js" ></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-slider.js" ></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/icheck.min.js"></script>
 
 
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.summernote/dist/summernote.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/src/bootstrap-wysihtml5.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/summernote.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/wysihtml5-0.3.0.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-wysihtml5.js"></script>
 
 
 
 
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/masonry.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.magnific-popup/dist/jquery.magnific-popup.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/masonry.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.magnific-popup.min.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){

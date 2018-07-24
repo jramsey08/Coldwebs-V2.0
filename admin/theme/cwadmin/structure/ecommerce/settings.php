@@ -1,11 +1,27 @@
-<?php  include("$THEME/structure/ecommerce/sidebar.php"); ?>
+<?php
+include("$THEME/structure/ecommerce/top_header.php");
+
+$query = "SELECT * FROM cwoptions WHERE type='business' ORDER BY RAND()";
+$result = mysqli_query($CwDb,$query);
+$Article = mysqli_fetch_assoc($result);
+$Article = CwOrganize($Article,$Array);
+
+?>
+
+
+
 
 
 <div class="content">
     <div class="cl-mcont">
+        <ol class="breadcrumb">
+            <li><a href="/admin">Dashboard</a></li>
+            <li><a href="/admin/Ecommerce">Ecommerce</a></li>
+            <li class="active">Ecommerce Settings</li>
+        </ol>
         <div class="page-head">
             <div class="row">
-                <form role="form" method='post' action='/Process/Functions' enctype="multipart/form-data">		
+                <form role="form" method='post' action='/Process/Ecommerce/Settings' enctype="multipart/form-data">		
                     <div class="col-sm-12 col-md-12">
                         <div class="tab-container">
                             <ul class="nav nav-tabs">
@@ -24,34 +40,31 @@
                                             </div>
                                         </div>
                                         <div class="content">
+                                            
+                                            
                                             <div class="col-sm-12 col-md-12">
-                                                <h3>Basic Info</h3>
-                                                <div class="col-sm-6 col-md-6">
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Business Name</label>
-                                                        <div class="col-sm-10">
+                                                <div class="block-flat">
+                                                    <div class="header">							
+                                                        <h3>Basic Info</h3>
+                                                    </div>
+                                                    <div class="content">
+                                                        <div class="form-group">
+                                                            <label>Business Name</label>
                                                             <input type="text" name='business[business_name]' placeholder="Enter Business Name" class="form-control" value='<?php echo $Article["content"]['business_name']; ?>'>
                                                         </div>
-                                                    </div>
-                                                    <br><br>
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Email</label>
-                                                        <div class="col-sm-10">
+                                                        <div class="form-group"> 
+                                                            <label>Email</label>
                                                             <input type="text" name='business[business_email]' placeholder="Enter Email Address" class="form-control" value='<?php echo $Article["content"]['business_email']; ?>'>
                                                         </div>
-                                                    </div>
-                                                    <br><br>
-                                                </div>
-                                                <div class="col-sm-6 col-md-6">
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Business Type</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="text" name='business[business_name]' placeholder="Enter Business Name" class="form-control" value='<?php echo $Article["content"]['business_name']; ?>'>
+                                                        <div class="form-group"> 
+                                                            <label>Business Type</label>
+                                                            <input type="text" name='business[business_type]' placeholder="Enter Business Type" class="form-control" value='<?php echo $Article["content"]['business_type']; ?>'>
                                                         </div>
                                                     </div>
-                                                    <br><br>
-                                                </div>
-                                            </div>
+                                                </div>				
+                                            </div>   
+                                            
+                                            
                                             <div class="col-sm-12 col-md-12">
                                                 <h3>Address</h3>
                                                 <div class="form-group">
@@ -73,8 +86,8 @@
                                                             <option value="<?php echo $Article['content']['business_address']['3']; ?>">Select State Below</option>
 <?php
 $query = "SELECT * FROM cwoptions WHERE type='state' ORDER BY name";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
 ?>
                                                             <option value="<?php echo $row['id']; ?>"<?php if($row['id'] == $Article['content']['business_address']['3']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option>
 <?php } ?>
@@ -88,8 +101,8 @@ while($row = mysql_fetch_array($result)){
                                                             <option value="<?php echo $Article['content']['business_address']['5']; ?>">Select Country Below</option>
 <?php
 $query = "SELECT * FROM cwoptions WHERE type='country' ORDER BY name";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
 ?>
                                                             <option value="<?php echo $row['id']; ?>"<?php if($row['id'] == $Article['content']['business_address']['5']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option>
 <?php } ?>
@@ -101,7 +114,7 @@ while($row = mysql_fetch_array($result)){
                                         </div>
                                         <div class="col-sm-12 col-md-12">
                                             <div class="form-group">
-                                                <textarea name='content' rows="300"  id='editor'><?php echo $Article['business_info']; ?></textarea>
+                                                <textarea name='business_info' rows="300"  id='editor'><?php echo $Article['content']['business_info']; ?></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -134,90 +147,76 @@ while($row = mysql_fetch_array($result)){
                                         </div>
                                         <div class="content">
                                             <div class="col-sm-12 col-md-12">
-                                                <h3>Basic Information</h3> 
-                                                <div class="col-sm-4 col-md-4">
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">First Name</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="text" name='business[firstname]' placeholder="Enter First Name" class="form-control" value='<?php echo $Article['content']['firstname']; ?>'>
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="block-flat">
+                                                        <div class="header">							
+                                                            <h3>Owner Information</h3>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4 col-md-4">
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Middle Name</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="text" name='business[middlename]' placeholder="Enter Middle Name" class="form-control" value='<?php echo $Article['content']['middlename']; ?>'>
+                                                        <div class="content">
+                                                            <div class="form-group">
+                                                                <label>First Name</label>
+                                                                <input type="text" name='business[firstname]' placeholder="Enter First Name" class="form-control" value='<?php echo $Article['content']['firstname']; ?>'>
+                                                            </div>
+                                                            <div class="form-group"> 
+                                                                <label>Middle Name</label>
+                                                                <input type="text" name='business[middlename]' placeholder="Enter Middle Name" class="form-control" value='<?php echo $Article['content']['middlename']; ?>'>
+                                                            </div>
+                                                            <div class="form-group"> 
+                                                                <label>Last Name</label>
+                                                                <input type="text" name='business[lastname]' placeholder="Enter Last Name" class="form-control" value='<?php echo $Article['content']['lastname']; ?>'>
+                                                            </div>
                                                         </div>
-                                                    </div>
+                                                    </div>				
                                                 </div>
-                                                <div class="col-sm-4 col-md-4">
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Last Name</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="text" name='business[lastname]' placeholder="Enter Last Name" class="form-control" value='<?php echo $Article['content']['lastname']; ?>'>
+                                                <div class="col-sm-6 col-md-6">
+                                                    <div class="block-flat">
+                                                        <div class="header">							
+                                                            <h3>Contact Information</h3>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <br><br>
+                                                        <div class="content">
+                                                            <div class="form-group">
+                                                                <label>Home Phone</label>
+                                                                <input type="text" name='business[phone]' placeholder="Enter Business Phone" class="form-control" value='<?php echo $Article['content']['phone']; ?>'>
+                                                            </div>
+                                                            <div class="form-group"> 
+                                                                <label>Cell Phone</label>
+                                                                <input type="number" name='business[cell]' placeholder="Enter Cell Phone" class="form-control" value='<?php echo $Article['content']['cell']; ?>'>
+                                                            </div>
+                                                            <div class="form-group"> 
+                                                                <label>Fax</label>
+                                                                <input type="number" name='business[fax]' placeholder="Enter Fax number" class="form-control" value='<?php echo $Article['content']['fax']; ?>'>
+                                                            </div>
+                                                        </div>
+                                                    </div>				
+                                                </div>                
                                             </div>
                                             <div class="col-sm-12 col-md-12">
-                                                <h3>Phone Number</h3>                             
-                                                <div class="col-sm-4 col-md-4">
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Phone</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="text" name='business[phone]' placeholder="Enter Business Phone" class="form-control" value='<?php echo $Article['content']['phone']; ?>'>
-                                                        </div>
+                                                <div class="block-flat">
+                                                    <div class="header">							
+                                                        <h3>Date of Birth</h3>
                                                     </div>
-                                                </div>
-                                                <div class="col-sm-4 col-md-4">
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Cell</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="number" name='business[cell]' placeholder="Enter Cell Phone" class="form-control" value='<?php echo $Article['content']['cell']; ?>'>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4 col-md-4">
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Fax</label>
-                                                        <div class="col-sm-10">
-                                                            <input type="number" name='business[fax]' placeholder="Enter Fax number" class="form-control" value='<?php echo $Article['content']['fax']; ?>'>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <br><br>
-                                            <div class="col-sm-12 col-md-12">
-                                                <h3>Birth Date</h3>
-                                                <div class="col-sm-4 col-md-4">
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Month</label>
-                                                        <div class="col-sm-10">
+                                                    <div class="content">
+                                                        <div class="form-group">
+                                                            <label>Month</label>
                                                             <input type="text" name='business[birthmonth]' placeholder="Enter Birth Month" class="form-control" value='<?php echo $Article['content']['birthmonth']; ?>'>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4 col-md-4">
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Day</label>
-                                                        <div class="col-sm-10">
+                                                        <div class="form-group"> 
+                                                            <label>Day</label>
                                                             <input type="number" name='business[birthdate]' placeholder="Enter Birth Day" class="form-control" value='<?php echo $Article['content']['birthdate']; ?>'>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-sm-4 col-md-4">
-                                                    <div class="form-group">
-                                                        <label class="col-sm-2 control-label">Year</label>
-                                                        <div class="col-sm-10">
+                                                        <div class="form-group"> 
+                                                            <label>Year</label>
                                                             <input type="number" name='business[birthyear]' placeholder="Enter Birth Year" class="form-control" value='<?php echo $Article['content']['birthyear']; ?>'>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <br><br>
-                                            </div>
-                                            <br><br>
+                                                </div>				
+                                            </div>                          
+
+
+
+                                            
+
+
                                             <h4> _</h4>
                                             <div class="col-sm-12 col-md-12">
                                                 <h3>Home Address</h3>
@@ -235,8 +234,8 @@ while($row = mysql_fetch_array($result)){
                                                             <option value="<?php echo $Article['content']['address']['3']; ?>">Select Below</option>
 <?php
 $query = "SELECT * FROM cwoptions WHERE type='state' ORDER BY name";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
 ?>
                                                             <option value="<?php echo $row['id']; ?>"<?php if($row['id'] == $Article['content']['address']['3']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option>
 <?php } ?>
@@ -250,8 +249,8 @@ while($row = mysql_fetch_array($result)){
                                                             <option value="<?php echo $Article['content']['address']['5']; ?>">Select Below</option>
 <?php
 $query = "SELECT * FROM cwoptions WHERE type='country' ORDER BY name";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
 ?>
                                                             <option value="<?php echo $row['id']; ?>"<?php if($row['id'] == $Article['content']['address']['5']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option>
 <?php } ?>
@@ -327,56 +326,10 @@ while($row = mysql_fetch_array($result)){
         </div>
         <input type="hidden" name="imgtype" value="post">
         <input type="hidden" name="userid" value="<?php echo $Array['userinfo']['id']; ?>">
-        <input type="hidden" name="img" value="<?php echo $Article['content']['img']; ?>">
-        <input type="hidden" name="PageIds" value="<?php echo $PageIds; ?>">
         <input type="hidden" name="articleid" value="<?php echo $ArticleId; ?>">
-        <input type="hidden" name="themeurl" value="<?php echo $_GET['type']; ?>">
-        <input type="hidden" name="theme" value="<?php echo $ThemeId[0]; ?>">
-        <input type="hidden" name="shortcode" value="<?php echo $Article['shortcode']; ?>">
+        <input type="hidden" name="redir" value="/admin/Ecommerce-Settings">
     </form>	
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

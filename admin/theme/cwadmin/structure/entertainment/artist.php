@@ -36,9 +36,9 @@
                                         <tbody>
 <?php
 $Query = "SELECT * FROM articles WHERE type='post-artist' AND trash='0' AND webid='$WebId'";
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-    $Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+    $Row = CwOrganize($Row,$Array);
     $ArticleId = $Row['id'];
     $ArticleId = OtarEncrypt($key,$ArticleId);
 ?>

@@ -64,11 +64,11 @@
 
 
 
-<script type="text/javascript" src="http://foxythemes.net/preview/products/flatdream/js/jquery.easypiechart/jquery.easy-pie-chart.js"></script>
-<script type="text/javascript" src="http://foxythemes.net/preview/products/flatdream/js/jquery.flot/jquery.flot.js"></script>
-<script type="text/javascript" src="http://foxythemes.net/preview/products/flatdream/js/jquery.flot/jquery.flot.pie.js"></script>
-<script type="text/javascript" src="http://foxythemes.net/preview/products/flatdream/js/jquery.flot/jquery.flot.resize.js"></script>
-<script type="text/javascript" src="http://foxythemes.net/preview/products/flatdream/js/jquery.flot/jquery.flot.labels.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.easy-pie-chart.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.flot/jquery.flot.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.flot/jquery.flot.pie.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.flot.resize.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.flot.labels.js"></script>
 
 <script type="text/javascript">
   $(document).ready(function(){

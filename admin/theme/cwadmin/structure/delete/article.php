@@ -41,16 +41,16 @@
 <tbody>
 <?php
 $Query = "SELECT * FROM articles WHERE category!='self' AND category!='x' AND category!='' AND type!='menu' AND trash='1' AND webid='$WebId'"; 
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-$Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+$Row = CwOrganize($Row,$Array);
 $ArticleCat = $Row['category'];
 $ArticleId = $Row['id'];
 $ArticleId = OtarEncrypt($key,$ArticleId);
 $query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0' AND webid='$WebId'"; 
-$result = mysql_query($query) or die(mysql_error());
+$result = mysqli_query($CwDb,$query);
 $row = mysql_fetch_array($result);
-$row = PbUnSerial($row); ?>
+$row = CwOrganize($row,$Array); ?>
 <tr class="odd gradeX">
 <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
 <td><?php echo $Row['content']['name']; ?></td>
@@ -88,10 +88,10 @@ $row = PbUnSerial($row); ?>
 
 
 
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.ui/jquery-ui.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.jeditable/jquery.jeditable.mini.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery-ui.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable.mini.js"></script>
 <script type="text/javascript" src="<?php echo "$THEME/header/js/datatables.min.js" ?>"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/bootstrap-adapter/js/datatables.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>
 
 <script type="text/javascript">
       //Add dataTable Functions

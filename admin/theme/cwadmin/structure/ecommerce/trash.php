@@ -5,7 +5,8 @@
                 <ol class="breadcrumb">
                     <li><a href="/admin">Dashboard</a></li>
                     <li><a href="/admin/Ecommerce">Ecommerce</a></li>
-                    <li class="active">Products</li>
+                    <li><a href="/admin/Ecommerce-Products">Products</a></li>
+                    <li class="active">Trash</li>
                 </ol>
             </div>
             <div class="row">
@@ -13,20 +14,19 @@
                     <div class="block-flat">
                         <div class="header">							
                             <h3>
-                                E-Commerce Products
+                                E-Commerce Trash Can
                                 <div align="right">
                                     <button type="button" style="background-color:#0969f7;color:white;" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
                                     <button type="button" style="background-color:#0969f7;color:white;" onclick="window.location.href='./Ecommerce-Import'" class="btn btn-flat"><i class="fa fa-upload"></i> Import</button>
+                                    <button type="button" style="background-color:#0969f7;color:white;" onclick="window.location.href='./Ecommerce-Products'" class="btn btn-flat"><i class="fa fa-check-square-o"></i> Active</button>
                                     <button type="button" style="background-color:#0969f7;color:white;" onclick="window.location.href='./Ecommerce-Pending'" class="btn btn-flat"><i class="fa fa-pause"></i> Pending</button>
-                                    <button type="button" style="background-color:#0969f7;color:white;" onclick="window.location.href='./Ecommerce-Trash'" class="btn btn-flat"><i class="fa fa-trash"></i> Trash</button>
                                 </div>
                             </h3>			
                         </div>
                         <br>
                         <center>
-                            <button type='submit' formaction="/Process/EditArticle/Delete" style="background-color: red; color: white;" class="btn btn-trans"><i class="fa "></i> Delete </button>
-                            <button type='submit' formaction="/Process/EditArticle/Active" style="background-color: green; color: white;" class="btn btn-trans"><i class="fa "></i> Activate </button>
-                            <button type='submit' formaction="/Process/EditArticle/Inactive" style="background-color: grey; color: white;" class="btn btn-trans"><i class="fa "></i> In-Active </button>
+                            <button type='submit' formaction="/Process/DeleteArticle/Delete" style="background-color: red; color: white;" class="btn btn-trans"><i class="fa "></i> Delete </button>
+                            <button type='submit' formaction="/Process/DeleteArticle/Restore" style="background-color: green; color: white;" class="btn btn-trans"><i class="fa "></i> Restore </button>
                         </center>
                         <div class="content">
                             <div class="table-responsive">
@@ -43,14 +43,14 @@
                                     </thead>
                                     <tbody>
 <?php
-$Query = "SELECT * FROM articles WHERE type='post-product' AND trash='0' AND active!='3' AND webid='$WebId' ORDER BY date_created DESC"; 
+$Query = "SELECT * FROM articles WHERE type='post-product' AND trash='1' AND webid='$WebId' ORDER BY date_created DESC"; 
 $Result = mysqli_query($CwDb,$Query);
 while($Row = mysqli_fetch_assoc($Result)){
     $Row = CwOrganize($Row,$Array);
     $ArticleCat = $Row['content']['category'];
     $ArticleId = $Row['id'];
     $ArticleId = OtarEncrypt($key,$ArticleId);
-    $query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0' AND webid='$WebId'"; 
+    $query = "SELECT * FROM articles WHERE id='$ArticleCat' AND webid='$WebId'"; 
     $result = mysqli_query($CwDb,$query);
     $row = mysqli_fetch_assoc($result);
     $row = CwOrganize($row,$Array);
@@ -59,7 +59,7 @@ while($Row = mysqli_fetch_assoc($Result)){
                                             <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
                                             <td><?php echo $Row['name']; ?></td>
                                             <td><?php echo $Row['hits']; ?></td>
-                                            <td><?php echo number_format($Row['content']['prodprice']); ?></td>
+                                            <td><?php if(is_double($Row['content']['prodprice'])){ echo number_format($Row['content']['prodprice']); } ?></td>
                                             <td><?php echo StatusName($Row['active']); ?></td>
                                             <td class="center"> 
                                                 <div class="btn-group">
@@ -87,7 +87,7 @@ while($Row = mysqli_fetch_assoc($Result)){
       	</div>
 	</div> 
 </div>
-<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/ECommerce-Products'>
+<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/ECommerce-Trash'>
 </form>
 <script type="text/javascript" src="<?php echo "$THEME/header/js/datatables.min.js" ?>"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>

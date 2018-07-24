@@ -27,9 +27,9 @@ $Id = OtarDecrypt($key, $_GET["type"]);
 
 
 $query = "SELECT * FROM images WHERE id='$Id' AND active='1' AND trash='0' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query);
+$row = mysqli_fetch_assoc($result);
+$row = CwOrganize($row,$Array);
 $Img = $row['img'];
 
 ?>

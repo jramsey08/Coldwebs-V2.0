@@ -1,3 +1,4 @@
+<?php include("$THEME/structure/ecommerce/top_header.php"); ?>
         <form name='editarticle' id='edittable' method='post'>
             <div class="cl-mcont">
                 <div class="page-head">
@@ -39,18 +40,24 @@
 <?php
 $Count = "";
 $Query = "SELECT * FROM trans WHERE trash='0' AND webid='$WebId'";
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-$Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+$Row = CwOrganize($Row,$Array);
 
 $QuerY = "SELECT * FROM users WHERE id='$Row[user]' AND webid='$WebId'";
-$ResulT = mysql_query($QuerY) or die(mysql_error());
-$RoW = mysql_fetch_array($ResulT);
-$RoW = PbUnSerial($RoW);
+$ResulT = mysqli_query($CwDb,$QuerY);
+$RoW = mysqli_fetch_assoc($ResulT);
+$RoW = CwOrganize($RoW,$Array);
 
 $ArticleCat = $Row['id'];
 $ArticleId = $Row['id'];
 $ArticleId = OtarEncrypt($key,$ArticleId);
+if($Row['date'] == ""){
+    $Row['date'] = strtotime("now");
+}
+if($RoW['name'] == ""){
+    $RoW['name'] = "Unknown Customer";
+}
 ?>
                                             <tr class="odd gradeX">
                                                 <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>

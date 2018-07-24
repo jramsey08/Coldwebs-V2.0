@@ -1,26 +1,34 @@
-<?php include("$THEME/structure/ecommerce/top_header.php"); ?>
-
-
-
 <?php
+include("$THEME/structure/ecommerce/top_header.php");
 $ArticleId = OtarDecrypt($key,$_GET["type"]);
 $query = "SELECT * FROM cwoptions WHERE id='$ArticleId'";
 $result = mysqli_query($CwDb,$query);
 $Article = mysqli_fetch_assoc($result);
 $Article = CwOrganize($Article,$Array);
+$State = $Article["content"]["state"];
+$query = "SELECT * FROM cwoptions WHERE id='$State'";
+$result = mysqli_query($CwDb,$query);
+$State = mysqli_fetch_assoc($result);
+$State = CwOrganize($State,$Array);
 ?>
 
 <div class="content">
     <div class="cl-mcont">
+                <div class="page-head">
+                    <ol class="breadcrumb">
+                        <li><a href="/admin">Dashboard</a></li>
+                        <li><a href="/admin/Ecommerce">Ecommerce</a></li>
+                        <li><a href="/admin/Ecommerce-Tax">Tax</a></li>
+                        <li class="active"><?php echo $Article['name']; ?></li>
+                    </ol>
+                </div>
         <div class="page-head">
-            <form role="form" method='post' action='/Process/Ecommerce/Payment' enctype="multipart/form-data">		
+            <form role="form" method='post' action='/Process/Ecommerce/Tax' enctype="multipart/form-data">		
                 <div class="row">
                     <div class="col-sm-12 col-md-9">
                         <div class="tab-container">
                             <ul class="nav nav-tabs">
                                 <li class="active"><a href="#basic" data-toggle="tab">Basic Info</a></li>
-                                <li><a href="#extra" data-toggle="tab">Extra Info</a></li>
-
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active cont" id="basic">
@@ -28,7 +36,7 @@ $Article = CwOrganize($Article,$Array);
                                         <div class="col-sm-12 col-md-12">
                                             <div class="col-sm-6 col-md-6">
                                                 <div class="header">
-                                                    <h3>Payment Information</h3>
+                                                    <h3>State Tax Configuration</h3>
                                                 </div>
                                             </div>
                                             <br><br><br>
@@ -37,41 +45,28 @@ $Article = CwOrganize($Article,$Array);
                                             <div class="col-sm-12 col-md-12">
                                                 <div class="col-sm-6 col-md-6">
                                                     <div class="form-group">
-                                                        <label class="col-sm-3 control-label">Title</label>
-                                                        <div class="col-sm-6">
-                                                            <input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $Article['name']; ?>'>
-                                                        </div>
-                                                    </div>
-                                                    <br><br>
-                                                    <div class="form-group">
-                                                        <label class="col-sm-3 control-label">Provider</label>
+                                                        <label class="col-sm-3 control-label">State</label>
                                                         <div class="col-sm-6">                                                    
-                                                            <select class="form-control" name='provider'>
-                                                                <option value="<?php echo $Article['content']['provider']; ?>">Select Below</option>
+                                                            <select class="form-control" name='state'>
+                                                                <option value="<?php echo $State['id']; ?>">Select Below</option>
 <?php 
-$query = "SELECT * FROM cwoptions WHERE  type='payment_provider' AND active='1' AND trash='0' AND webid='$WebId' ORDER BY name";
+$query = "SELECT * FROM cwoptions WHERE type='state' AND active='1' AND trash='0' ORDER BY name";
 $result = mysqli_query($CwDb,$query);
 while($row = mysqli_fetch_assoc($result)){
     $row = CwOrganize($row,$Array);
 ?>
-                                                                <option value="<?php echo $row['id']; ?>" <?php if($row['id'] == $Article['content']['provider']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option>
+                                                                <option value="<?php echo $row['id']; ?>" <?php if($row['id'] == $State['id']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option>
 <?php } ?>
-                                                                <option value="paypal" <?php if("paypal" == $Article['content']['provider']){ echo "selected=selected"; }; ?>>PayPal</option>
-                                                                <option value="wepay" <?php if("wepay" == $Article['content']['provider']){ echo "selected=selected"; }; ?>>WePay</option>
                                                             </select>
                                                         </div>
                                                     </div>
                                                     <br><br>                                                    
                                                 </div>
                                                 <div class="col-sm-6 col-md-6">
-                                                   <div class="form-group">
-                                                        <label class="col-sm-3 control-label">Default Payment</label>
-                                                        <div class="col-sm-6">                                                    
-                                                            <select class="form-control" name='default'>
-                                                                <option value="<?php if($Article['content']['default'] == ""){ echo "0"; } ?>">Select Below</option>
-                                                                <option value="1" <?php if($Article['content']['default'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
-                                                                <option value="0" <?php if($Article['content']['default'] == "0"){ echo "selected='selected'"; } ?>>No</option>
-                                                            </select>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-3 control-label">Percentage</label>
+                                                        <div class="col-sm-6">
+                                                            <input type="number" name='price' placeholder="Enter Price" class="form-control" value='<?php echo $Article['content']['price']; ?>'>
                                                         </div>
                                                     </div>
                                                     <br><br>
@@ -91,12 +86,11 @@ while($row = mysqli_fetch_assoc($result)){
                                             <div class="content">
                                                 <div class="col-sm-6 col-md-6">
                                                     <div class="form-group">
-                                                        <label class="col-sm-3 control-label">Api</label>
+                                                        <label class="col-sm-3 control-label">Function Tags</label>
                                                         <div class="col-sm-6">
-                                                            <textarea name='api' rows="2" cols="100"><?php echo $Article['content']['api']; ?></textarea>
+                                                            <input class="tags" type="hidden" name='tags' value="<?php echo $Article['other']['tags']; ?>" />
                                                         </div>
                                                     </div>
-                                                    <br><br>
                                                 </div>
                                             </div>
                                         </div>

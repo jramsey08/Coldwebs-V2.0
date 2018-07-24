@@ -112,8 +112,8 @@
                                                     </thead>
                                                     <tbody class="no-border-y">
 <?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND type='image' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ 
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){ 
 if($Article['id'] == ""){
     #exit;
 } ?>
@@ -143,7 +143,7 @@ if($Article['id'] == ""){
                                     <div class="col-sm-12 col-md-12">
                                         <?php $GalRand = "Galupload-" . RandomCode("50"); ?>
                                         <input type="hidden" name='galrand' value='<?php echo $GalRand; ?>'>
-                                        <iframe class="dropzone-frame" src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' scrolling='no' frameborder="0" height="600" width="720" ></iframe>
+                                        <iframe class="dropzone-frame" src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' frameborder="0" height="600" width="720" ></iframe>
                                     </div>
                                 </div>
                             </div>
@@ -169,16 +169,16 @@ if($Article['id'] == ""){
 <?php
 $Id = $Article['id'];
 $Query = "SELECT * FROM articles WHERE type='post' AND other LIKE '%" . $Id. "%' AND trash='0' AND webid='$WebId'"; 
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-    $Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+    $Row = CwOrganize($Row,$Array);
     $ArticleCat = $Row['category'];
     $ArticleId = $Row['id'];
     $ArticleId = OtarEncrypt($key,$ArticleId);
     $query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0' AND webid='$WebId'"; 
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
-    $row = PbUnSerial($row);
+    $result = mysqli_query($CwDb,$query);
+    $row = mysqli_fetch_assoc($result);
+    $row = CwOrganize($row);
 ?>
                                                         <tr class="odd gradeX">
                                                             <td><?php echo $Row['name']; ?></td>
@@ -209,13 +209,14 @@ while($Row = mysql_fetch_array($Result)){
                                 <div class="row">
                                     <div class="col-sm-12 col-md-12">
                                         <div class="header"><h3>Social Media Integration</h3></div>
-                                            <div class="content">
-                                                <div class="col-sm-6 col-md-6">
-                                                    <div class="form-group">
+                                        <div class="content">
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="form-group">
 <?php
+$Social = $Array['siteinfo']['other']['social'];
 $query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query) ;
+while($row = mysqli_fetch_assoc($result)){
     $TotalSocial = $TotalSocial + 1;
 }
 if ($TotalSocial % 2 == 0) {
@@ -225,70 +226,72 @@ if ($TotalSocial % 2 == 0) {
 $Half = $TotalSocial / 2;
 $Split1 = $Half;
 $Split2 = $Half + 1;
-$query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0' LIMIT 0,$Split1";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-    $name = strtolower($row[name]);
-    $Social = $Article['other']['social'];
+$query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0' ORDER BY list LIMIT 0,$Split1";
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+$name = strtolower($row['name']); 
+$SocName = $Array['siteinfo']['other']['social']["$name"];
+$MainSocial = $Array['siteinfo']['other']['socialauth']["$name"];
 ?>
-                                                        <label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
-                                                        <div class="col-sm-9">
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon">@</span>
-                                                                <input type="text" class="form-control" name="social[<?php echo $name; ?>]" value="<?php echo isset_get($Social,$name); ?>" placeholder="Username / Url">
-                                                            </div>
+                                                    <label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
+                                                    <div class="col-sm-9">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">@</span>
+                                                            <input type="text" class="form-control" name="social[<?php echo $name; ?>]" value="<?php echo $SocName; ?>" placeholder="Username / Url" <?php if($MainSocial == "1"){ echo "disabled"; } ?>>
                                                         </div>
-                                                        <br><br><br>
-<?php } ?>
                                                     </div>
+                                                    <br><br><br>
+<?php } ?> 
                                                 </div>
-                                                <div class="col-sm-6 col-md-6">
-                                                    <div class="form-group">
-<?php $query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0' LIMIT $Split2,$TotalSocial";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-    $name = strtolower($row['name']);
-    $Social = $Article['other']['social']; 
+                                            </div>
+                                            <div class="col-sm-6 col-md-6">
+                                                <div class="form-group">
+<?php $query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0' ORDER BY list LIMIT $Split1,$TotalSocial";
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+$name = strtolower($row['name']);
+$SocName = $Array['siteinfo']['other']['social']["$name"];
+$MainSocial = $Array['siteinfo']['other']['socialauth']["$name"];
 ?>
-                                                        <label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
-                                                        <div class="col-sm-9">
-                                                            <div class="input-group">
-                                                                <span class="input-group-addon">@</span>
-                                                                <input type="text" class="form-control" name="social[<?php echo $name; ?>]" value="<?php echo isset_get($Social,$name); ?>" placeholder="Username / Url">
-                                                            </div>
+                                                    <label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
+                                                    <div class="col-sm-9">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">@</span>
+                                                            <input type="text" class="form-control" name="social[<?php echo $name; ?>]" value="<?php echo $SocName; ?>" placeholder="Username / Url" <?php if($MainSocial == "1"){ echo "disabled"; } ?>>
                                                         </div>
-                                                        <br><br><br>
-<?php } ?>
                                                     </div>
+                                                    <br><br><br>
+<?php } ?>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane" id="extra">
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-12">
-                                            <div class="header">
-                                                <h3>Extra Configurations</h3>
-                                            </div>
-                                            <div class="content">
-                                                <div class="form-group">
-                                                    <label class="col-sm-3 control-label">Tags</label>
-                                                    <div class="col-sm-9">
-                                                        <input type="hidden" name='tags' placeholder="Enter Universal Tags" class="tags" value='<?php echo $Article['other']['tags']; ?>'>
-                                                    </div>
+                            </div>
+                            <div class="tab-pane" id="extra">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-12">
+                                        <div class="header">
+                                            <h3>Extra Configurations</h3>
+                                        </div>
+                                        <div class="content">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Tags</label>
+                                                <div class="col-sm-9">
+                                                    <input type="hidden" name='tags' placeholder="Enter Universal Tags" class="tags" value='<?php echo $Article['other']['tags']; ?>'>
                                                 </div>
-                                                <br><br>
-                                                <div class="form-group">
-                                                    <label class="col-sm-3 control-label">Registered User</label>
-                                                    <div class="col-sm-9">
-                                                        <select class="form-control" name='user'>
-                                                            <option value='' <?php if($Article['other']['user'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
+                                            </div>
+                                            <br><br>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Registered User</label>
+                                                <div class="col-sm-9">
+                                                    <select class="form-control" name='user'>
+                                                        <option value='' <?php if($Article['other']['user'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
 <?php
 $Query = "SELECT * FROM users WHERE email!='' AND webid='$WebId' ORDER BY id DESC LIMIT 0,5";
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-    $Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+    $Row = CwOrganize($Row,$Array);
     if($Row['info']['access'] == "0"){
     }else{
         $Access = CwUserAccess($Row['info']['access']);
@@ -297,10 +300,9 @@ while($Row = mysql_fetch_array($Result)){
             $Row['name'] = $Row['info']['firstname'] . " " . $Row['info']['lastname'];
         }}
 ?>
-                                                            <option value='<?php echo $Row['id']; ?>' <?php if($Article['other']['user'] == $Row['id']){ echo "selected='selected'"; } ?>><?php echo mysql_real_escape_string($Row['name']); ?></option>
+                                                        <option value='<?php echo $Row['id']; ?>' <?php if($Article['other']['user'] == $Row['id']){ echo "selected='selected'"; } ?>><?php echo mysql_real_escape_string($Row['name']); ?></option>
 <?php } ?>
-                                                        </select>
-                                                    </div>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -309,6 +311,7 @@ while($Row = mysql_fetch_array($Result)){
                             </div>
                         </div>
                     </div>
+                </div>
                     <div class="col-sm-3 col-md-3">
                         <div class="panel panel-default">
                             <div class="panel-heading">
@@ -393,22 +396,6 @@ while($Row = mysql_fetch_array($Result)){
             <input type="hidden" name="imgsizes" value="<?php echo OtarEncrypt($key,$StructureImgSizes); ?>">
         </form>	
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -1,3 +1,8 @@
+<?php include("$THEME/structure/ecommerce/top_header.php"); ?>
+
+
+
+
 <div class="cl-mcont">
 <div class="page-head">
 <ol class="breadcrumb">
@@ -12,7 +17,7 @@
 <div class="header">							
 <h3>Product Categories
 <div align="right">
-<button type="button" onclick="window.location.href='./<?php echo $_GET["url"]; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
+<button type="button" onclick="window.location.href='./<?php echo $_GET["url"]; ?>/New'" style="background-color:#0969f7;color:white;" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
 </div>
 </h3>			
 </div>
@@ -43,20 +48,20 @@
 <?php
 $Count = "";
 $Query = "SELECT * FROM articles WHERE type='prodcat' AND trash='0' AND webid='$WebId'";
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-$Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+$Row = CwOrganize($Row,$Array);
 $Count = "0";
 $ArticleCat = $Row['id'];
 $ArticleId = $Row['id'];
 $ArticleId = OtarEncrypt($key,$ArticleId);
-if($Cw_Multiple_Cat['active'] == "1"){
+if($Cw_Multiple_Cat == "1"){
     $query = "SELECT * FROM articles WHERE category LIKE '%-" . $ArticleCat. "-%' AND trash='0' AND webid='$WebId'";
 }else{
     $query = "SELECT * FROM articles WHERE category='$ArticleCat' AND trash='0' AND webid='$WebId'";
 }
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
 $Count = $Count + 1; } ?>
 <tr class="odd gradeX">
 <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
@@ -92,9 +97,9 @@ $Count = $Count + 1; } ?>
 
 
 
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.jeditable/jquery.jeditable.mini.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/jquery.datatables.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.datatables/bootstrap-adapter/js/datatables.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable.mini.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.datatables.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>
 <script type="text/javascript">
       //Add dataTable Functions
       var functions = $('<div class="btn-group">
@@ -203,8 +208,8 @@ $Count = $Count + 1; } ?>
 </script>
 
 
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/masonry.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.magnific-popup/dist/jquery.magnific-popup.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/masonry.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.magnific-popup.min.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){

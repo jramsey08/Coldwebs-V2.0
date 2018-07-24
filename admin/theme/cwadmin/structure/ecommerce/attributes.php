@@ -1,67 +1,68 @@
 <?php include("$THEME/structure/ecommerce/top_header.php"); ?>
-
-
-    <form name='editarticle' id='edittable' method='post'><br>
-        <div class="content">
+        <form name='editarticle' id='edittable' method='post'><br>
             <div class="cl-mcont">
                 <div class="page-head">
                     <ol class="breadcrumb">
                         <li><a href="/admin">Dashboard</a></li>
-                        <li><a href="/admin/Ecommerce">Ecommerce</a></li>
-                        <li class="active">Delivery</li>
+                        <li><a href="/admin/Ecommerce">E-Commerce</a></li>
+                        <li class="active">Product Attributes</li>
                     </ol>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="block-flat">
                             <div class="header">							
-                                <h3>Delivery Options
+                                <h3>Product Attributes
                                     <div align="right">
                                         <button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" style="background-color:#0969f7;color:white;" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
                                     </div>
-                                </h3>			
+                                    <center>
+                                        <button type='submit' formaction="/Process/EditUserAccess/Delete" style="background-color: red; color: white;" class="btn btn-trans"><i class="fa "></i> Delete </button>
+                                        <button type='submit' formaction="/Process/EditUserAccess/Active" style="background-color: green; color: white;" class="btn btn-trans"><i class="fa "></i> Activate </button>
+                                        <button type='submit' formaction="/Process/EditUserAccess/Inactive" style="background-color: grey; color: white;" class="btn btn-trans"><i class="fa "></i> In-Active </button>
+                                    </center>
+                                </h3>
                             </div>
-                            <br>
-                            <center>
-                                <button type='submit' formaction="/Process/EditAccess/Delete" style="background-color: red; color: white;" class="btn btn-trans"><i class="fa "></i> Delete </button>
-                                <button type='submit' formaction="/Process/EditAccess/Active" style="background-color: green; color: white;" class="btn btn-trans"><i class="fa "></i> Activate </button>
-                                <button type='submit' formaction="/Process/EditAccess/Inactive" style="background-color: grey; color: white;" class="btn btn-trans"><i class="fa "></i> In-Active </button>
-                            </center>
                             <div class="content">
                                 <div class="table-responsive">
-                                    <table class="table table-bordered" id="datatable">
+                                    <table class="table table-bordered" id="datatable" >
                                         <thead>
                                             <tr>
-                                                <th></th>
+                                                <td></td>
                                                 <th>Name</th>
-                                                <th>Price</th>
+                                                <th>Category</th>
                                                 <th>Status</th>
-                                                <th>Default Option</th>
                                                 <th>Settings</th>
                                             </tr>
                                         </thead>
                                         <tbody>
 <?php
-$Query = "SELECT * FROM cwoptions WHERE type='shipping' AND webid='$WebId' AND trash='0' ORDER BY name";
+$Query = "SELECT * FROM cwoptions WHERE type='attribute' AND trash='0'  AND webid='$WebId' ORDER BY id";
 $Result = mysqli_query($CwDb,$Query);
-while($Delivery = mysqli_fetch_assoc($Result)){
-    $Delivery = CwOrganize($Delivery,$Array);
-    $ArticleId = $Delivery['id'];
-    $ArticleId = OtarEncrypt($key,$ArticleId);
-    $Price = $Delivery["content"]["price"];
+while($Row = mysqli_fetch_assoc($Result)){
+$Row = CwOrganize($Row,$Array);
+$Status = StatusName($Row['active']);
+$ArticleCat = $Row['category'];
+$ArticleId = $Row['id'];
+$ArticleId = OtarEncrypt($key,$ArticleId);
+$query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0' AND webid='$WebId'"; 
+$result = mysqli_query($CwDb,$query);
+$row = mysqli_fetch_assoc($result);
+$row = CwOrganize($row,$Array);
 ?>
                                             <tr class="odd gradeX">
-                                                <td><input type="checkbox" name="edit[]" value="<?php echo $Delivery['id']; ?>"></td>
-                                                <td><?php echo $Delivery['name']; ?></td>
-                                                <td><?php echo number_format($Price, "2"); ?></td>
-                                                <td><?php echo StatusName($Delivery['active']); ?></td>
-                                                <td><?php echo StatusName($Delivery['content']['default']); ?></td>
-                                                <td class="center">
+                                                <td><center><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></center></td>
+                                                <td><?php echo $Row['name']; ?></td>
+                                                <td><?php echo $Row['category']; ?></td>
+                                                <td><?php echo $Status; ?></td>
+                                                <td class="center"> 
                                                     <div class="btn-group">
                                                         <button class="btn btn-default btn-xs" type="button">Actions</button>
                                                         <button data-toggle="dropdown" class="btn btn-xs btn-primary dropdown-toggle" type="button"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>
                                                         <ul role="menu" class="dropdown-menu">
-                                                            <li><a href="/admin/Ecommerce-Delivery/<?php echo $ArticleId; ?>">Edit</a></li>
+                                                            <li><a href="/admin/Ecommerce-Attributes/<?php echo $ArticleId; ?>">Edit</a></li>
+                                                            <li class="divider"></li>
+                                                            <li><a href="/Process/Delete/Attributes/<?php echo $ArticleId; ?>">Remove</a></li>
                                                         </ul>
                                                     </div>
                                                 </td>
@@ -75,31 +76,23 @@ while($Delivery = mysqli_fetch_assoc($Result)){
                     </div>
                 </div>
           	</div>
-    	</div>
-        <input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/Ecommerce-Delivery'>
-    </form>
+          	<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/Ecommerce-Attributes'>
+        </form>
+	</div> 
 </div>
-
-
-
-
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery-ui.js"></script>
-<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable/jquery.jeditable.mini.js"></script>
-<script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.min.js" ?>"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable.mini.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.datatables.min.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/datatables.js"></script>
-
 <script type="text/javascript">
       //Add dataTable Functions
-    
     $(document).ready(function(){
       //initialize the javascript
       //Basic Instance
       $("#datatable").dataTable();
-      
       //Search input style
       $('.dataTables_filter input').addClass('form-control').attr('placeholder','Search');
       $('.dataTables_length select').addClass('form-control');    
-          
        /* Formating function for row details */
         function fnFormatDetails ( oTable, nTr )
         {
@@ -109,10 +102,8 @@ while($Delivery = mysqli_fetch_assoc($Result)){
             sOut += '<tr><td>Link to source:</td><td>Could provide a link here</td></tr>';
             sOut += '<tr><td>Extra info:</td><td>And any further details here (images etc)</td></tr>';
             sOut += '</table>';
-             
             return sOut;
         }
-       
         /*
          * Insert a 'details' column to the table
          */
@@ -120,15 +111,12 @@ while($Delivery = mysqli_fetch_assoc($Result)){
         var nCloneTd = document.createElement( 'td' );
         nCloneTd.innerHTML = '<img class="toggle-details" src="images/plus.png" />';
         nCloneTd.className = "center";
-         
         $('#datatable2 thead tr').each( function () {
             this.insertBefore( nCloneTh, this.childNodes[0] );
         } );
-         
         $('#datatable2 tbody tr').each( function () {
             this.insertBefore(  nCloneTd.cloneNode( true ), this.childNodes[0] );
         } );
-         
         /*
          * Initialse DataTables, with no sorting on the 'details' column
          */
@@ -138,7 +126,6 @@ while($Delivery = mysqli_fetch_assoc($Result)){
             ],
             "aaSorting": [[1, 'asc']]
         });
-         
         /* Add event listener for opening and closing details
          * Note that the indicator for showing which row is open is not controlled by DataTables,
          * rather it is done here
@@ -158,13 +145,10 @@ while($Delivery = mysqli_fetch_assoc($Result)){
                 oTable.fnOpen( nTr, fnFormatDetails(oTable, nTr), 'details' );
             }
         });
-        
       $('.dataTables_filter input').addClass('form-control').attr('placeholder','Search');
       $('.dataTables_length select').addClass('form-control');   
-      
       /* Init DataTables */
       var aTable = $('#datatable3').dataTable();
-       
       /* Apply the jEditable handlers to the table */
       aTable.$('td').editable( 'js/jquery.datatables/examples/examples_support/editable_ajax.php', {
           "callback": function( sValue, y ) {

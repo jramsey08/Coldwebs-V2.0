@@ -1,23 +1,14 @@
 <?php include("$THEME/structure/ecommerce/top_header.php"); ?>
-
-
     <form name='editarticle' id='edittable' method='post'><br>
         <div class="content">
             <div class="cl-mcont">
-                <div class="page-head">
-                    <ol class="breadcrumb">
-                        <li><a href="/admin">Dashboard</a></li>
-                        <li><a href="/admin/Ecommerce">Ecommerce</a></li>
-                        <li class="active">Delivery</li>
-                    </ol>
-                </div>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="block-flat">
                             <div class="header">							
-                                <h3>Delivery Options
+                                <h3>State Tax Configuration
                                     <div align="right">
-                                        <button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" style="background-color:#0969f7;color:white;" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
+                                        <button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" style="background-color:#0969f7;color:white;" class="btn btn-flat"><i class="fa fa-check"></i> Add New</button>
                                     </div>
                                 </h3>			
                             </div>
@@ -33,40 +24,34 @@
                                         <thead>
                                             <tr>
                                                 <th></th>
-                                                <th>Name</th>
-                                                <th>Price</th>
+                                                <th>State</th>
+                                                <th>Amount</th>
                                                 <th>Status</th>
-                                                <th>Default Option</th>
                                                 <th>Settings</th>
                                             </tr>
                                         </thead>
                                         <tbody>
 <?php
-$Query = "SELECT * FROM cwoptions WHERE type='shipping' AND webid='$WebId' AND trash='0' ORDER BY name";
+$Query = "SELECT * FROM cwoptions WHERE type='tax' AND webid='$WebId' AND trash='0' ORDER BY name";
 $Result = mysqli_query($CwDb,$Query);
-while($Delivery = mysqli_fetch_assoc($Result)){
-    $Delivery = CwOrganize($Delivery,$Array);
-    $ArticleId = $Delivery['id'];
+while($Tax = mysqli_fetch_assoc($Result)){
+    $Tax = CwOrganize($Tax,$Array);
+    $ArticleId = $Tax['id'];
     $ArticleId = OtarEncrypt($key,$ArticleId);
-    $Price = $Delivery["content"]["price"];
+    $State = $Tax["content"]["state"];
+    $query = "SELECT * FROM cwoptions WHERE id='$State'";
+    $result = mysqli_query($CwDb,$query);
+    $State = mysqli_fetch_assoc($result);
+    $State = CwOrganize($State,$Array);
 ?>
                                             <tr class="odd gradeX">
-                                                <td><input type="checkbox" name="edit[]" value="<?php echo $Delivery['id']; ?>"></td>
-                                                <td><?php echo $Delivery['name']; ?></td>
-                                                <td><?php echo number_format($Price, "2"); ?></td>
-                                                <td><?php echo StatusName($Delivery['active']); ?></td>
-                                                <td><?php echo StatusName($Delivery['content']['default']); ?></td>
-                                                <td class="center">
-                                                    <div class="btn-group">
-                                                        <button class="btn btn-default btn-xs" type="button">Actions</button>
-                                                        <button data-toggle="dropdown" class="btn btn-xs btn-primary dropdown-toggle" type="button"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>
-                                                        <ul role="menu" class="dropdown-menu">
-                                                            <li><a href="/admin/Ecommerce-Delivery/<?php echo $ArticleId; ?>">Edit</a></li>
-                                                        </ul>
-                                                    </div>
-                                                </td>
+                                                <td><input type="checkbox" name="edit[]" value="<?php echo $Tax['id']; ?>"></td>
+                                                <td><?php echo $State['name']; ?></td>
+                                                <td><?php echo $Tax["content"]["price"]; ?></td>
+                                                <td><?php echo StatusName($Tax['active']); ?></td>
+                                                <td class="center"><a href="/admin/Ecommerce-Tax/<?php echo $ArticleId; ?>">Update Info</a></td>
                                             </tr>
-<?php } ?>									
+<?php } ?>
                                         </tbody>
                                     </table>							
                                 </div>
@@ -76,7 +61,7 @@ while($Delivery = mysqli_fetch_assoc($Result)){
                 </div>
           	</div>
     	</div>
-        <input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/Ecommerce-Delivery'>
+        <input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/Ecommerce-Tax'>
     </form>
 </div>
 

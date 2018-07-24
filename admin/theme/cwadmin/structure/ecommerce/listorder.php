@@ -1,3 +1,5 @@
+<?php include("$THEME/structure/ecommerce/top_header.php"); ?>
+
     <form role="form" method='post' action='/Process/Ecommerce/Orders' enctype="multipart/form-data">
         <div class="cl-mcont">
             <div class="page-head">
@@ -41,8 +43,8 @@
                         								<?php echo $Trans_User["info"]["address"]["6"]; ?><br>
                         								<?php echo $Trans_User["info"]["address"]["2"]; ?>,  <?php echo $Trans_User["info"]["address"]["3"]; ?>, <?php echo $Trans_User["info"]["address"]["4"]; ?><br/>
                                                         <?php echo $Trans_User["info"]["address"]["5"]; ?><br/>
-                        								<abbr title="Phone">T:</abbr> <?php echo $Trans_User["info"]["address"]["telephone"]; ?><br>
-                                                        <abbr title="Fax">F:</abbr><?php echo $Trans_User["info"]["address"]["fax"]; ?>
+                        								<abbr title="Phone">T:</abbr> <?php echo $Trans_User["info"]["telephone"]; ?><br>
+                                                        <abbr title="Fax">F:</abbr><?php echo $Trans_User["info"]["fax"]; ?>
                         							</address>
                         						</div>
                         					</div>	
@@ -104,15 +106,15 @@
                     								<tbody class="no-border-x">
 <?php
 $query = "SELECT * FROM cw_cart WHERE session='$Trans[cart]' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
     $row = CwOrganize($row,$Array);
     $Item = Cw_Quick_Info("articles",$WebId,$row["item"],$Array);
     $Total = $row["qty"] * $row["price"];
 ?>
                     									<tr>
-                    									    <td><a href="#" target="_blank"><a href="/admin/Products/<?php echo OtarEncrypt($key,$Item["id"]); ?>" target="_blank"><img src="<?php echo $Item["content"]["img"]; ?>" height="50" width="50"></a></td>
-                    										<td style="width:30%;"><a href="/admin/Products/<?php echo OtarEncrypt($key,$Item["id"]); ?>" target="_blank"><?php echo $Item["name"]; ?></a></td>
+                    									    <td><a href="#" target="_blank"><a href="/admin/Ecommerce-Products/<?php echo OtarEncrypt($key,$Item["id"]); ?>" target="_blank"><img src="<?php echo $Item["content"]["img"]; ?>" height="50" width="50"></a></td>
+                    										<td style="width:30%;"><a href="/admin/Ecommerce-Products/<?php echo OtarEncrypt($key,$Item["id"]); ?>" target="_blank"><?php echo $Item["name"]; ?></a></td>
                     										<td style="width:10%;"><?php echo $Item["other"]["sku"]; ?></td>
                     										<td class="text-right">$<?php echo number_format($row["price"], "2"); ?></td>
                     										<td class="text-right"><?php echo $row["qty"]; ?></td>
@@ -127,7 +129,7 @@ while($row = mysql_fetch_array($result)){
                                     <div class="col-sm-12 col-md-12">
                                         <h3>Order Notes</h3>
                                         <div class="form-group">
-                                            <textarea name='notes' rows="5" cols="124"><?php echo $Trans['info']; ?></textarea>
+                                            <textarea name='notes' style="width: -webkit-fill-available;" rows="5" cols="124"><?php echo $Trans['info']; ?></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -194,11 +196,10 @@ while($row = mysql_fetch_array($result)){
                             						</div>
                             						<div class="content overflow-hidden">
                             							<address>
-                            								<strong>Carrier:</strong><br>
-                            								<strong>Pick-up Date:</strong> Name<br>
-                            								<strong>Status:</strong> Name<br>
-                            								<strong>Delivery Date:</strong> Name<br>
-                            								<strong>Payment:</strong> Name<br><br>
+                            								<strong>Carrier:</strong> <?php echo $Trans['other']["carrier"]; ?><br>
+                            								<strong>Pick-up Date:</strong> <?php echo $Trans['other']["delivery"]["pickup"]; ?><br>
+                            								<strong>Status:</strong> <?php echo $Trans['other']["delivery"]["status"]; ?><br>
+                            								<strong>Delivery Date:</strong> <?php echo $Trans['other']["delivery"]["dropoff"]; ?><br>
                             							</address>
                             						</div>
                             					</div>	
@@ -275,7 +276,7 @@ while($row = mysql_fetch_array($result)){
                             <input type="text" name='carrier' placeholder="Enter Shipping Carrier" class="form-control" value='<?php echo $Trans['other']["carrier"]; ?>'>
                         </div>
                         <div class="form-group">Tracking Number:
-                            <textarea name='tracking' cols="38%"><?php echo $Trans['other']['tracking']; ?></textarea>
+                            <textarea name='tracking' cols="38%" style="width: -webkit-fill-available;"><?php echo $Trans['other']['tracking']; ?></textarea>
                         </div>
                     </div>
                 </div>
