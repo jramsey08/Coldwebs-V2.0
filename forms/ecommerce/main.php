@@ -14,6 +14,15 @@ switch ($Get_Id) {
     case "payment":
         include("forms/ecommerce/payment.php");
         break;
+    case "settings":
+        include("forms/ecommerce/settings.php");
+        break;
+    case "import":
+        include("forms/ecommerce/import.php");
+        break;
+    case "tax":
+        include("forms/ecommerce/tax.php");
+        break;
     case "":
         header("Location: http://$Website_Url_Auth/admin/");
         break;

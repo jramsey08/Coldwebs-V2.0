@@ -15,8 +15,8 @@ if($Login == "1"){
 
 //////////////////////////// PULL UN-CHANGED TRANS INFORMATION \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     $query = "SELECT * FROM trans WHERE id='$Article_Id'";
-	$result = mysql_query($query) or die(mysql_error());
-	$Article = mysql_fetch_array($result);
+    $result = mysqli_query($CwDb, $query);
+    $Article = mysqli_fetch_assoc($result);
 	$Article = CwOrganize($Article,$Array);
     $Article = Cw_Filter_Array($Article);
     $Article_Other = $Article["other"];
@@ -40,9 +40,9 @@ if($Login == "1"){
 
 
 //////////////////////  UPDATE THE DATABASE WITH ANY NEW/OLD INFORMATION \\\\\\\\\\\\\\\\\\\\\\
-	$result = mysql_query("UPDATE trans SET other='$Article_Other' WHERE id='$Article_Id' AND webid='$WebId'") 
+	$result = mysqli_query($CwDb,"UPDATE trans SET other='$Article_Other' WHERE id='$Article_Id' AND webid='$WebId'") 
 	or die(mysql_error());
-	$result = mysql_query("UPDATE trans SET status='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'") 
+	$result = mysqli_query($CwDb,"UPDATE trans SET status='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'") 
 	or die(mysql_error());
 ////////////////////////////////////////////////////////////////////////////////////////////////
 

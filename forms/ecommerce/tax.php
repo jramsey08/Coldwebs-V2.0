@@ -5,15 +5,13 @@ if($Login == "1"){
 // PULLS ALL INFORMATION FROM THE POST REQUEST FOR THE SUPPLIER \\
 
 
-	$Article_Content["carrier"] = $_POST["carrier"];
+	$Article_Content["state"] = $_POST["state"];
 	$Article_Content["date"] = strtotime("now");
 	$Article_Content["price"] = $_POST["price"];
 	$Article_Content["default"] = $_POST["default"];
-	$Default = $_POST["default"];
 
 	$Article_Id = $_POST["id"];
 	$Article_Name = $_POST["name"];
-	$Article_Type = "shipping";
 	$Article_Active = $_POST["active"];
 	
 	
@@ -48,18 +46,18 @@ if($Login == "1"){
 
 
 	if($Article_Id == ""){
-	    $Manual_Message = "Created Delivery Option";
 	    
+	    $Manual_Message = "Added State Tax Option";
 		mysqli_query($CwDb,"INSERT INTO cwoptions(name, type, active, content, webid) 
-		VALUES('$Article_Name', '$Article_Type', '$Article_Active',  '$Article_Content', '$WebId') ");
-
-		$query = "SELECT * FROM cwoptions WHERE type='shipping' AND content='$Article_Content' AND name='$Article_Name'";
+		VALUES('$Article_Name', 'tax', '$Article_Active',  '$Article_Content', '$WebId') ")or die(mysql_error());
+		$query = "SELECT * FROM cwoptions WHERE type='tax' AND content='$Article_Content' AND name='$Article_Name'";
         $result = mysqli_query($CwDb, $query);
         $RoW = mysqli_fetch_assoc($result);
     	$RoW = CwOrganize($RoW,$Array);
         $Article_Id = $RoW["id"];
-		
+        
 	}else{
+	    $Manual_Message = "Updated State Tax Info";
         $query = "SELECT * FROM cwoptions WHERE id='$Article_Id'";
         $result = mysqli_query($CwDb, $query);
         $Article = mysqli_fetch_assoc($result);
@@ -75,34 +73,31 @@ if($Login == "1"){
 		or die(mysqli_error()); 
 	}
 	
-    $query = "SELECT * FROM settings WHERE type='shipping'";
+	$query = "SELECT * FROM cwoptions WHERE type='tax' AND active='1' AND trash='0'";
+    $result = mysqli_query($CwDb, $query);
+    while($TaxInfo = mysqli_fetch_assoc($result)){
+        $TaxInfo = CwOrganize($TaxInfo,$Array);
+        $TaxSelect["state"] = $TaxInfo["content"]["state"];
+        $TaxSelect["price"] = $TaxInfo["content"]["price"];
+        $TaxGroup[] = $TaxSelect;
+    }
+    $TaxGroup = Cw_Filter_Array($TaxGroup);
+	$TaxGroup = serialize($TaxGroup);
+	
+    $query = "SELECT * FROM settings WHERE type='tax'";
     $result = mysqli_query($CwDb, $query);
     $Setting = mysqli_fetch_assoc($result);
     $Setting = CwOrganize($Setting,$Array);
     $Content = $Setting["content"];
-    if($Default == "1"){
-        if($Setting["id"] == ""){
-            $Content["post"] = $Article_Id;
-            $Content = serialize($Content);
-            mysqli_query($CwDb,"INSERT INTO settings(name, content, api, webid, def, type, active, trash) 
-    		VALUES('Default Delivery', '$Content', '',  '$WebId', '1', 'shipping', '1', '0') ");
-        }else{
-            if($Content["post"] != $Article_Id){
-                $Query = "SELECT * FROM cwoptions WHERE type='shipping' AND id!='$Article_Id'";
-                $Result = mysqli_query($CwDb, $query);
-                while($Row = mysqli_fetch_assoc($Result)){
-                    $Row = CwOrganize($Row,$Array);                
-                    $Update = $Row["content"];
-                    $Update["default"] = "0";
-                    $Update = serialize($Update);
-                    $ResulT = mysqli_query($CwDb,"UPDATE cwoptions SET content='$Update' WHERE id='$Row[id]'");
-                }
-                $Content["post"] = $Article_Id;
-                $Content = serialize($Content);
-                $result = mysqli_query($CwDb,"UPDATE settings SET content='$Content' WHERE type='shipping' AND webid='$WebId'"); 
-            }
-        }
+    if($Setting["id"] == ""){
+        $TaxGroup = serialize($TaxGroup);
+        mysqli_query($CwDb,"INSERT INTO settings(name, content, api, webid, def, type, active, trash) 
+		VALUES('Tax Group', '$TaxGroup', '',  '$WebId', '1', 'tax', '1', '0') ")or die(mysqli_error());
+    }else{
+        $ResulT = mysqli_query($CwDb,"UPDATE settings SET content='$TaxGroup' WHERE type='tax'") 
+		or die(mysqli_error());
     }
+
 // TRACKS CHANGES MADE FROM USERS \\
     $Info = array();
     $Info["webid"] = $WebId;
@@ -115,7 +110,7 @@ if($Login == "1"){
     Cw_Changes($Info, $Article, $Array);
 /////////////////////////////////////////
 
-	header("Location: http://$Website_Url_Auth/admin/Ecommerce-Delivery");
+	header("Location: http://$Website_Url_Auth/admin/Ecommerce-Tax");
 
 }
 ?>

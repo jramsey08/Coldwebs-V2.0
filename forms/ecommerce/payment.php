@@ -50,12 +50,12 @@ if($Login == "1"){
 	if($Article_Id == ""){
 	    $Manual_Message = "Created Payment Option";
 	    
-		mysql_query("INSERT INTO cwoptions(name, type, active, content, webid) 
+		mysqli_query($CwDb,"INSERT INTO cwoptions(name, type, active, content, webid) 
 		VALUES('$Article_Name', '$Article_Type', '$Article_Active',  '$Article_Content', '$WebId') ")or die(mysql_error());
 
 		$query = "SELECT * FROM cwoptions WHERE type='payment' AND content='$Article_Content' AND name='$Article_Name'";
-    	$result = mysql_query($query) or die(mysql_error());
-    	$RoW = mysql_fetch_array($result);
+        $result = mysqli_query($CwDb, $query);
+        $RoW = mysqli_fetch_assoc($result);
     	$RoW = CwOrganize($RoW,$Array);
         $Article_Id = $RoW["id"];
 		
@@ -67,41 +67,41 @@ if($Login == "1"){
         $Article = Cw_Filter_Array($Article);
 
 // UPDATE THE DATABASE WITH ANY NEW/OLD INFORMATION \\
-		$result = mysql_query("UPDATE cwoptions SET name='$Article_Name' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE cwoptions SET active='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE cwoptions SET content='$Article_Content' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
+		$result = mysqli_query($CwDb,"UPDATE cwoptions SET name='$Article_Name' WHERE id='$Article_Id' AND webid='$WebId'") 
+		or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE cwoptions SET active='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'") 
+		or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE cwoptions SET content='$Article_Content' WHERE id='$Article_Id' AND webid='$WebId'") 
+		or die(mysqli_error()); 
 	}
 	
     $query = "SELECT * FROM settings WHERE type='payment'";
-    $result = mysql_query($query) or die(mysql_error());
-    $Setting = mysql_fetch_array($result);
+    $result = mysqli_query($CwDb, $query);
+    $Setting = mysqli_fetch_assoc($result);
     $Setting = CwOrganize($Setting,$Array);
     $Content = $Setting["content"];
     if($Default == "1"){
         if($Setting["id"] == ""){
             $Content["post"] = $Article_Id;
             $Content = serialize($Content);
-            mysql_query("INSERT INTO settings(name, content, api, webid, def, type, active, trash) 
-    		VALUES('Default Delivery', '$Content', '',  '$WebId', '1', 'payment', '1', '0') ")or die(mysql_error());
+            mysqli_query($CwDb,"INSERT INTO settings(name, content, api, webid, def, type, active, trash) 
+    		VALUES('Default Delivery', '$Content', '',  '$WebId', '1', 'payment', '1', '0') ")or die(mysqli_error());
         }else{
             if($Content["post"] != $Article_Id){
                 $Query = "SELECT * FROM cwoptions WHERE type='payment' AND id!='$Article_Id'";
-                $Result = mysql_query($Query) or die(mysql_error());
-                while($Row = mysql_fetch_array($Result)){
+                $result = mysqli_query($CwDb, $query);
+                while($Row = mysqli_fetch_assoc($result)){
                     $Row = CwOrganize($Row,$Array);                
                     $Update = $Row["content"];
                     $Update["default"] = "0";
                     $Update = serialize($Update);
-                    $ResulT = mysql_query("UPDATE cwoptions SET content='$Update' WHERE id='$Row[id]'") 
-        		    or die(mysql_error());
+                    $ResulT = mysqli_query($CwDb,"UPDATE cwoptions SET content='$Update' WHERE id='$Row[id]'") 
+        		    or die(mysqli_error());
                 }
                 $Content["post"] = $Article_Id;
                 $Content = serialize($Content);
-                $result = mysql_query("UPDATE settings SET content='$Content' WHERE type='payment' AND webid='$WebId'") 
-    		    or die(mysql_error());
+                $result = mysqli_query($CwDb,"UPDATE settings SET content='$Content' WHERE type='payment' AND webid='$WebId'") 
+    		    or die(mysqli_error());
             }
         }
     }

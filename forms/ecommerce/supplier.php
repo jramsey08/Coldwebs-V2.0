@@ -70,24 +70,24 @@ if($Login == "1"){
 	if($Article_Id == ""){
 	    $Manual_Message = "Created ecommerce variable";
 	    
-		mysql_query("INSERT INTO cwoptions(name, type, active, content, webid) 
+		mysqli_query($CwDb,"INSERT INTO cwoptions(name, type, active, content, webid) 
 		VALUES('$Article_Name', '$Article_Type', '$Article_Active',  '$Article_Content', '$WebId') ")or die(mysql_error());
 		
 		
 	}else{
         $query = "SELECT * FROM cwoptions WHERE id='$Article_Id'";
-    	$result = mysql_query($query) or die(mysql_error());
-    	$Article = mysql_fetch_array($result);
+        $result = mysqli_query($CwDb, $query);
+        $Article = mysqli_fetch_assoc($result);
     	$Article = CwOrganize($Article,$Array);
         $Article = Cw_Filter_Array($Article);
 
 // UPDATE THE DATABASE WITH ANY NEW/OLD INFORMATION \\
-		$result = mysql_query("UPDATE cwoptions SET name='$Article_Name' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE cwoptions SET active='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE cwoptions SET content='$Article_Content' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
+		$result = mysqli_query($CwDb,"UPDATE cwoptions SET name='$Article_Name' WHERE id='$Article_Id' AND webid='$WebId'") 
+		or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE cwoptions SET active='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'") 
+		or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE cwoptions SET content='$Article_Content' WHERE id='$Article_Id' AND webid='$WebId'") 
+		or die(mysqli_error()); 
 	}
 
 // TRACKS CHANGES MADE FROM USERS \\
