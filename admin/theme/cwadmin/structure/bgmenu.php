@@ -38,16 +38,16 @@
                                         <tbody>
 <?php
 $Query = "SELECT * FROM admin WHERE type='menu' AND trash='0' ORDER BY category"; 
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
     $Row = CwOrganize($Row,$Array);
     $ArticleCat = $Row['category'];
     $ArticleId = $Row['id'];
     $ArticleId = OtarEncrypt($key,$ArticleId);
     $query = "SELECT * FROM admin WHERE id='$ArticleCat' AND type='menu' AND active='1' AND trash='0'";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
-    $row = PbUnSerial($row); 
+    $result = mysqli_query($CwDb,$query);
+    $row = mysqli_fetch_assoc($result);
+    $row = CwOrganize($row,$Array); 
     if($row['name'] == ""){
         $row['name'] = "None";
     }

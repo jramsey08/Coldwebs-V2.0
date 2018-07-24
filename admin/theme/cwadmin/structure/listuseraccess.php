@@ -75,8 +75,8 @@ $ListedUserAccess = $UserAccess['content'];
 
 <?php $TotalSocial = "0";
 $query = "SELECT * FROM cwoptions WHERE type='access' AND active='1' AND trash='0'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
     $TotalAccess = $TotalAccess + 1;
 }
 
@@ -88,8 +88,8 @@ $Half = $TotalAccess / 2;
 $Split1 = $Half;
 $Split2 = $Half + 1;
 $query = "SELECT * FROM cwoptions WHERE type='access' AND active='1' AND trash='0' ORDER BY name LIMIT 0,$Split1";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
     $name = strtolower($row['name']);
     $VerifyAccess = $row['content'];
     if(is_array($ListedUserAccess)){
@@ -117,8 +117,8 @@ while($row = mysql_fetch_array($result)){
 $Split2 = $Split2 - 1;
 $TotalAccess = $TotalAccess - 2;
 $query = "SELECT * FROM cwoptions WHERE type='access' AND active='1' AND trash='0' ORDER BY name LIMIT $Split2,$TotalAccess";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
 $name = strtolower($row['name']);
 $VerifyAccess = $row['content'];
 if(is_array($ListedUserAccess)){

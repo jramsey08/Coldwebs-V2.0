@@ -4,16 +4,16 @@ if($Current_Admin_Id == "" OR $UserSiteAccess['backend'] == "0"){
         $Code = OtarDecrypt($key, $_GET["type"]);
         $Date = strtotime("now");
         $Query = "SELECT * FROM cw_request WHERE id='$Code' AND trash='0' AND active='3' AND webid='$WebId' AND expire>$Date";
-        $Result = mysql_query($Query) or die(mysql_error());
-        $Row = mysql_fetch_array($Result);
+        $Result = mysql_query($CwDb,$Query);
+        $Row = mysqli_fetch_assoc($Result);
         $Row = CwOrganize($Row,$Array);
         if($Row["id"] == ""){
             $Err = "<strong>Error!</strong> This link is invalid or has expired. Please request a new link. <a href='/Password-Recovery'> Request New Link</a>";
         }else{
             $query = "SELECT * FROM users WHERE email='$Row[email]' AND webid='$WebId'";
-            $result = mysql_query($query) or die(mysql_error());
-            $row = mysql_fetch_array($result);
-            $row = CwOrganize($Array,$row);
+            $result = mysqli_query($CwDb,$query);
+            $row = mysqli_fetch_assoc($result);
+            $row = CwOrganize($row,$Array);
             if($row["id"] == ""){
                 $Err = "<strong>Error!</strong> No account associated with this username or email address was found.<br>
                 <center>Please <a href='/Register'> Create an Account</a> Now</center>";

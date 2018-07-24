@@ -9,8 +9,8 @@ $Id = OtarDecrypt($key,$_GET['type']);
 
 
 $Query = "SELECT * FROM page_function WHERE id='$Id' AND trash='0'"; 
-$Result = mysql_query($Query) or die(mysql_error());
-$Row = mysql_fetch_array($Result);
+$Result = mysqli_query($CwDb,$Query);
+$Row = mysqli_fetch_assoc($Result);
 $FunctionId = $Row['id'];
 if($Row['contents'] == ""){
     $Row['contents']['category'] = "all";
@@ -26,8 +26,8 @@ if($ArticleId == ""){
 
 }else{
     $query = "SELECT * FROM articles WHERE url='$ArticleUrl' AND trash='0'"; 
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($CwDb,$query);
+    $row = mysqli_fetch_assoc($result);
     $ArticleContents['article'] = $row;
     $ArticleContents['structure'] = $Article["structure"];
     $ArticleContents = OtarEncrypt($key,$ArticleContents);
@@ -112,8 +112,8 @@ $Structure[$Count] = $y;
 $CurrentLayout = $Row["function"];
 foreach($Structure as $Layout){
     $query = "SELECT * FROM articles WHERE type='function' AND info='$Layout' AND active='1' AND trash='0'"; 
-    $result = mysql_query($query) or die(mysql_error());
-    while($row = mysql_fetch_array($result)){
+    $result = mysqli_query($CwDb,$query);
+    while($row = mysqli_fetch_assoc($result)){
     $row = PbUnSerial($row);
         echo "<option value='$row[id]'"; if( $CurrentLayout == $Layout){ echo "selected=selected"; } echo ">"; echo $row['content']['name']; echo"</option>";
     }
@@ -144,8 +144,6 @@ foreach($Structure as $Layout){
 <button data-wizard="#wizard1" class="btn btn-primary wizard-next">Next Step <i class="fa fa-caret-right"></i></button>
 </div>
 </div></div>
-
-
 
 
 

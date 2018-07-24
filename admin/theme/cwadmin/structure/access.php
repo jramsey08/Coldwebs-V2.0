@@ -37,9 +37,9 @@
                                         <tbody>
 <?php
 $Query = "SELECT * FROM cwoptions WHERE type='useraccess' AND trash='0'";
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-$Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+$Row = CwOrganize($Row,$Array);
 $ArticleCat = $Row['category'];
 $ArticleId = $Row['id'];
 $ArticleId = OtarEncrypt($key,$ArticleId);

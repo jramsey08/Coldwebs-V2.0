@@ -1,60 +1,61 @@
 <div class="cl-mcont">
-<div class="page-head">
-<ol class="breadcrumb">
-<li><a href="/admin">Dashboard</a></li>
-<li><a href="/admin/Author">Content Authors</a></li>
-<li class="active"><?php echo $Article['name']; ?></li>
-</ol></div>		
-		
+    <form role="form" method='post' action='/Process/Blog' enctype="multipart/form-data">
+        <div class="page-head">
+            <ol class="breadcrumb">
+                <li><a href="/admin">Dashboard</a></li>
+                <li><a href="/admin/Team">Team Members</a></li>
+                <li class="active"><?php echo $Article['name']; ?></li>
+            </ol>
+        </div>		
+        <div class="row">
+            <div class="col-sm-12 col-md-9">
+                <div class="tab-container">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="#basic" data-toggle="tab">Basic Info</a></li>
+                        <li><a href="#gallery" data-toggle="tab">Gallery</a></li>
+                        <li><a href="#social" data-toggle="tab">Social Media</a></li>
+                    </ul>
+                    <div class="tab-content">
 
-<div class="row">
-<div class="col-sm-12 col-md-9">
-<div class="tab-container">
-<ul class="nav nav-tabs">
-<li class="active"><a href="#basic" data-toggle="tab">Basic Info</a></li>
-<li><a href="#articles" data-toggle="tab">Posts</a></li>
-<li><a href="#gallery" data-toggle="tab">Gallery</a></li>
-<li><a href="#social" data-toggle="tab">Social Media</a></li>
-<li><a href="#uploads" data-toggle="tab">Uploads</a></li>
-</ul>
-
-
-<div class="tab-content">
-
-<div class="tab-pane active cont" id="basic">
-<div class="row">
-<form role="form" method='post' action='/Process/Blog' enctype="multipart/form-data">
-<div class="col-sm-12 col-md-12">
-<div class="col-sm-6 col-md-6">
-<div class="header"><h3>Basic Information</h3></div></div>
-</div>
-<div class="content">
-<div class="col-sm-6 col-md-6">
-<div class="form-group">
-<label class="col-sm-3 control-label">Name</label>
-<div class="col-sm-6">
-<input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $Article['name']; ?>'>
-</div></div><br><br>
-<div class="form-group">
-<label class="col-sm-3 control-label">Url</label>
-<div class="col-sm-6">
-<div class="input-group">
-<span class="input-group-addon">@</span>
-<input type="text" class="form-control" name='url' value="<?php echo $Article['url']; ?>" placeholder="Example: site.com/'URL'">
-</div></div></div>
-
-</div>
-
-<div class="form-group">
-<label class="col-sm-3 control-label">Registered User</label>
-<div class="col-sm-6">
-<select class="form-control" name='user'>
-<option value='' <?php if($Article['other']['user'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
+                        <div class="tab-pane active cont" id="basic">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-12">
+                                    <div class="col-sm-6 col-md-6">
+                                        <div class="header">
+                                            <h3>Basic Information</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="content">
+                                    <div class="col-sm-12 col-md-12">
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Name</label>
+                                                <div class="col-sm-9">
+                                                    <input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $Article['name']; ?>'>
+                                                </div>
+                                            </div><br><br>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Url</label>
+                                                <div class="col-sm-9">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon">@</span>
+                                                        <input type="text" class="form-control" name='url' value="<?php echo $Article['url']; ?>" placeholder="Example: site.com/'URL'">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Registered User</label>
+                                                <div class="col-sm-9">
+                                                    <select class="form-control" name='user'>
+                                                        <option value='' <?php if($Article['other']['user'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
 <?php
 $Query = "SELECT * FROM users WHERE email!='' AND webid='$WebId' ORDER BY id DESC LIMIT 0,5";
-$Result = mysqli_query($CwDb,$Query);
-while($Row = mysqli_fetch_assoc($Result)){
-    $Row = CwOrganize($Row,$Array);
+$Result = mysql_query($Query) or die(mysql_error());
+while($Row = mysql_fetch_array($Result)){
+    $Row = PbUnSerial($Row);
     if($Row['info']['access'] == "0"){
     }else{
         $Access = CwUserAccess($Row['info']['access']);
@@ -63,26 +64,27 @@ while($Row = mysqli_fetch_assoc($Result)){
             $Row['name'] = $Row['info']['firstname'] . " " . $Row['info']['lastname'];
         }}
 ?>
-<option value='<?php echo $Row['id']; ?>' <?php if($Article['other']['user'] == $Row['id']){ echo "selected='selected'"; } ?>><?php echo mysql_real_escape_string($Row['name']); ?></option>
+                                                        <option value='<?php echo $Row['id']; ?>' <?php if($Article['other']['user'] == $Row['id']){ echo "selected='selected'"; } ?>><?php echo mysql_real_escape_string($Row['name']); ?></option>
 <?php } ?>
-</select></div></div>
-
-<div class="form-group">
-<label class="col-sm-3 control-label">Featured</label>
-<div class="col-sm-6">
-<select class="form-control" name='feat'>
-<option value='0' <?php if($Article['feat'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
-<option value='0' <?php if($Article['feat'] == "0"){ echo "selected='selected'"; } ?>>No</option>
-<option value='1' <?php if($Article['feat'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
-</select></div></div><br><br>
-
-
-
-
-
-</div>
-
-
+                                                    </select>
+                                                </div><br><br>
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Email</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" name='email' placeholder="Enter Email" class="form-control" value='<?php echo $Article['other']['email']; ?>'>
+                                                    </div>
+                                                </div><br><br>
+                                                
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">Position</label>
+                                                    <div class="col-sm-9">
+                                                        <input type="text" name='position' placeholder="Enter Position" class="form-control" value='<?php echo $Article['content']['position']; ?>'>
+                                                    </div>
+                                                </div><br><br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
 <div class="col-sm-12 col-md-12">
 <div class="form-group">
@@ -134,8 +136,8 @@ while($Row = mysqli_fetch_assoc($Result)){
 </tr></thead>
 <tbody class="no-border-y">
 <?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND type='image' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY list";
-$result = mysqli_query($CwDb,$query);
-while($row = mysqli_fetch_assoc($result)){ 
+$result = mysql_query($query) or die(mysql_error());
+while($row = mysql_fetch_array($result)){ 
 if($Article['id'] == ""){
     #exit;
 } ?>
@@ -153,70 +155,6 @@ if($Article['id'] == ""){
 </div>
 
 
-
-<div class="tab-pane cont" id="uploads">
-    <div class="col-sm-12 col-md-12">
-        <div class="header">
-            <h3>Media Uploader</h3>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12 col-md-12">
-            <?php $GalRand = "Galupload-" . RandomCode("50"); ?>
-            <input type="hidden" name='galrand' value='<?php echo $GalRand; ?>'>
-            <iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' frameborder="0" height="600" width="720" ></iframe>
-        </div>
-    </div>
-</div>
-
-
-<div class="tab-pane cont" id="articles">
-<div class="col-sm-12 col-md-12">
-<div class="header"><h3>Author Posts</h3>
-</div></div>
-<div class="row">
-<div class="col-sm-12 col-md-12">
-<div class="content">
-<div class="table-responsive">
-<table class="table table-bordered" id="datatable" >
-<thead><tr>
-<th>Name</th>
-<th>Page Views</th>
-<th>Settings</th>
-</tr></thead>
-<tbody><?php
-$Id = $Article['id'];
-$Query = "SELECT * FROM articles WHERE type='post' AND other LIKE '%" . $Id. "%' AND trash='0' AND webid='$WebId'"; 
-$Result = mysqli_query($CwDb,$Query);
-while($Row = mysqli_fetch_assoc($Result)){
-$Row = CwOrganize($Row,$Array);
-$ArticleCat = $Row['category'];
-$ArticleId = $Row['id'];
-$ArticleId = OtarEncrypt($key,$ArticleId);
-$query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0' AND webid='$WebId'"; 
-$result = mysqli_query($CwDb,$query);
-$row = mysqli_fetch_assoc($result);
-$row = PbUnSerial($row); ?>
-<tr class="odd gradeX">
-<td><?php echo $Row['name']; ?></td>
-<td><?php echo $Row['content']['hits']; ?></td>
-<td class="center"> 
-<div class="btn-group">
-<button class="btn btn-default btn-xs" type="button">Actions</button>
-<button data-toggle="dropdown" class="btn btn-xs btn-primary dropdown-toggle" type="button"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>
-<ul role="menu" class="dropdown-menu">
-<li><a href="/admin/Articles/<?php echo $ArticleId; ?>">Edit</a></li>
-<li><a href="#">Copy</a></li>
-<li><a href="#">Details</a></li>
-<li class="divider"></li>
-<li><a href="/Process/Delete/Articles/<?php echo $ArticleId; ?>">Remove</a></li>
-</ul></div></td>
-</tr><?php } ?>
-</tbody></table></div>
-</div></div></div>
-</div>
-
-
 <div class="tab-pane" id="social">
 <div class="row">
 <div class="col-sm-12 col-md-12">
@@ -226,8 +164,8 @@ $row = PbUnSerial($row); ?>
 <div class="form-group">
 <?php
 $query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0'";
-$result = mysqli_query($CwDb,$query);
-while($row = mysqli_fetch_assoc($result)){
+$result = mysql_query($query) or die(mysql_error());
+while($row = mysql_fetch_array($result)){
     $TotalSocial = $TotalSocial + 1;
 }
 if ($TotalSocial % 2 == 0) {
@@ -238,9 +176,9 @@ $Half = $TotalSocial / 2;
 $Split1 = $Half;
 $Split2 = $Half + 1;
 $query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0' LIMIT 0,$Split1";
-$result = mysqli_query($CwDb,$query);
-while($row = mysqli_fetch_assoc($result)){
-$name = strtolower($row["name"]);
+$result = mysql_query($query) or die(mysql_error());
+while($row = mysql_fetch_array($result)){
+$name = strtolower($row[name]);
 $Social = $Article['other']['social']; ?>
 <label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
 <div class="col-sm-6">
@@ -252,8 +190,8 @@ $Social = $Article['other']['social']; ?>
 <div class="col-sm-6 col-md-6">
 <div class="form-group">
 <?php $query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0' LIMIT $Split2,$TotalSocial";
-$result = mysqli_query($CwDb,$query);
-while($row = mysqli_fetch_assoc($result)){
+$result = mysql_query($query) or die(mysql_error());
+while($row = mysql_fetch_array($result)){
 $name = strtolower($row['name']);
 $Social = $Article['other']['social']; ?>
 <label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
@@ -358,8 +296,9 @@ EmbedCode
 </div>
 
 
-<input type="hidden" name="imgtype" value="author">
-<input type="hidden" name="redirect" value="admin/Author">
+<input type="hidden" name="imgtype" value="team">
+<input type="hidden" name="structure" value="author">
+<input type="hidden" name="redirect" value="admin/Team">
 <input type="hidden" name="userid" value="<?php echo $Array['userinfo']['id']; ?>">
 <input type="hidden" name="img" value="<?php echo $Article['content']['img']; ?>">
 <input type="hidden" name="id" value="<?php echo $Article['id']; ?>">

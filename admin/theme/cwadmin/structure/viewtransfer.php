@@ -55,10 +55,9 @@
 <select class="form-control" name='category'>
 <option value="<?php echo $Article[category]; ?>">Select Below</option>
 <?php $query = "SELECT * FROM articles WHERE category='self' AND type='category' AND active='1' AND trash='0'"; 
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-if($row[content] == ""){ }else{ $row[content] = unserialize($row[content]); }
-echo "<option value='$row[id]'"; if($row[id] == $Article[category]){ echo "selected=selected"; }; ?>><?php echo $row[content][name]; ?></option> <?php } ?>
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+echo "<option value='$row[id]'"; if($row["id"] == $Article["category"]){ echo "selected=selected"; }; ?>><?php echo $row["name"]; ?></option> <?php } ?>
 </select></div></div><br><br>
 <div class="form-group">
 <label class="col-sm-3 control-label">Featured</label>
@@ -127,8 +126,8 @@ echo "<option value='$row[id]'"; if($row[id] == $Article[category]){ echo "selec
 </tr></thead>
 <tbody class="no-border-y">
 <?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ ?>
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){ ?>
 <tr>
 <td><img src='<?php echo $row['img']; ?>' height="200" width="200"></td>
 <td style="width:30%;"><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="1" value='<?php echo $row["list"]; ?>'></td>
@@ -176,54 +175,7 @@ while($row = mysql_fetch_array($result)){ ?>
 </div></div></div>
 </div></div>
 
-<div class="tab-pane" id="social">
-<div class="row">
-<div class="col-sm-12 col-md-12">
-<div class="header"><h3>Social Media Integration</h3></div>
-<div class="content">
-<div class="col-sm-6 col-md-6">
-<div class="form-group">
-<?php
-$query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-    $TotalSocial = $TotalSocial + 1;
-}
-if ($TotalSocial % 2 == 0) {
-}else{
-    $TotalSocial = $TotalSocial + 1;
-}
-$Half = $TotalSocial / 2;
-$Split1 = $Half;
-$Split2 = $Half + 1;
-$query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0' LIMIT 0,$Split1";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$name = strtolower($row[name]);
-$Social = $Article['other']['social']; ?>
-<label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
-<div class="col-sm-6">
-<div class="input-group">
-<span class="input-group-addon">@</span>
-<input type="text" class="form-control" name="social[<?php echo $name; ?>]" value="<?php echo isset_get($Social,$name); ?>" placeholder="Username / Url">
-</div></div><br><br><br>
-<?php } echo "</div></div>"; ?>
-<div class="col-sm-6 col-md-6">
-<div class="form-group">
-<?php $query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0' LIMIT $Split2,$TotalSocial";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$name = strtolower($row['name']);
-$Social = $Article['other']['social']; ?>
-<label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
-<div class="col-sm-6">
-<div class="input-group">
-<span class="input-group-addon">@</span>
-<input type="text" class="form-control" name="social[<?php echo $name; ?>]" value="<?php echo isset_get($Social,$name); ?>" placeholder="Username / Url">
-</div></div><br><br><br>
-<?php } echo "</div></div>"; ?>
-</div></div></div>
-</div>
+
 
 
 

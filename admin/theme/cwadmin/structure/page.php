@@ -41,18 +41,18 @@
 <tbody>
 <?php
 $Query = "SELECT * FROM page_template WHERE trash='0' AND webid='$WebId'"; 
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){ 
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){ 
 $ArticleId = OtarEncrypt($key,$Row['id']);
-$Row = PbUnSerial($Row);
+$Row = CwOrganize($Row,$Array);
 $query = "SELECT * FROM page_settings WHERE article='$ArticleId' AND tempid='$Row[id]' AND webid='$WebId'"; 
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query);
+$row = mysqli_fetch_assoc($result);
+$row = CwOrganize($row,$Array);
 $qUerY = "SELECT * FROM articles WHERE id='$ArticleId' AND webid='$WebId'";
-$rEsulT = mysql_query($qUerY) or die(mysql_error());
-$rOW = mysql_fetch_array($rEsulT);
-$rOW = PbUnSerial($rOW);
+$rEsulT = mysqli_query($CwDb,$qUerY);
+$rOW = mysqli_fetch_assoc($rEsulT);
+$rOW = CwOrganize($rOW,$Array);
 $ArticleName = $rOW['name'];
 if($ArticleName == ""){ $ArticleName = $rOw['name']; }
 if($ArticleName == ""){ $ArticleName = $Row['name']; }

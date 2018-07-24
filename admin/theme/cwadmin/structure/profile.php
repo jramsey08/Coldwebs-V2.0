@@ -111,9 +111,9 @@ Change Account Password:
 <th style="width:15%;" class="text-center"><strong>Action</strong></th>
 </tr></thead>
 <tbody class="no-border-y">
-<?php $query = "SELECT * FROM images WHERE album='$PostId' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ ?>
+<?php $query = "SELECT * FROM images WHERE album='$PostId' AND album!='' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY list";
+$result = mysqli_query($CwDb,$query) ;
+while($row = mysqli_fetch_assoc($result)){ ?>
 <tr>
 <td><img src='<?php echo $row['img']; ?>' height="200" width="200"></td>
 <td style="width:30%;"><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="1" value='<?php echo $row["list"]; ?>'></td>
@@ -170,8 +170,8 @@ while($row = mysql_fetch_array($result)){ ?>
 <div class="form-group">
 <?php
 $query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
     $TotalSocial = $TotalSocial + 1;
 }
 if ($TotalSocial % 2 == 0) {
@@ -182,8 +182,8 @@ $Half = $TotalSocial / 2;
 $Split1 = $Half;
 $Split2 = $Half + 1;
 $query = "SELECT * FROM cwoptions WHERE type='sm' AND active='1' AND trash='0' LIMIT 0,$Split1";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query) ;
+while($row = mysqli_fetch_assoc($result)){
 $name = strtolower($row['name']);
 $Social = $Article['other']['social']; ?>
 <label class="col-sm-3 control-label"><?php echo $row['name']; ?></label>
@@ -277,39 +277,16 @@ $Social = $Article['other']['social']; ?>
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- </script> <script type="text/javascript" src="http://condorthemes.com/flatdream/js/jasny.bootstrap/extend/js/jasny-bootstrap.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/moment.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.daterangepicker/daterangepicker.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.touchspin/bootstrap-touchspin/bootstrap.touchspin.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.switch/bootstrap-switch.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.select2/select2.min.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.slider/js/bootstrap-slider.js" ></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/jquery.icheck/icheck.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/jasny-bootstrap.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/moment.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/daterangepicker.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap.touchspin.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-colorpicker.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-switch.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-datetimepicker.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/select2.min.js" ></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-slider.js" ></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/icheck.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
       /*Date Range Picker*/
@@ -459,11 +436,10 @@ $Social = $Article['other']['social']; ?>
 </script>
 
 
-<script src="http://condorthemes.com/flatdream/js/ckeditor/ckeditor.js"></script>
-<script src="http://condorthemes.com/flatdream/js/ckeditor/adapters/jquery.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.summernote/dist/summernote.min.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/lib/js/wysihtml5-0.3.0.js"></script>
-<script type="text/javascript" src="http://condorthemes.com/flatdream/js/bootstrap.wysihtml5/src/bootstrap-wysihtml5.js"></script>
+<script src="/admin/theme/cwadmin/header/js/ckeditor.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/summernote.min.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/wysihtml5-0.3.0.js"></script>
+<script type="text/javascript" src="/admin/theme/cwadmin/header/js/bootstrap-wysihtml5.js"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){

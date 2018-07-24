@@ -66,10 +66,10 @@
                                             <div class="col-sm-6">
                                                 <select class="form-control" name='category'>
                                                     <option value="<?php echo $Article['category']; ?>">Select Below</option>
-    <?php $query = "SELECT * FROM articles WHERE category='1' AND type='menu' AND active='1' AND id!='$Article[id]' AND trash='0' AND webid='$WebId'"; 
-    $result = mysql_query($query) or die(mysql_error());
-    while($row = mysql_fetch_array($result)){
-        $row = PbUnSerial($row);
+<?php $query = "SELECT * FROM articles WHERE category='1' AND type='menu' AND active='1' AND id!='$Article[id]' AND trash='0' AND webid='$WebId'"; 
+    $result = mysqli_query($CwDb,$query) ;
+    while($row = mysqli_fetch_assoc($result)){
+        $row = CwOrganize($row,$Array);
         echo "<option value='$row[id]'"; if($row['id'] == $Article['category']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option> <?php } ?>
                                                 </select>
                                             </div>

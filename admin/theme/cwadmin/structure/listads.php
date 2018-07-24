@@ -2,7 +2,7 @@
 <div class="page-head">
 <ol class="breadcrumb">
 <li><a href="/admin">Dashboard</a></li>
-<li><a href="/admin/Advertisement">Advertisements</a></li>
+<li><a href="/admin/Advertisement">Advertisements</a></li> 
 <li class="active"><?php echo $Article['content']['name']; ?></li>
 </ol></div>		
 		
@@ -26,91 +26,115 @@
 <div class="col-sm-6 col-md-6">
 <div class="header"><h3>Basic Information</h3></div></div>
 </div>
+
 <div class="content">
-<div class="col-sm-6 col-md-6">
-<div class="form-group">
-<label class="col-sm-3 control-label">Title</label>
-<div class="col-sm-6">
-<input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $Article['name']; ?>'>
-</div></div><br><br>
-<div class="form-group">
-<label class="col-sm-3 control-label">Url</label>
-<div class="col-sm-6">
-<div class="input-group">
-<span class="input-group-addon">@</span>
-<input type="text" class="form-control" name='url' value="<?php echo $Article['other']['url']; ?>" placeholder="Example: http://site.com/">
-</div></div></div><br><br>
-<div class="form-group">
-<label class="col-sm-3 control-label">Type</label>
-<div class="col-sm-6">
-<select class="form-control" name='type'>
-<option value="<?php echo $Article['type']; ?>">Select Below</option>
-<option value="code" <?php if($Article['type'] == "code"){ echo "selected=selected"; }; ?>>Code</option>
-<option value="img" <?php if($Article['type'] == "img"){ echo "selected=selected"; }; ?>>Image</option>
-<option value="video" <?php if($Article['type'] == "video"){ echo "selected=selected"; }; ?>>Video (Upload)</option>
-<option value="audio" <?php if($Article['type'] == "audio"){ echo "selected=selected"; }; ?>>Audio (Upload)</option>
-<option value="embed" <?php if($Article['type'] == "embed"){ echo "selected=selected"; }; ?>>Embeded Code</option>
-</select></div></div><br><br>
-</div>
-<div class="form-group">
-<label class="col-sm-3 control-label">Featured</label>
-<div class="col-sm-6">
-<select class="form-control" name='feat'>
-<option value='0' <?php if($Article['feat'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
-<option value='0' <?php if($Article['feat'] == "0"){ echo "selected='selected'"; } ?>>No</option>
-<option value='1' <?php if($Article['feat'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
-</select></div></div><br><br>
-<div class="form-group">
-<label class="col-sm-3 control-label">Ad Location</label>
-<div class="col-sm-6">
-<select class="form-control" name='location'>
-
-<option value='any' <?php if($Article['location'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
-<option value='x' <?php if($Article['location'] == "x"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Any*</option>
-<option value='1' <?php if($Article['location'] == "1"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Top Banner</option>
-<option value='2' <?php if($Article['location'] == "2"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Body</option>
-<option value='3' <?php if($Article['location'] == "3"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Sidebar</option>
-<option value='4' <?php if($Article['location'] == "4"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Footer</option>
-<option value='x' <?php if($Article['location'] != "" AND $Loc_Find != "1"){ echo "selected='selected'"; } ?>>Manual</option>
-
-</select></div></div>
+    <div class="col-sm-6 col-md-6">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Title</label>
+            <div class="col-sm-9">
+                <input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $Article['name']; ?>'>
+            </div>
+        </div>
+        <br><br>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Url</label>
+            <div class="col-sm-9">
+                <div class="input-group">
+                    <span class="input-group-addon">@</span>
+                    <input type="text" class="form-control" name='url' value="<?php echo $Article['other']['url']; ?>" placeholder="Example: http://site.com/">
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Type</label>
+            <div class="col-sm-9">
+                <select class="form-control" name='type'>
+                    <option value="<?php echo $Article['type']; ?>">Select Below</option>
+                    <option value="code" <?php if($Article['type'] == "code"){ echo "selected=selected"; }; ?>>Code</option>
+                    <option value="img" <?php if($Article['type'] == "img"){ echo "selected=selected"; }; ?>>Image</option>
+                    <option value="video" <?php if($Article['type'] == "video"){ echo "selected=selected"; }; ?>>Video (Upload)</option>
+                    <option value="audio" <?php if($Article['type'] == "audio"){ echo "selected=selected"; }; ?>>Audio (Upload)</option>
+                    <option value="embed" <?php if($Article['type'] == "embed"){ echo "selected=selected"; }; ?>>Embeded Code</option>
+                </select>
+            </div>
+        </div>
+        <br><br>
+    </div>
+    <div class="col-sm-6 col-md-6">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Featured</label>
+            <div class="col-sm-9">
+                <select class="form-control" name='feat'>
+                    <option value='0' <?php if($Article['feat'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
+                    <option value='0' <?php if($Article['feat'] == "0"){ echo "selected='selected'"; } ?>>No</option>
+                    <option value='1' <?php if($Article['feat'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
+                </select>
+            </div>
+        </div>
+        <br><br>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Ad Location</label>
+            <div class="col-sm-9">
+                <select class="form-control" name='location'>
+                    <option value='any' <?php if($Article['location'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
+                    <option value='x' <?php if($Article['location'] == "x"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Any*</option>
+                    <option value='1' <?php if($Article['location'] == "1"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Top Banner</option>
+                    <option value='2' <?php if($Article['location'] == "2"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Body</option>
+                    <option value='3' <?php if($Article['location'] == "3"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Sidebar</option>
+                    <option value='4' <?php if($Article['location'] == "4"){ echo "selected='selected'"; $Loc_Find = "1"; } ?>>Footer</option>
+                    <option value='x' <?php if($Article['location'] != "" AND $Loc_Find != "1"){ echo "selected='selected'"; } ?>>Manual</option>
+                </select>
+            </div>
+        </div>
+    </div>
 </div>
 <br><br>
+<hr>
 <div class="col-sm-12 col-md-12">
-<div class="col-sm-6 col-md-6">
-<div class="form-group">
-<label class="col-sm-3 control-label">Limitations</label>
-<div class="col-sm-6">
-<select class="form-control" name='adlimit'>
-<option value="<?php echo $Article['adlimit']; ?>">Select Below</option>
-<option value="views" <?php if($Article['adlimit'] == "views"){ echo "selected=selected"; }; ?>>Views</option>
-<option value="clicks" <?php if($Article['adlimit'] == "clicks"){ echo "selected=selected"; }; ?>>Clicks</option>
-<option value="time" <?php if($Article['adlimit'] == "time"){ echo "selected=selected"; }; ?>>Time</option>
-<option value="none" <?php if($Article['adlimit'] == "none"){ echo "selected=selected"; }; ?>>None</option>
-</select></div></div><br><br>
-<div class="form-group">
-<label class="col-sm-3 control-label">Payment Options</label>
-<div class="col-sm-6">
-<select class="form-control" name='adpayment'>
-<option value="<?php echo $Article['other']['adpayment']; ?>">Select Below</option>
-<option value="paypal" <?php if($Article['other']['adpayment'] == "paypal"){ echo "selected=selected"; }; ?>>PayPal</option>
-<option value="cash" <?php if($Article['other']['adpayment'] == "cash"){ echo "selected=selected"; }; ?>>Cash</option>
-<option value="cheque" <?php if($Article['other']['adpayment'] == "cheque"){ echo "selected=selected"; }; ?>>Cheque</option>
-<option value="other" <?php if($Article['other']['adpayment'] == "other"){ echo "selected=selected"; }; ?>>Other</option>
-<option value="free" <?php if($Article['other']['adpayment'] == "free"){ echo "selected=selected"; }; ?>>Free</option>
-</select></div></div><br><br>
-<div class="form-group">
-<label class="col-sm-3 control-label">Payment Status</label>
-<div class="col-sm-6">
-<select class="form-control" name='adpaymentstatus'>
-<option value="<?php echo $Article['other']['adpaymentstatus']; ?>">Select Below</option>
-<option value="0" <?php if($Article['other']['adpaymentstatus'] == "0"){ echo "selected=selected"; }; ?>>Not-Paid</option>
-<option value="1" <?php if($Article['other']['adpaymentstatus'] == "1"){ echo "selected=selected"; }; ?>>Paid</option>
-<option value="2" <?php if($Article['other']['adpaymentstatus'] == "2"){ echo "selected=selected"; }; ?>>Pending</option>
-</select></div></div><br><br>
+    <div class="col-sm-6 col-md-6">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Limitations</label>
+            <div class="col-sm-9">
+                <select class="form-control" name='adlimit'>
+                    <option value="<?php echo $Article['adlimit']; ?>">Select Below</option>
+                    <option value="views" <?php if($Article['adlimit'] == "views"){ echo "selected=selected"; }; ?>>Views</option>
+                    <option value="clicks" <?php if($Article['adlimit'] == "clicks"){ echo "selected=selected"; }; ?>>Clicks</option>
+                    <option value="time" <?php if($Article['adlimit'] == "time"){ echo "selected=selected"; }; ?>>Time</option>
+                    <option value="none" <?php if($Article['adlimit'] == "none"){ echo "selected=selected"; }; ?>>None</option>
+                </select>
+            </div>
+        </div>
+        <br><br>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Payment Options</label>
+            <div class="col-sm-9">
+                <select class="form-control" name='adpayment'>
+                    <option value="<?php echo $Article['other']['adpayment']; ?>">Select Below</option>
+                    <option value="paypal" <?php if($Article['other']['adpayment'] == "paypal"){ echo "selected=selected"; }; ?>>PayPal</option>
+                    <option value="cash" <?php if($Article['other']['adpayment'] == "cash"){ echo "selected=selected"; }; ?>>Cash</option>
+                    <option value="cheque" <?php if($Article['other']['adpayment'] == "cheque"){ echo "selected=selected"; }; ?>>Cheque</option>
+                    <option value="other" <?php if($Article['other']['adpayment'] == "other"){ echo "selected=selected"; }; ?>>Other</option>
+                    <option value="free" <?php if($Article['other']['adpayment'] == "free"){ echo "selected=selected"; }; ?>>Free</option>
+                </select>
+            </div>
+        </div>
+        <br><br>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Payment Status</label>
+            <div class="col-sm-9">
+                <select class="form-control" name='adpaymentstatus'>
+                    <option value="<?php echo $Article['other']['adpaymentstatus']; ?>">Select Below</option>
+                    <option value="0" <?php if($Article['other']['adpaymentstatus'] == "0"){ echo "selected=selected"; }; ?>>Not-Paid</option>
+                    <option value="1" <?php if($Article['other']['adpaymentstatus'] == "1"){ echo "selected=selected"; }; ?>>Paid</option>
+                    <option value="2" <?php if($Article['other']['adpaymentstatus'] == "2"){ echo "selected=selected"; }; ?>>Pending</option>
+                </select>
+            </div>
+        </div>
+        <br><br>
 <div class="form-group">
 <label class="col-sm-3 control-label">PB Marketing</label>
-<div class="col-sm-6">
+<div class="col-sm-9">
 <select class="form-control" name='pbmarketing'>
 <option value='0' <?php if($Article['other']['pbmarketing'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
 <option value='0' <?php if($Article['other']['pbmarketing'] == "0"){ echo "selected='selected'"; } ?>>No</option>
@@ -118,7 +142,7 @@
 </select></div></div><br><br>
 <div class="form-group">
 <label class="col-sm-3 control-label">Override Title</label>
-<div class="col-sm-6">
+<div class="col-sm-9">
 <select class="form-control" name='usetitle'>
 <option value='0' <?php if($Article['other']['usetitle'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
 <option value='0' <?php if($Article['other']['usetitle'] == "0"){ echo "selected='selected'"; } ?>>No</option>
@@ -126,7 +150,7 @@
 </select></div></div><br><br>
 <div class="form-group">
 <label class="col-sm-3 control-label">Override Sizing</label>
-<div class="col-sm-6">
+<div class="col-sm-9">
 <select class="form-control" name='manualsize'>
 <option value='0' <?php if($Article['other']['manualsize'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
 <option value='0' <?php if($Article['other']['manualsize'] == "0"){ echo "selected='selected'"; } ?>>No</option>
@@ -134,34 +158,36 @@
 </select></div></div>
 </div>
 <div class="col-sm-6 col-md-6">
-<div class="form-group">
-<label class="col-sm-3 control-label">Total Views</label>
-<div class="col-sm-6">
-<input type="text" name='adviews' placeholder="Enter Total Views" class="form-control" value='<?php echo $Article['other']['adviews']; ?>'>
-</div></div><br><br>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">Total Views</label>
+        <div class="col-sm-9">
+            <input type="text" name='adviews' placeholder="Enter Total Views" class="form-control" value='<?php echo $Article['other']['adviews']; ?>'>
+        </div>
+    </div>
+    <br><br>
 <div class="form-group">
 <label class="col-sm-3 control-label">Total Clicks</label>
-<div class="col-sm-6">
+<div class="col-sm-9">
 <input type="text" name='adclicks' placeholder="Enter Total Clicks" class="form-control" value='<?php echo $Article['other']['adclicks']; ?>'>
 </div></div><br><br>
 <div class="form-group">
 <label class="col-sm-3 control-label">End Date</label>
-<div class="col-sm-6">
+<div class="col-sm-9">
 <input type="text" name='adtime' placeholder="Enter End Date MM/DD/YYYY " class="form-control" value='<?php echo $Article['other']['adtime']; ?>'>
 </div></div><br><br>
 <div class="form-group">
 <label class="col-sm-3 control-label">Height</label>
-<div class="col-sm-6">
+<div class="col-sm-9">
 <input type="text" name='height' placeholder="Enter Height" class="form-control" value='<?php echo $Article['height']; ?>'>
 </div></div><br><br>
 <div class="form-group">
 <label class="col-sm-3 control-label">Width</label>
-<div class="col-sm-6">
+<div class="col-sm-9">
 <input type="text" name='width' placeholder="Enter Width" class="form-control" value='<?php echo $Article['width']; ?>'>
 </div></div><br><br>
 <div class="form-group">
 <label class="col-sm-3 control-label">Manual Location</label>
-<div class="col-sm-6">
+<div class="col-sm-9">
 <input type="text" name='manualadloc' placeholder="Enter Width" class="form-control" value='<?php echo $Article['other']['manualadloc']; ?>'>
 </div></div><br><br>
 </div></div>
@@ -181,7 +207,7 @@
         <div class="col-sm-12 col-md-12">
             <?php $GalRand = "Galupload-" . RandomCode("50"); ?>
             <input type="hidden" name='galrand' value='<?php echo $GalRand; ?>'>
-            <iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' scrolling='no' frameborder="0" height="600" width="720" ></iframe>
+            <iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' frameborder="0" height="600" width="720" ></iframe>
         </div>
     </div>
 </div>
@@ -215,8 +241,8 @@
 </tr></thead>
 <tbody class="no-border-y">
 <?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND trash='0' AND webid='$WebId' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ ?>
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){ ?>
 <tr>
 <td><a href="/admin/ImgRotate/<?php echo OtarEncrypt($key, $row['id']); ?>"><img class='ImgSrc' src='<?php echo $row['img']; ?>' height="200" width="200"></a></td>
 <td style="width:10%;" class='ImageOrder'><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="10" value='<?php echo $row["list"]; ?>'></td>
@@ -252,11 +278,11 @@ while($row = mysql_fetch_array($result)){ ?>
 <div id="collapseOne" class="panel-collapse collapse in">
 <div class="form-group"><br>
 <label class="col-sm-3 control-label">Active</label>
-<div class="col-sm-6">
+<div class="col-sm-12">
 <select class="form-control" name='active'>
 <option value="<?php if($Article['active'] == ""){ echo "1"; } ?>">Select Below</option>
-<option value="1" <?php if($Article['active'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
-<option value="0" <?php if($Article['active'] == "0"){ echo "selected='selected'"; } ?>>No</option>
+<option value="1" <?php if($Article['active'] == "1"){ echo "selected='selected'"; } ?>>Active</option>
+<option value="0" <?php if($Article['active'] == "0"){ echo "selected='selected'"; } ?>>In-Active</option>
 </select></div></div><br>
 <center><div class="panel-body">
 <button class="btn btn-primary" type="submit" formmethod="post" onclick="formSubmitter('cwjqueryform', 'cwmessage')">Publish</button>
@@ -289,10 +315,10 @@ while($row = mysql_fetch_array($result)){ ?>
     <input type="file" name="profilepic[]"></span>
     <a href="#" class="btn btn-danger fileinput-exists" data-dismiss="fileinput">Remove</a>
 </div></div>
-<?php }else if($Article['type'] == "video" OR $Article['type'] == "audio"){ ?>
+<?php }else if($Article['type'] != "embed"){ ?>
     <label class="col-sm-3 control-label">Media Display</label>
-    <center><?php $Article['other']['mediacodetype']($Article['other']['mediacode'],300,300); ?></center>
-<?php }else if($Article['type'] == "embed"){ ?>
+    <center><?php $Article['other']['mediacodetype']($Article['other']['mediacode'],200,300); ?></center>
+<?php }else{ ?>
 
 
 <?php } ?>
@@ -304,14 +330,15 @@ while($row = mysql_fetch_array($result)){ ?>
 <a data-toggle="collapse" data-parent="#accordion" href="#cwMedia">
 <i class="fa "></i>Media Upload</a>
 </h4></div>
-<div id="cwMedia" class="panel-collapse collapse in">
+<div id="cwMedia" class="panel-collapse collapse ">
 <div class="form-group">
 <label class="col-sm-3 control-label">Type</label>
-<div class="col-sm-6">
+<div class="col-sm-9">
 <select class="form-control" name='mediacodetype'>
 <option value='' <?php if($Article['other']['mediacodetype'] == ""){ echo "selected='selected'"; } ?>>Select Video Format</option>
 <option value='youtube' <?php if($Article['other']['mediacodetype'] == "youtube"){ echo "selected='selected'"; } ?>>Youtube</option>
 <option value='vimeo' <?php if($Article['other']['mediacodetype'] == "vimeo"){ echo "selected='selected'"; } ?>>Vimeo</option>
+<option value='spotify' <?php if($Article['other']['mediacodetype'] == "spotify"){ echo "selected='selected'"; } ?>>Spotify Player</option>
 <option value='embed' <?php if($Article['other']['mediacodetype'] == "embed"){ echo "selected='selected'"; } ?>>Embeded Code</option>
 <option value='videofile' <?php if($Article['other']['mediacodetype'] == "videofile"){ echo "selected='selected'"; } ?>>Video File (*Uploaded)</option>
 <option value='audiofile' <?php if($Article['other']['mediacodetype'] == "audiofile"){ echo "selected='selected'"; } ?>>Audio File (*Uploaded)</option>
@@ -324,7 +351,7 @@ EmbedCode
 </div>
 <div class="form-group">
 <label class="col-sm-3 control-label">Upload(*)</label>
-<div class="col-sm-6">
+<div class="col-sm-9">
 <div class="fileinput fileinput-new" data-provides="fileinput">
 <span class="btn btn-primary btn-file">
 <span class="fileinput-new">Select file(s)</span>
@@ -344,7 +371,7 @@ EmbedCode
 
 </div>
 
-
+f
 <input type="hidden" name="redirect" value="admin/Advertisement">
 <input type="hidden" name="imgtype" value="ads">
 <input type="hidden" name="userid" value="<?php echo $Array['userinfo']['id']; ?>">

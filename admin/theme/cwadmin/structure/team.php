@@ -1,76 +1,74 @@
 <div class="cl-mcont">
-<div class="page-head">
-<ol class="breadcrumb">
-<li><a href="/admin">Dashboard</a></li>
-<li class="active">Content Authors</li>
-</ol></div>
-<div class="row">
-<div class="col-md-12">
-<div class="block-flat">
-<div class="header">							
-<h3>Content Authors
-<div align="right">
-<button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
-</div>
-</h3>			
-</div><br>
-<form name='editarticle' id='edittable' method='post'><br>
-<center>
-<button type='submit' formaction="/Process/EditArticle/Delete" style="background-color: red; color: white;" class="btn btn-trans"><i class="fa "></i> Delete </button>
-<button type='submit' formaction="/Process/EditArticle/Active" style="background-color: green; color: white;" class="btn btn-trans"><i class="fa "></i> Activate </button>
-<button type='submit' formaction="/Process/EditArticle/Inactive" style="background-color: grey; color: white;" class="btn btn-trans"><i class="fa "></i> In-Active </button>
-</center>
-<div class="content">
-<div class="table-responsive">
-<table class="table table-bordered" id="datatable">
-<thead>
-<tr>
-<th></th>
-<th>Name</th>
-<th>Posts</th>
-<th>Status</th>
-<th>Settings</th>
-</tr>
-</thead>
-<tbody>
+    <div class="page-head">
+        <ol class="breadcrumb">
+            <li><a href="/admin">Dashboard</a></li>
+            <li class="active"> Team MEmbers</li>
+        </ol>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="block-flat">
+                <div class="header">							
+                    <h3>Team Members
+                        <div align="right">
+                            <button type="button" onclick="window.location.href='./<?php echo $_GET['url']; ?>/New'" class="btn btn-flat"><i class="fa fa-check"></i> Create New</button>
+                        </div>
+                    </h3>			
+                </div><br>
+                <form name='editarticle' id='edittable' method='post'><br>
+                    <center>
+                        <button type='submit' formaction="/Process/EditArticle/Delete" style="background-color: red; color: white;" class="btn btn-trans"><i class="fa "></i> Delete </button>
+                        <button type='submit' formaction="/Process/EditArticle/Active" style="background-color: green; color: white;" class="btn btn-trans"><i class="fa "></i> Activate </button>
+                        <button type='submit' formaction="/Process/EditArticle/Inactive" style="background-color: grey; color: white;" class="btn btn-trans"><i class="fa "></i> In-Active </button>
+                    </center>
+                    <div class="content">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="datatable">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>Name</th>
+                                        <th>Position</th>
+                                        <th>Email</th>
+                                        <th>Settings</th>
+                                    </tr>
+                                </thead>
+                            <tbody>
 <?php
-$Query = "SELECT * FROM articles WHERE category!='self' AND category!='x' AND category!='' AND type='author' AND trash='0' AND webid='$WebId'"; 
-$Result = mysqli_query($CwDb,$Query);
-while($Row = mysqli_fetch_assoc($Result)){
-$Row = PbUnSerial($Row);
-$ArticleCat = $Row['category'];
-$ArticleId = $Row['id'];
-$ArticleId = OtarEncrypt($key,$ArticleId);
-$query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0' AND webid='$WebId'"; 
-$result = mysqli_query($CwDb,$query);
-$row = mysqli_fetch_assoc($result);
-$row = CwOrganize($row,$Array); ?>
-<tr class="odd gradeX">
-<td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
-<td><?php echo $Row['name']; ?></td>
-<td><?php echo $row['name']; ?></td>
-<td><?php echo StatusName($Row['active']); ?></td>
-<td class="center"> 
-<div class="btn-group">
-<button class="btn btn-default btn-xs" type="button">Actions</button>
-<button data-toggle="dropdown" class="btn btn-xs btn-primary dropdown-toggle" type="button"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>
-<ul role="menu" class="dropdown-menu">
-<li><a href="/admin/Author/<?php echo $ArticleId; ?>">Edit</a></li>
-<!-- <li><a href="/Process/Copy/Author/<?php echo OtarEncrypt($key,$ArticleId); ?>">Copy</a></li> -->
-</ul></div></td>
-</tr>
-<?php } ?>									
-</tbody>
-</table>							
-</div>
-</div>
-</div>				
-</div>
-</div>
+$Query = "SELECT * FROM articles WHERE category!='self' AND category!='x' AND category!='' AND type='team' AND trash='0' AND webid='$WebId'"; 
+$Result = mysql_query($Query) or die(mysql_error());
+while($Row = mysql_fetch_array($Result)){
+    $Row = CwOrganize($Row,$Array);
+    $ArticleId = $Row['id'];
+    $ArticleId = OtarEncrypt($key,$ArticleId);
+?>
+                                <tr class="odd gradeX">
+                                    <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
+                                    <td><?php echo $Row['name']; ?></td>
+                                    <td><?php echo $Row['content']['position']; ?></td>
+                                    <td><?php echo $Row['other']['email']; ?></td>
+                                    <td class="center"> 
+                                        <div class="btn-group">
+                                            <button class="btn btn-default btn-xs" type="button">Actions</button>
+                                            <button data-toggle="dropdown" class="btn btn-xs btn-primary dropdown-toggle" type="button"><span class="caret"></span><span class="sr-only">Toggle Dropdown</span></button>
+                                            <ul role="menu" class="dropdown-menu">
+                                                <li><a href="/admin/Team/<?php echo $ArticleId; ?>">Edit</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+<?php } ?>
+                            </tbody>
+                        </table>							
+                    </div>
+                </div>
+            </div>				
+        </div>
+    </div>
       	</div>
 	</div> 
 </div>
-<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/Author'>
+<input type='hidden' name='redirect' value='<?php echo "http://$Website_Url_Auth"; ?>/admin/Team'>
 </form>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery-ui.js"></script>
 <script type="text/javascript" src="/admin/theme/cwadmin/header/js/jquery.jeditable.mini.js"></script>

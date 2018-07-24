@@ -43,9 +43,9 @@
 <tbody>
 <?php
 $Query = "SELECT * FROM users WHERE webid='$WebId'"; 
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-    $Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query) ;
+while($Row = mysqli_fetch_assoc($Result)){
+    $Row = CwOrganize($Row,$Array);
     $UserId = OtarEncrypt($key,$Row[id]);
     $Access = CwUserAccess($Row['info']['access']);
     $Status = CwUserStatus($Row['info']['status']);

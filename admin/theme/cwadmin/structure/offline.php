@@ -85,8 +85,8 @@
 </tr></thead>
 <tbody class="no-border-y">
 <?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ ?>
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){ ?>
 <tr>
 <td><img src='<?php echo $row['img']; ?>' height="200" width="200"></td>
 <td style="width:30%;"><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="1" value='<?php echo $row["list"]; ?>'></td>

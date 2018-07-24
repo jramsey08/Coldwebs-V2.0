@@ -46,19 +46,19 @@ $PageIds = OtarEncrypt($key, $PageIds);
 <optgroup label='Category'>
 <?php
 $Query = "SELECT * FROM articles WHERE type='category' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY id";
-$Result = mysql_query($Query) or die(mysql_error());
-while($row = mysql_fetch_array($Result)){
+$Result = mysqli_query($CwDb,$Query);
+while($row = mysqli_fetch_assoc($Result)){
 $ArticleId = $row['id'];
-$row = PbUnSerial($row);
+$row = CwOrganize($row,$Array);
     echo "<option value='$row[id]'"; if($Article['content']['internal'] == $ArticleId){ echo "selected=selected"; } if($row['active'] == "0"){echo "disabled";}echo ">"; echo $row['name']; echo "</option>"; 
 } ?></optgroup>
 <optgroup label='Articles'>
 <?php 
 $Query = "SELECT * FROM articles WHERE type='post' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY id";
-$Result = mysql_query($Query) or die(mysql_error());
-while($row = mysql_fetch_array($Result)){
-$ArticleId = $row[id];
-$row = PbUnSerial($row);
+$Result = mysqli_query($CwDb,$Query) or die(mysql_error());
+while($row = mysqli_fetch_assoc($Result)){
+$ArticleId = $row["id"];
+$row = CwOrganize($row,$Array);
     echo "<option value='$row[id]'"; if($Article['content']['internal'] == $ArticleId){ echo "selected=selected"; } if($row['active'] == "0"){echo "disabled";}echo ">"; echo $row['content']['name']; echo "</option>";
 } ?></optgroup>
 </select></div></div>

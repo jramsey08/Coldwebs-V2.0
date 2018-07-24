@@ -9,8 +9,8 @@
 
 <?php
 $query = "SELECT * FROM login_session WHERE userid='$Current_Admin_Id' AND active='1' AND trash='0' AND webid='$WebId' ORDER BY id DESC";
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
+$result = mysqli_query($CwDb,$query);
+$row = mysqli_fetch_assoc($result);
 
 $Incoming['pbsession'] = $row['id'];
 $Incoming['user'] = $Current_Admin_Id;

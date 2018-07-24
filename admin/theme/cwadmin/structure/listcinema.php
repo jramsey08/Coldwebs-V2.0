@@ -54,9 +54,9 @@
                                                 <select class="form-control" name='category'>
                                                     <option value="<?php echo $Article['category']; ?>">Select Below</option>
 <?php $query = "SELECT * FROM articles WHERE category='self' AND type='category' AND active='1' AND trash='0' AND webid='$WebId'"; 
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+$row = CwOrganize($row,$Array);
 echo "<option value='$row[id]'"; if($row['id'] == $Article['category']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option> <?php } ?>
                                                 </select>
                                             </div>
@@ -134,8 +134,8 @@ echo "<option value='$row[id]'"; if($row['id'] == $Article['category']){ echo "s
 </tr></thead>
 <tbody class="no-border-y">
 <?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND type='image' AND trash='0' AND webid='$WebId' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ 
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){ 
 if($Article['id'] == ""){
     #exit;
 } ?>
@@ -153,103 +153,136 @@ if($Article['id'] == ""){
 
 
 <div class="tab-pane" id="media">
-<div class="col-sm-12 col-md-12">
-<div class="header"><h3>Audio / Video Integration</h3>
-</div></div>
-<div class="row">
-<div class="col-sm-6 col-md-6">
-<div class="content">
-<div class="form-group">
-<label class="col-sm-3 control-label">Media Type</label>
-<div class="col-sm-6">
-<select class="form-control" name='codetype'>
-<option value='' <?php if($Article['content']['codetype'] == ""){ echo "selected='selected'"; } ?>>Select Video Format</option>
-<option value='youtube' <?php if($Article['content']['codetype'] == "youtube"){ echo "selected='selected'"; } ?>>Youtube</option>
-<option value='vimeo' <?php if($Article['content']['codetype'] == "vimeo"){ echo "selected='selected'"; } ?>>Vimeo</option>
-<option value='code' <?php if($Article['content']['codetype'] == "code"){ echo "selected='selected'"; } ?>>Embed Code</option>
-<option value='videofile' <?php if($Article['content']['codetype'] == "videofile"){ echo "selected='selected'"; } ?>>Video File (*Uploaded)</option>
-<option value='audiofile' <?php if($Article['content']['codetype'] == "audiofile"){ echo "selected='selected'"; } ?>>Audio File (*Uploaded)</option>
-</select></div></div><br><br>
-<div class="form-group">
-<label class="col-sm-3 control-label">Upload Media(*)</label>
-<div class="col-sm-6">
-<div class="fileinput fileinput-new" data-provides="fileinput">
-<span class="btn btn-primary btn-file">
-<span class="fileinput-new">Select file(s)</span>
-<span class="fileinput-exists">Change</span><input type="file" name="mediafile[]"></span>
-<a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">&times;</a>
-</div></div></div>
-</div></div>
-<div class="col-sm-6 col-md-6">
-<div class="form-group">
-<label class="col-sm-3 control-label">Embed Code</label>
-<div class="col-sm-6">
-<textarea name='code' class="form-control"><?php echo $Article['content']['code']; ?></textarea>
-</div></div></div>
-</div></div>
+    <div class="col-sm-12 col-md-12">
+        <div class="header">
+            <h3>Audio / Video Integration</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-12">
+            <div class="col-sm-6 col-md-6">
+                <div class="content">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Media Type</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" name='codetype'>
+                                <option value='' <?php if($Article['content']['codetype'] == ""){ echo "selected='selected'"; } ?>>Select Video Format</option>
+                                <option value='youtube' <?php if($Article['content']['codetype'] == "youtube"){ echo "selected='selected'"; } ?>>Youtube</option>
+                                <option value='vimeo' <?php if($Article['content']['codetype'] == "vimeo"){ echo "selected='selected'"; } ?>>Vimeo</option>
+                                <option value='code' <?php if($Article['content']['codetype'] == "code"){ echo "selected='selected'"; } ?>>Embed Code</option>
+                                <option value='videofile' <?php if($Article['content']['codetype'] == "videofile"){ echo "selected='selected'"; } ?>>Video File (*Uploaded)</option>
+                                <option value='audiofile' <?php if($Article['content']['codetype'] == "audiofile"){ echo "selected='selected'"; } ?>>Audio File (*Uploaded)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Upload Media(*)</label>
+                        <div class="col-sm-6">
+                            <div class="fileinput fileinput-new" data-provides="fileinput">
+                                <span class="btn btn-primary btn-file">
+                                <span class="fileinput-new">Select file(s)</span>
+                                <span class="fileinput-exists">Change</span><input type="file" name="mediafile[]"></span>
+                                <a href="#" class="close fileinput-exists" data-dismiss="fileinput" style="float: none">&times;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-6">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Embed Code</label>
+                    <div class="col-sm-6">
+                        <textarea name='code' class="form-control"><?php echo $Article['content']['code']; ?></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-12">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Link External Video</label>
+                <div class="col-sm-6">
+                    <input type="hidden" name='videolinks' placeholder="Enter Video Urls" class="tags" value=''>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div class="tab-pane cont" id="vids">
-<div class="row">
-<div class="col-md-12">
-<div class="header"><h3>Cinema Vids</h3></div>
-<div class="content">
-<div class="table-responsive">
-<table class="table no-border hover">
-<thead class="no-border">
-<tr>
-<th style="width:30%;"><strong>Image</strong></th>
-<th style="width:10%;"><strong>Order</strong></th>
-<th style="width:20%;"><strong>Name</strong></th>
-<th style="width:40%;"><strong>Url</strong></th>
-<th style="width:60%;"><strong>Controls</strong></th>
-<th style="width:50%;"><strong>Show</strong></th>
-<th style="width:50%;"><strong>Hide</strong></th>
-<th style="width:50%;"><strong>Delete</strong></th>
-</tr></thead>
-<tbody class="no-border-y">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="header">
+                <h3>Cinema Vids</h3>
+            </div>
+            <div class="content">
+                <div class="table-responsive">
+                    <table class="table no-border hover">
+                        <thead class="no-border">
+                            <tr>
+                                <th style="width:30%;"><strong>Image</strong></th>
+                                <th style="width:10%;"><strong>Order</strong></th>
+                                <th style="width:20%;"><strong>Name</strong></th>
+                                <th style="width:40%;"><strong>Url</strong></th>
+                                <th style="width:60%;"><strong>Controls</strong></th>
+                                <th style="width:50%;"><strong>Show</strong></th>
+                                <th style="width:50%;"><strong>Hide</strong></th>
+                                <th style="width:50%;"><strong>Delete</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody class="no-border-y">
 <?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND type='video' AND trash='0' AND webid='$WebId' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ 
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){ 
 if($Article['id'] == ""){
     #exit;
 }
 if($row['img'] == ""){
    $row['img'] = "/admin/theme/cwadmin/uploads/video.svg";
 }?>
-<tr>
-<td><img class='ImageSrc' src='<?php echo $row['img']; ?>' height="200" width="200"></td>
-<td style="width:10%;" class='ImageOrder'><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="10" value='<?php echo $row["list"]; ?>'></td>
-<td style="width:30%;" class='TrackName'><input type='text' name="TrackName[<?php echo $row['id']; ?>]" size="30" value='<?php echo $row["name"]; ?>'></td>
-<td style="width:60%;"><textarea name="ImageUrl[<?php echo $row['id']; ?>]" disabled><?php echo $row["url"]; ?></textarea></td>
-<td style="width:60%;"><button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal<?php echo $row['id']; ?>">Play Video</button></td>
-<td><input type="radio" name="cinemaactive[<?php echo $row['id']; ?>]" value="1" <?php if($row['active'] == "1"){ echo "checked"; } ?>></td>
-<td><input type="radio" name="cinemaactive[<?php echo $row['id']; ?>]" value="0" <?php if($row['active'] == "0"){ echo "checked"; } ?>></td>
-<td><input type="checkbox" name="removegal[]" value="<?php echo $row['id']; ?>"></td>
-<!-- Modal -->
-<div class="modal fade" id="myModal<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel"><?php echo $row['name']; ?></h4>
-      </div>
-      <div class="modal-body">
-        <video width="550" height="300" controls>
-            <source src="<?php echo $row["url"]; ?>" type="video/mp4">
-            <source src="mov_bbb.ogg" type="video/ogg">
-            Your browser does not support HTML5 video.
-       </video>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
+                            <tr>
+                                <td><img class='ImageSrc' src='<?php echo $row['img']; ?>' height="200" width="200"></td>
+                                <td style="width:10%;" class='ImageOrder'><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="10" value='<?php echo $row["list"]; ?>'></td>
+                                <td style="width:30%;" class='TrackName'><input type='text' name="TrackName[<?php echo $row['id']; ?>]" size="30" value='<?php echo $row["name"]; ?>'></td>
+                                <td style="width:60%;"><textarea name="ImageUrl[<?php echo $row['id']; ?>]" disabled><?php echo $row["url"]; ?></textarea></td>
+                                <td style="width:60%;"><button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal<?php echo $row['id']; ?>">Play Video</button></td>
+                                <td><input type="radio" name="cinemaactive[<?php echo $row['id']; ?>]" value="1" <?php if($row['active'] == "1"){ echo "checked"; } ?>></td>
+                                <td><input type="radio" name="cinemaactive[<?php echo $row['id']; ?>]" value="0" <?php if($row['active'] == "0"){ echo "checked"; } ?>></td>
+                                <td><input type="checkbox" name="removegal[]" value="<?php echo $row['id']; ?>"></td>
+                                <!-- Modal -->
+                                <div class="modal fade" id="myModal<?php echo $row['id']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel"><?php echo $row['name']; ?></h4>
+                                            </div>
+                                            <div class="modal-body">
+<?php if($row["gallery"] == "videolink"){ ?>
+                                                <iframe width="560" height="315" src="<?php echo $row["url"]; ?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<?php }else{ ?>
+                                                <video width="550" height="300" controls>
+                                                    <source src="<?php echo $row["url"]; ?>" type="video/mp4">
+                                                    <source src="mov_bbb.ogg" type="video/ogg">
+                                                    Your browser does not support HTML5 video.
+                                               </video>
+<?php } ?>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </tr>
+<?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-</tr><?php } ?>
-</tbody></table>
-</div></div></div></div>
 </div>
 
 
@@ -264,7 +297,7 @@ if($row['img'] == ""){
         <div class="col-sm-12 col-md-12">
             <?php $GalRand = "Galupload-" . RandomCode("50"); ?>
             <input type="hidden" name='galrand' value='<?php echo $GalRand; ?>'>
-            <iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' scrolling='no' frameborder="0" height="600" width="720" ></iframe>
+            <iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' frameborder="0" height="600" width="720" ></iframe>
         </div>
     </div>
 </div>
@@ -286,14 +319,35 @@ if($row['img'] == ""){
                 </div>
                 <br><br>
                 <div class="form-group">
+                    <label class="col-sm-3 control-label">Author</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name='author'>
+<?php if($UserSiteAccess['editauthor'] == "1"){ ?>
+                            <option value='' <?php if($Article['other']['author'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
+<?php
+}
+if($UserSiteAccess['editauthor'] == "1"){ 
+$Query = "SELECT * FROM articles WHERE type='author' AND active='1' AND trash='0' AND webid='$WebId' ORDER BY id DESC";
+}else{
+$Query = "SELECT * FROM articles WHERE type='author' AND active='1' AND trash='0' AND webid='$WebId' AND category='$Current_Admin_Id' ORDER BY id DESC";
+}
+$Result = mysql_query($Query) or die(mysql_error());
+while($Row = mysql_fetch_array($Result)){
+$Row = PbUnSerial($Row); ?>
+                            <option value='<?php echo $Row['id']; ?>' <?php if($Article['other']['author'] == $Row['id']){ echo "selected='selected'"; } ?>><?php echo $Row['name']; ?></option>
+<?php } ?>
+                        </select>
+                    </div>
+                </div><br><br>
+                <div class="form-group">
                     <label class="col-sm-3 control-label">Music Artist</label>
                     <div class="col-sm-6">
                         <select class="form-control" name='artist'>
                             <option value="<?php echo $Article['other']["artist"]; ?>">Select Below</option>
 <?php
 $query = "SELECT * FROM articles WHERE type='post-artist' AND active='1' AND trash='0' AND webid='$WebId' ORDER BY RAND() LIMIT 0,4";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
     $row = CwOrganize($row,$Array);
     echo "<option value='$row[id]'"; if($row['id'] == $Article['other']["artist"]){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option>
 <?php } ?>
@@ -371,28 +425,55 @@ while($row = mysql_fetch_array($result)){
 
 
 <div class="panel panel-default">
-<div class="panel-heading">
-<h4 class="panel-title">
-<a data-toggle="collapse" data-parent="#accordion" href="#CwLayout">
-<i class="fa "></i>Structure</a>
-</h4></div>
-<div id="CwLayout" class="panel-collapse collapse">
-<div class="panel-body">
-<div class="content">
-<div class="form-group">
-<label class="col-sm-3 control-label">Type</label>
-<div class="col-sm-6">
-<select class="form-control" name='structure'>
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#CwLayout">
+            <i class="fa "></i>Structure</a>
+        </h4>
+    </div>
+    <div id="CwLayout" class="panel-collapse collapse">
+        <div class="panel-body"> 
+            <div class="content">
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Template</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" name='maintheme' onchange="switchTem(this.value)">
+                            <option value='<?php echo $StructureTheme; ?>' <?php if( $PageInfo['template'] == 'default'){ echo "selected=selected"; } ?>>Default</option> 
+<?php $Templates = Pulltheme("../theme/","0",$WebId);
+foreach ($Templates as $Template){
+    echo "<option value='$Template[0]'"; if($PageInfo['template'] == $Template[0]){ echo "selected=selected"; } echo ">$Template[1]</option>"; 
+} ?>
+                        </select>
+                    </div>
+                </div>
+                <br><br>
+                <div class="form-group" id='switchTem'>
+                    <label class="col-sm-3 control-label">Type</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" name='structure'>
+                            <option value="default">Default</option>
 <?php
-$PageType = $Article['type'];
+$Category = $Article['category'];
+if($Category == "page"){
+    $PageType = "page";
+}else{
+    $PageType = $Article['type'];
+}
 $CurrentLayout = $Article['other']['structure'];
+$PageType = "page";
 $Layouts = $ThemeArray['structure'][$PageType];
-echo "<option value='default'"; if( $PageInfo['template'] == 'default'){ echo "selected=selected"; } echo ">Default</option>"; 
-foreach($ThemeArray['structure']["$PageType"] as $Layout=>$x_value){ 
-    echo "<option value='$Layout'"; if( $CurrentLayout == $Layout){ echo "selected=selected"; } echo ">$Layout</option>"; 
+if($PageType == ""){$PageType = "page"; }
+foreach($Layouts as $Layout=>$x_value){
+    echo "<option value='$Layout'"; if($CurrentLayout == $Layout){ echo "selected=selected"; } echo ">$Layout</option>";
 }  ?>
-</select></div></div>
-</div></div></div></div>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

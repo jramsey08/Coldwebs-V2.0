@@ -3,21 +3,21 @@
     <div class="row">
         <div class="col-md-3 col-sm-6">
             <div class="fd-tile detail clean tile-purple">
-              <div class="content"><h1 class="text-left"><?php TotalVisitors($Array); ?></h1><p>Website Views</p></div>
+              <div class="content"><h1 class="text-left"><?php echo $TotalVisitors; ?></h1><p>Website Views</p></div>
               <div class="icon"><i class="fa fa-flag"></i></div>
               <a class="details" href="#">Details <span><i class="fa fa-arrow-circle-right pull-right"></i></span></a>
             </div>
         </div>
           <div class="col-md-3 col-sm-6">
             <div class="fd-tile detail clean tile-green">
-              <div class="content"><h1 class="text-left"><?php TodayVisitors($Array); ?></h1><p>Today's Views</p></div>
+              <div class="content"><h1 class="text-left"><?php echo $TodayVisitors; ?></h1><p>Today's Views</p></div>
               <div class="icon"><i class="fa fa-comments"></i></div>
               <a class="details" href="#">Details <span><i class="fa fa-arrow-circle-right pull-right"></i></span></a>
             </div>
         </div>
          <div class="col-md-3 col-sm-6">
             <div class="fd-tile detail clean tile-prusia">
-              <div class="content"><h1 class="text-left"><?php LiveVisitor($Array); ?></h1><p>Live Visitors</p></div>
+              <div class="content"><h1 class="text-left"><?php echo $LiveVisitors; ?></h1><p>Live Visitors</p></div>
               <div class="icon"><i class="fa fa-heart"></i></div>
               <a class="details" href="#">Details <span><i class="fa fa-arrow-circle-right pull-right"></i></span></a>
             </div>
@@ -125,9 +125,9 @@
                             <tbody class="no-border-y">
 <?php
 $Query = "SELECT * FROM tasks WHERE user='$Current_Admin_Id' AND active='1' AND trash='0' AND webid='$WebId' OR  user='0' AND active='1' AND trash='0' AND webid='$WebId' ORDER BY id DESC LIMIT 0,5"; 
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-$row = PbUnSerial($row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+$row = CwOrganize($row,$Array);
 ?>
                                 <tr class="items">
                                     <td style="width: 10%;">
@@ -181,20 +181,20 @@ $row = PbUnSerial($row);
                             <tbody>
 <?php
 $Query = "SELECT * FROM users WHERE email!='' AND webid='$WebId' ORDER BY id DESC LIMIT 0,5"; 
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-    $Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+    $Row = CwOrganize($Row,$Array);
     if($Row['info']['access'] != "0"){
         $Access = CwUserAccess($Row['info']['access']);
         $Status = CwUserStatus($Row['info']['status']);
-        if(mysql_real_escape_string($Row['name']) == ""){
+        if(mysqli_real_escape_string($CwDb,$Row['name']) == ""){
             $Row['name'] = $Row['info']['firstname'] . " " . $Row['info']['lastname'];
         }
 ?>
                                 <tr class="odd gradeX">
-                                    <td><?php echo mysql_real_escape_string($Row['name']); ?></td>
-                                    <td><?php echo mysql_real_escape_string($Access); ?></td>
-                                    <td><?php echo mysql_real_escape_string($Status); ?></td>
+                                    <td><?php echo mysqli_real_escape_string($CwDb,$Row['name']); ?></td>
+                                    <td><?php echo mysqli_real_escape_string($CwDb,$Access); ?></td>
+                                    <td><?php echo mysqli_real_escape_string($CwDb,$Status); ?></td>
                                     <td class="center"> 
                                         <div class="btn-group">
                                             <button class="btn btn-default btn-xs" type="button">Actions</button>

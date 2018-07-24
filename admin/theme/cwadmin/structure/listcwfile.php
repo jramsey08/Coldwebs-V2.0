@@ -126,8 +126,8 @@ $newToken = generateFormToken('cwfile');
 </tr></thead>
 <tbody class="no-border-y">
 <?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND type='image' AND trash='0' AND active='1' AND webid='$WebId' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ 
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){ 
 if($Article['id'] == ""){
     #exit;
 } ?>
@@ -155,7 +155,7 @@ if($Article['id'] == ""){
         <div class="col-sm-12 col-md-12">
             <?php $GalRand = "Galupload-" . RandomCode("50"); ?>
             <input type="hidden" name='galrand' value='<?php echo $GalRand; ?>'>
-            <iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' scrolling='no' frameborder="0" height="600" width="720" ></iframe>
+            <iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' frameborder="0" height="600" width="720" ></iframe>
         </div>
     </div>
 </div>

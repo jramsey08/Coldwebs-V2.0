@@ -44,8 +44,8 @@
 <select class="form-control" name='category'>
 <option value="<?php echo $Menu['category']; ?>">Select Below</option>
 <?php $query = "SELECT * FROM admin WHERE category='self' AND type='menu' AND active='1' AND trash='0' AND id!='$Menu[id]'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
 $row = PbUnSerial($row);
 ?>
     <option value="<?php echo $row['id']; ?>" <?php if($row['id'] == $Menu['category']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option>
@@ -58,8 +58,8 @@ $row = PbUnSerial($row);
 <select class="form-control" name='access'>
 <option value='' <?php if($Menu['feat'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
 <?php $query = "SELECT * FROM cwoptions WHERE type='access' AND active='1' AND trash='0' ORDER BY name";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
 ?>
     <option value="<?php echo $row['content']; ?>" <?php if($row['content'] == $Menu['access']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option>
 <?php } ?>

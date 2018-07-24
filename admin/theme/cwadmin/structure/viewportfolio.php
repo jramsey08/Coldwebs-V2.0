@@ -50,9 +50,9 @@
                                                 <select class="form-control" name='category'>
                                                     <option value="<?php echo $Article['category']; ?>">Select Below</option>
 <?php $query = "SELECT * FROM articles WHERE category='self' AND type='category' AND active='1' AND trash='0' AND webid='$WebId'"; 
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+$row = CwOrganize($row,$Array);
 echo "<option value='$row[id]'"; if($row['id'] == $Article['category']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option> <?php } ?>
                                                 </select>
                                             </div>
@@ -64,9 +64,9 @@ echo "<option value='$row[id]'"; if($row['id'] == $Article['category']){ echo "s
                                                 <select class="form-control" name='portfoliotype'>
                                                     <option value="<?php echo $Article['content']['portfoliotype']; ?>">Select Below</option>
 <?php $query = "SELECT * FROM cwoptions WHERE type='portfolio' AND active='1' AND trash='0' ORDER BY name"; 
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+$row = CwOrganize($row,$Array);
 echo "<option value='$row[id]'"; if($row['id'] == $Article['content']['portfoliotype']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option> <?php } ?>
                                                 </select>
                                             </div>
@@ -78,9 +78,9 @@ echo "<option value='$row[id]'"; if($row['id'] == $Article['content']['portfolio
                                                 <select class="form-control" name='client'>
                                                     <option value="<?php echo $Article['other']['client']; ?>">Select Below</option>
 <?php $query = "SELECT * FROM users WHERE client='1' AND webid='$WebId'";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
+$row = CwOrganize($row,$Array);
 echo "<option value='$row[id]'"; if($row['id'] == $Article['other']['client']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option> <?php } ?>
                                                 </select>
                                             </div>
@@ -200,8 +200,8 @@ echo "<option value='$row[id]'"; if($row['id'] == $Article['other']['client']){ 
                                                 </thead>
                                                 <tbody class="no-border-y">
 <?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND type='image' AND trash='0' AND webid='$WebId' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ 
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){ 
 if($Article['id'] == ""){
     #exit;
 } ?>
@@ -236,14 +236,35 @@ if($Article['id'] == ""){
                                         </div>
                                         <br><br>
                                         <div class="form-group">
+                                            <label class="col-sm-3 control-label">Author</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" name='author'>
+                        <?php if($UserSiteAccess['editauthor'] == "1"){ ?>
+                                                    <option value='' <?php if($Article['other']['author'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
+                        <?php
+                        }
+                        if($UserSiteAccess['editauthor'] == "1"){ 
+                        $Query = "SELECT * FROM articles WHERE type='author' AND active='1' AND trash='0' AND webid='$WebId' ORDER BY id DESC";
+                        }else{
+                        $Query = "SELECT * FROM articles WHERE type='author' AND active='1' AND trash='0' AND webid='$WebId' AND category='$Current_Admin_Id' ORDER BY id DESC";
+                        }
+                        $Result = mysql_query($Query) or die(mysql_error());
+                        while($Row = mysql_fetch_array($Result)){
+                        $Row = PbUnSerial($Row); ?>
+                                                    <option value='<?php echo $Row['id']; ?>' <?php if($Article['other']['author'] == $Row['id']){ echo "selected='selected'"; } ?>><?php echo $Row['name']; ?></option>
+                        <?php } ?>
+                                                </select>
+                                            </div>
+                                        </div><br><br>
+                                        <div class="form-group">
                                             <label class="col-sm-3 control-label">Music Artist</label>
                                             <div class="col-sm-9">
                                                 <select class="form-control" name='artist'>
                                                     <option value="<?php echo $Article['other']["artist"]; ?>">Select Below</option>
 <?php
 $query = "SELECT * FROM articles WHERE type='post-artist' AND active='1' AND trash='0' AND webid='$WebId' ORDER BY RAND() LIMIT 0,4";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
     $row = CwOrganize($row,$Array);
     echo "<option value='$row[id]'"; if($row['id'] == $Article['other']["artist"]){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option>
 <?php } ?>
@@ -265,7 +286,7 @@ while($row = mysql_fetch_array($result)){
                                 <div class="col-sm-12 col-md-12">
                                     <?php $GalRand = "Galupload-" . RandomCode("50"); ?>
                                     <input type="hidden" name='galrand' value='<?php echo $GalRand; ?>'>
-                                    <iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' scrolling='no' frameborder="0" height="600" width="720" ></iframe>
+                                    <iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' frameborder="0" height="600" width="720" ></iframe>
                                 </div>
                             </div>
                         </div>
@@ -354,9 +375,10 @@ $PageType = $Article['type'];
 $CurrentLayout = $Article['other']['structure'];
 $Layouts = $ThemeArray['structure'][$PageType];
 echo "<option value='default'"; if( $PageInfo['template'] == 'default'){ echo "selected=selected"; } echo ">Default</option>"; 
+if(is_array($ThemeArray['structure']["$PageType"])){
 foreach($ThemeArray['structure']["$PageType"] as $Layout=>$x_value){ 
     echo "<option value='$Layout'"; if( $CurrentLayout == $Layout){ echo "selected=selected"; } echo ">$Layout</option>"; 
-}  ?>
+}}  ?>
                                         </select>
                                     </div>
                                 </div>

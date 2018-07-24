@@ -5,8 +5,7 @@ if($Dynamic_Setup == "1"){
     $PostId = $Array['dynamicarticle']['id'];
     if($AddHits == "1"){
     $NewHits = $DynamicHits + 1;
-    $result = mysql_query("UPDATE articles SET hits='$NewHits' WHERE id='$PostId' AND webid='$WebId'") 
-    or die(mysql_error());  
+    $result = mysqli_query("UPDATE articles SET hits='$NewHits' WHERE id='$PostId' AND webid='$WebId'");  
     }
 }else{
     $PostId = $Array['article']['id'];
@@ -14,10 +13,10 @@ if($Dynamic_Setup == "1"){
 
 
 $query = "SELECT * FROM page_function WHERE active='1' AND trash='0' AND page='$PostId' AND template='$theme' AND webid='$WebId' ORDER BY list ASC";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query) ;
+while($row = mysqli_fetch_assoc($result)){
     $Function_Type = $row['function'];
-    $row = PbUnSerial($row);
+    $row = CwOrganize($row,$Array);
     if($row['contents']['category'] == ""){ $row['contents']['category'] = "all"; }
     $Function_Array = $row['contents'];
     $Array['function'] = $Function_Array;

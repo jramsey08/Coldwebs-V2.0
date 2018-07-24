@@ -36,18 +36,18 @@
 <tbody>
 <?php
 $Query = "SELECT * FROM articles WHERE category!='self' AND type='post-video' AND trash='0' AND webid='$WebId'"; 
-$Result = mysql_query($Query) or die(mysql_error());
-while($Row = mysql_fetch_array($Result)){
-$Row = PbUnSerial($Row);
+$Result = mysqli_query($CwDb,$Query);
+while($Row = mysqli_fetch_assoc($Result)){
+$Row = CwOrganize($Row,$Array);
 $ArticleCat = $Row['category'];
 $ArticleId = $Row['id'];
 $query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0' AND webid='$WebId'"; 
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
-$row = PbUnSerial($row);
+$result = mysqli_query($CwDb,$query);
+$row = mysqli_fetch_assoc($result);
+$row = CwOrganize($row,$Array);
 $querY = "SELECT * FROM images WHERE album='$ArticleId' AND active='1' AND trash='0' AND webid='$WebId'"; 
-$resulT = mysql_query($querY) or die(mysql_error());
-$roW = mysql_fetch_array($resulT);
+$resulT = mysqli_query($CwDb,$querY);
+$roW = mysqli_fetch_assoc($resulT);
 $GalleryCount = count($roW);
 $GalleryCount = $GalleryCount / "2";
 $GalleryCount = $GalleryCount - "1";

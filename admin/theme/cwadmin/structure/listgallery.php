@@ -22,123 +22,139 @@
 <div class="tab-content">
 
 <div class="tab-pane active cont" id="basic">
-<div class="row">
-<form role="form" method='post' action='/Process/Blog' enctype="multipart/form-data">
-
-<div class="col-sm-12 col-md-12">
-<div class="col-sm-6 col-md-6">
-<div class="header"><h3>Basic Information</h3></div></div>
-</div>
-<div class="content">
-<div class="col-sm-6 col-md-6">
-<div class="form-group">
-<label class="col-sm-3 control-label">Title</label>
-<div class="col-sm-9">
-<input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $Article['name']; ?>'>
-</div></div><br><br>
-<div class="form-group">
-<label class="col-sm-3 control-label">Url</label>
-<div class="col-sm-9">
-<div class="input-group">
-<span class="input-group-addon">@</span>
-<input type="text" class="form-control" name='url' value="<?php echo $Article['url']; ?>" placeholder="Example: site.com/'URL'">
-</div></div></div><br><br>
-<div class="form-group">
-<label class="col-sm-3 control-label">Category</label>
-<div class="col-sm-9">
-<select class="form-control" name='category'>
-<option value="<?php echo $Article['category']; ?>">Select Below</option>
-<?php $query = "SELECT * FROM articles WHERE category='self' AND type='category' AND active='1' AND trash='0' AND webid='$WebId'"; 
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
-$row = PbUnSerial($row);
-echo "<option value='$row[id]'"; if($row['id'] == $Article['category']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option> <?php } ?>
-</select></div></div><br><br>
-</div>
-
-                                    <div class="col-sm-6 col-md-6">
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Date</label>
-                                            <div class="col-sm-9">
-                                                <input type="date" name='date_created' placeholder="Enter Title" class="form-control" value='<?php echo date("Y-m-d",$Article['date_created']); ?>'>
+    <div class="row">
+    <form role="form" method='post' action='/Process/Blog' enctype="multipart/form-data">
+    
+    <div class="col-sm-12 col-md-12">
+    <div class="col-sm-6 col-md-6">
+    <div class="header"><h3>Basic Information</h3></div></div>
+    </div>
+    <div class="content">
+    <div class="col-sm-6 col-md-6">
+    <div class="form-group">
+    <label class="col-sm-3 control-label">Title</label>
+    <div class="col-sm-9">
+    <input type="text" name='name' placeholder="Enter Title" class="form-control" value='<?php echo $Article['name']; ?>'>
+    </div></div><br><br>
+    <div class="form-group">
+    <label class="col-sm-3 control-label">Url</label>
+    <div class="col-sm-9">
+    <div class="input-group">
+    <span class="input-group-addon">@</span>
+    <input type="text" class="form-control" name='url' value="<?php echo $Article['url']; ?>" placeholder="Example: site.com/'URL'">
+    </div></div></div><br><br>
+    <div class="form-group">
+    <label class="col-sm-3 control-label">Category</label>
+    <div class="col-sm-9">
+    <select class="form-control" name='category'>
+    <option value="<?php echo $Article['category']; ?>">Select Below</option>
+    <?php $query = "SELECT * FROM articles WHERE category='self' AND type='category' AND active='1' AND trash='0' AND webid='$WebId'"; 
+    $result = mysql_query($query) or die(mysql_error());
+    while($row = mysql_fetch_array($result)){
+    $row = PbUnSerial($row);
+    echo "<option value='$row[id]'"; if($row['id'] == $Article['category']){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option> <?php } ?>
+    </select></div></div><br><br>
+    </div>
+    
+                                        <div class="col-sm-6 col-md-6">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Date</label>
+                                                <div class="col-sm-9">
+                                                    <input type="date" name='date_created' placeholder="Enter Title" class="form-control" value='<?php echo date("Y-m-d",$Article['date_created']); ?>'>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <br><br>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Featured</label>
-                                            <div class="col-sm-9">
-                                                <select class="form-control" name='feat'>
-                                                    <option value='0' <?php if($Article['feat'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
-                                                    <option value='0' <?php if($Article['feat'] == "0"){ echo "selected='selected'"; } ?>>No</option>
-                                                    <option value='1' <?php if($Article['feat'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
-                                                </select>
+                                            <br><br>
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Featured</label>
+                                                <div class="col-sm-9">
+                                                    <select class="form-control" name='feat'>
+                                                        <option value='0' <?php if($Article['feat'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
+                                                        <option value='0' <?php if($Article['feat'] == "0"){ echo "selected='selected'"; } ?>>No</option>
+                                                        <option value='1' <?php if($Article['feat'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <br><br>
-<div class="form-group">
-<label class="col-sm-3 control-label">Featured</label>
-<div class="col-sm-9">
-<select class="form-control" name='feat'>
-<option value='0' <?php if($Article['feat'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
-<option value='0' <?php if($Article['feat'] == "0"){ echo "selected='selected'"; } ?>>No</option>
-<option value='1' <?php if($Article['feat'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
-</select></div></div><br><br>
-<div class="form-group">
-<label class="col-sm-3 control-label">Allow Comments</label>
-<div class="col-sm-9">
-<select class="form-control" name='comment'>
-<option value='0' <?php if($Article['other']['comment'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
-<option value='0' <?php if($Article['other']['comment'] == "0"){ echo "selected='selected'"; } ?>>No</option>
-<option value='1' <?php if($Article['other']['comment'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
-</select></div></div>
+                                            <br><br>
+    <div class="form-group">
+    <label class="col-sm-3 control-label">Featured</label>
+    <div class="col-sm-9">
+    <select class="form-control" name='feat'>
+    <option value='0' <?php if($Article['feat'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
+    <option value='0' <?php if($Article['feat'] == "0"){ echo "selected='selected'"; } ?>>No</option>
+    <option value='1' <?php if($Article['feat'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
+    </select></div></div><br><br>
+    <div class="form-group">
+    <label class="col-sm-3 control-label">Allow Comments</label>
+    <div class="col-sm-9">
+    <select class="form-control" name='comment'>
+    <option value='0' <?php if($Article['other']['comment'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
+    <option value='0' <?php if($Article['other']['comment'] == "0"){ echo "selected='selected'"; } ?>>No</option>
+    <option value='1' <?php if($Article['other']['comment'] == "1"){ echo "selected='selected'"; } ?>>Yes</option>
+    </select></div></div>
+    </div>
+    </div>
+        <div class="col-sm-12 col-md-12">
+            <div class="form-group">
+                <textarea name='content' rows="300"  id='editor'><?php echo $Article['info']; ?></textarea>
+            </div>
+        </div>
+    </div>
 </div>
 
-
-</div>
-
-
-
-<div class="col-sm-12 col-md-12">
-<div class="form-group">
-<textarea name='content' rows="300"  id='editor'><?php echo $Article['info']; ?></textarea>
-</div></div>
-
-
-</div></div>
 
 <div class="tab-pane cont" id="gallery">
-<div class="row">
-<div class="col-md-12">
-<div class="header"><h3>Gallery</h3></div>
-<div class="content">
-<div class="table-responsive">
-<table class="table no-border hover">
-<thead class="no-border">
-<tr>
-<th style="width:15%;"><strong>Image</strong></th>
-<th style="width:10%;"><strong>Order</strong></th>
-<th style="width:50%;"><strong>Url</strong></th>
-<th style="width:40%;"><strong>Show</strong></th>
-<th style="width:40%;"><strong>Hide</strong></th>
-<th style="width:40%;"><strong>Delete</strong></th>
-</tr></thead>
-<tbody class="no-border-y">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="header">
+                <h3>Gallery</h3>
+            </div>
+            <div class="content">
+                <div class="table-responsive">
+                    <table class="table no-border hover">
+                        <thead class="no-border">
+                            <tr>
+                                <th style="width:15%;"><strong>Image</strong></th>
+                                <th style="width:10%;"><strong>Order</strong></th>
+                                <th style="width:50%;"><strong>Url</strong></th>
+<?php if(is_array($ThemeGalleryOptions)){ ?>
+                                <th style="width:50%;"><strong>Options</strong></th>
+<?php } ?>
+                                <th style="width:40%;"><strong>Show</strong></th>
+                                <th style="width:40%;"><strong>Hide</strong></th>
+                                <th style="width:40%;"><strong>Delete</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody class="no-border-y">
 <?php $query = "SELECT * FROM images WHERE album='$Article[id]' AND type='image' AND trash='0' AND webid='$WebId' ORDER BY list";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){ 
+$result = mysqli_query($CwDb,$query) ;
+while($row = mysqli_fetch_assoc($result)){ 
 if($Article['id'] == ""){
     #exit;
 } ?>
-<tr>
-<td><a href="/admin/ImgRotate/<?php echo OtarEncrypt($key, $row['id']); ?>"><img class='ImgSrc' src='<?php echo $row['img']; ?>' height="200" width="200"></a></td>
-<td style="width:10%;" class='ImageOrder'><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="10" value='<?php echo $row["list"]; ?>'></td>
-<td style="width:60%;" class='ImageUrl'><input type='text' name="ImageUrl[<?php echo $row['id']; ?>]" size="80" value='<?php echo $row["url"]; ?>'></td>
-<td><input type="radio" name="Imageactive[<?php echo $row['id']; ?>]" value="1" <?php if($row['active'] == "1"){ echo "checked"; } ?>></td>
-<td><input type="radio" name="Imageactive[<?php echo $row['id']; ?>]" value="0" <?php if($row['active'] == "0"){ echo "checked"; } ?>></td>
-<td><input type="checkbox" name="removegal[]" value="<?php echo $row['id']; ?>"></td>
-</tr><?php } ?>
-</tbody></table>
-</div></div></div></div>
+                            <tr>
+                                <td><a href="/admin/ImgRotate/<?php echo OtarEncrypt($key, $row['id']); ?>"><img class='ImgSrc' src='<?php echo $row['img']; ?>' height="200" width="200"></a></td>
+                                <td style="width:10%;" class='ImageOrder'><input type='text' name="ImageOrder[<?php echo $row['id']; ?>]" size="10" value='<?php echo $row["list"]; ?>'></td>
+                                <td style="width:60%;" class='ImageUrl'><input type='text' name="ImageUrl[<?php echo $row['id']; ?>]" size="80" value='<?php echo $row["url"]; ?>'></td>
+                                <td style="width:60%;" class='ImageUrl'>
+<?php if(is_array($ThemeGalleryOptions)){ ?>
+                                <select name="ImgOption[<?php echo $row['id']; ?>]">
+<?php foreach($ThemeGalleryOptions as $key => $value){ ?>
+                                    <option value="<?php echo $value; ?>" <?php if($row["gallery"] == $value){ echo "selected"; } ?>><?php echo $key; ?></option>
+<?php } ?>
+                                </select>
+                            </td>
+<?php } ?>
+                                <td><input type="radio" name="Imageactive[<?php echo $row['id']; ?>]" value="1" <?php if($row['active'] == "1"){ echo "checked"; } ?>></td>
+                                <td><input type="radio" name="Imageactive[<?php echo $row['id']; ?>]" value="0" <?php if($row['active'] == "0"){ echo "checked"; } ?>></td>
+                                <td><input type="checkbox" name="removegal[]" value="<?php echo $row['id']; ?>"></td>
+                            </tr>
+<?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -153,7 +169,7 @@ if($Article['id'] == ""){
         <div class="col-sm-12 col-md-12">
             <?php $GalRand = "Galupload-" . RandomCode("50"); ?>
             <input type="hidden" name='galrand' value='<?php echo $GalRand; ?>'>
-            <iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' scrolling='no' frameborder="0" height="600" width="720" ></iframe>
+            <iframe src='/api/dropzone/main.php?type=track&rand=<?php echo $GalRand; ?>&id=<?php echo $Article['id']; ?>' frameborder="0" height="600" width="720" ></iframe>
         </div>
     </div>
 </div>
@@ -212,14 +228,35 @@ if($Article['id'] == ""){
                 </div>
                 <br><br>
                 <div class="form-group">
+                    <label class="col-sm-3 control-label">Author</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" name='author'>
+<?php if($UserSiteAccess['editauthor'] == "1"){ ?>
+                            <option value='' <?php if($Article['other']['author'] == ""){ echo "selected='selected'"; } ?>>Select Below</option>
+<?php
+}
+if($UserSiteAccess['editauthor'] == "1"){ 
+$Query = "SELECT * FROM articles WHERE type='author' AND active='1' AND trash='0' AND webid='$WebId' ORDER BY id DESC";
+}else{
+$Query = "SELECT * FROM articles WHERE type='author' AND active='1' AND trash='0' AND webid='$WebId' AND category='$Current_Admin_Id' ORDER BY id DESC";
+}
+$Result = mysql_query($Query) or die(mysql_error());
+while($Row = mysql_fetch_array($Result)){
+$Row = PbUnSerial($Row); ?>
+                            <option value='<?php echo $Row['id']; ?>' <?php if($Article['other']['author'] == $Row['id']){ echo "selected='selected'"; } ?>><?php echo $Row['name']; ?></option>
+<?php } ?>
+                        </select>
+                    </div>
+                </div><br><br>
+                <div class="form-group">
                     <label class="col-sm-3 control-label">Music Artist</label>
                     <div class="col-sm-9">
                         <select class="form-control" name='artist'>
                             <option value="<?php echo $Article['other']["artist"]; ?>">Select Below</option>
 <?php
 $query = "SELECT * FROM articles WHERE type='post-artist' AND active='1' AND trash='0' AND webid='$WebId' ORDER BY RAND() LIMIT 0,4";
-$result = mysql_query($query) or die(mysql_error());
-while($row = mysql_fetch_array($result)){
+$result = mysqli_query($CwDb,$query);
+while($row = mysqli_fetch_assoc($result)){
     $row = CwOrganize($row,$Array);
     echo "<option value='$row[id]'"; if($row['id'] == $Article['other']["artist"]){ echo "selected=selected"; }; ?>><?php echo $row['name']; ?></option>
 <?php } ?>
@@ -303,28 +340,55 @@ while($row = mysql_fetch_array($result)){
 
 
 <div class="panel panel-default">
-<div class="panel-heading">
-<h4 class="panel-title">
-<a data-toggle="collapse" data-parent="#accordion" href="#CwLayout">
-<i class="fa "></i>Structure</a>
-</h4></div>
-<div id="CwLayout" class="panel-collapse collapse">
-<div class="panel-body">
-<div class="content">
-<div class="form-group">
-<label class="col-sm-3 control-label">Type</label>
-<div class="col-sm-6">
-<select class="form-control" name='structure'>
+    <div class="panel-heading">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#CwLayout">
+            <i class="fa "></i>Structure</a>
+        </h4>
+    </div>
+    <div id="CwLayout" class="panel-collapse collapse">
+        <div class="panel-body"> 
+            <div class="content">
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Template</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" name='maintheme' onchange="switchTem(this.value)">
+                            <option value='<?php echo $StructureTheme; ?>' <?php if( $PageInfo['template'] == 'default'){ echo "selected=selected"; } ?>>Default</option> 
+<?php $Templates = Pulltheme("../theme/","0",$WebId);
+foreach ($Templates as $Template){
+    echo "<option value='$Template[0]'"; if($PageInfo['template'] == $Template[0]){ echo "selected=selected"; } echo ">$Template[1]</option>"; 
+} ?>
+                        </select>
+                    </div>
+                </div>
+                <br><br>
+                <div class="form-group" id='switchTem'>
+                    <label class="col-sm-3 control-label">Type</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" name='structure'>
+                            <option value="default">Default</option>
 <?php
-$PageType = $Article['type'];
+$Category = $Article['category'];
+if($Category == "page"){
+    $PageType = "page";
+}else{
+    $PageType = $Article['type'];
+}
 $CurrentLayout = $Article['other']['structure'];
+$PageType = "page";
 $Layouts = $ThemeArray['structure'][$PageType];
-echo "<option value='default'"; if( $PageInfo['template'] == 'default'){ echo "selected=selected"; } echo ">Default</option>"; 
-foreach($ThemeArray['structure']["$PageType"] as $Layout=>$x_value){ 
-    echo "<option value='$Layout'"; if( $CurrentLayout == $Layout){ echo "selected=selected"; } echo ">$Layout</option>"; 
+if($PageType == ""){$PageType = "page"; }
+foreach($Layouts as $Layout=>$x_value){
+    echo "<option value='$Layout'"; if($CurrentLayout == $Layout){ echo "selected=selected"; } echo ">$Layout</option>";
 }  ?>
-</select></div></div>
-</div></div></div></div>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

@@ -40,15 +40,15 @@
 <tbody>
 <?php
 $Query = "SELECT * FROM articles WHERE type='ticker' AND trash='0' AND webid='$WebId'"; 
-$Result = mysql_query($Query) or die(mysql_error());
+$Result = mysqli_query($CwDb,$Query);
 while($Row = mysql_fetch_array($Result)){
-$Row = PbUnSerial($Row);
+$Row = CwOrganize($Row,$Array);
 $ArticleId = $Row['id'];
 $ArticleId = OtarEncrypt($key,$ArticleId);
 $query = "SELECT * FROM articles WHERE id='$ArticleCat' AND active='1' AND trash='0' AND webid='$WebId'"; 
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
-$row = PbUnSerial($row); ?>
+$result = mysqli_query($CwDb,$query);
+$row = mysqli_fetch_assoc($result);
+$row = CwOrganize($row,$Array); ?>
 <tr class="odd gradeX">
 <td><input type="checkbox" name="edit[]" value="<?php echo $Row['id']; ?>"></td>
 <td><?php echo $Row['content']['name']; ?></td>
