@@ -11,7 +11,7 @@ if($Login == "1"){
 		$Image = OtarDecrypt($key, $Image);
         $Post = Cw_Quick_Info("images", $WebId, $Image, $Array);
 		$Album = $Post['album'];
-		mysql_query("DELETE FROM images WHERE id='$Image' AND webid='$WebId'") 
+		mysqli_query($CwDb,"DELETE FROM images WHERE id='$Image' AND webid='$WebId'") 
 		or die(mysql_error());
 		$Album = OtarEncrypt($key,$Album);
 		$Info["id"] = $Image;
@@ -24,9 +24,9 @@ if($Login == "1"){
 		$Article = $_GET['end'];
 		$Article = OtarDecrypt($key, $Article);
 		$Post = Cw_Quick_Info("articles", $WebId, $Article, $Array);
-		$result = mysql_query("UPDATE articles SET trash='1' WHERE id='$Article' AND webid='$WebId'") 
+		$result = mysqli_query($CwDb,"UPDATE articles SET trash='1' WHERE id='$Article' AND webid='$WebId'") 
 		or die(mysql_error());
-		$result = mysql_query("UPDATE images SET trash='1' WHERE album='$Article' AND webid='$WebId'")
+		$result = mysqli_query($CwDb,"UPDATE images SET trash='1' WHERE album='$Article' AND webid='$WebId'")
 		or die(mysql_error());
 		$Info["id"] = $Article;
         $Info["type"] = "articles";
@@ -38,9 +38,9 @@ if($Login == "1"){
 		$Article = $_GET['end'];
 		$Article = OtarDecrypt($key, $Article);
 		$Post = Cw_Quick_Info("articles", $WebId, $Article, $Array);
-		$result = mysql_query("UPDATE articles SET trash='1' WHERE id='$Article' AND webid='$WebId'") 
+		$result = mysqli_query($CwDb,"UPDATE articles SET trash='1' WHERE id='$Article' AND webid='$WebId'") 
 		or die(mysql_error());
-		$result = mysql_query("UPDATE images SET trash='1' WHERE album='$Article' AND webid='$WebId'")
+		$result = mysqli_query($CwDb,"UPDATE images SET trash='1' WHERE album='$Article' AND webid='$WebId'")
 		or die(mysql_error());
 		$Info["id"] = $Article;
         $Info["type"] = "articles";
@@ -52,7 +52,7 @@ if($Login == "1"){
 		$Article = $_GET['end'];
 		$Article = OtarDecrypt($key, $Article);
 		$Post = Cw_Quick_Info("cw_cart", $WebId, $Article, $Array);
-		$result = mysql_query("UPDATE cw_cart SET trash='1' WHERE id='$Article' AND webid='$WebId'") 
+		$result = mysqli_query($CwDb,"UPDATE cw_cart SET trash='1' WHERE id='$Article' AND webid='$WebId'") 
 		or die(mysql_error());
 		$Info["id"] = $Article;
         $Info["type"] = "cw_cart";
@@ -64,8 +64,8 @@ if($Login == "1"){
 		$Article = $_GET['end'];
 		$Article = OtarDecrypt($key, $Article);
 		$Post = Cw_Quick_Info("images", $WebId, $Article, $Array);
-        $ProdId = OtarEncrypt($key, $Post[album]);
-		$result = mysql_query("UPDATE images SET trash='1' WHERE id='$Article' AND webid='$WebId'")
+        $ProdId = OtarEncrypt($key, $Post["album"]);
+		$result = mysqli_query($CwDb,"UPDATE images SET trash='1' WHERE id='$Article' AND webid='$WebId'")
 		or die(mysql_error());
 		$Info["id"] = $Article;
         $Info["type"] = "images";
@@ -77,7 +77,7 @@ if($Login == "1"){
 		$Article = $_GET['end'];
 		$Article = OtarDecrypt($key, $Article);
 		$Post = Cw_Quick_Info("page_function", $WebId, $Article, $Array);
-		$result = mysql_query("UPDATE page_function SET trash='1' WHERE id='$Article' AND webid='$WebId'") 
+		$result = mysqli_query($CwDb,"UPDATE page_function SET trash='1' WHERE id='$Article' AND webid='$WebId'") 
 		or die(mysql_error());
 		$Info["id"] = $Article;
         $Info["type"] = "page_function";
@@ -92,7 +92,7 @@ if($Login == "1"){
 		$RestoreId = $Restore['id'];
 		$RestoreId = OtarDecrypt($key, $RestoreId);
 		$Post = Cw_Quick_Info($RestoreType, $WebId, $RestoreId, $Array);
-		$result = mysql_query("UPDATE $RestoreType SET trash='0' WHERE id='$RestoreId' AND webid='$WebId'") 
+		$result = mysqli_query($CwDb,"UPDATE $RestoreType SET trash='0' WHERE id='$RestoreId' AND webid='$WebId'") 
 		or die(mysql_error());
 		$Info["id"] = $RestoreId;
         $Info["type"] = $RestoreType;
@@ -104,7 +104,7 @@ if($Login == "1"){
 		$Page = $_GET['end'];
 		$Page = OtarDecrypt($key, $Page);
 		$Post = Cw_Quick_Info("page_template", $WebId, $Page, $Array);
-		$result = mysql_query("UPDATE page_template SET trash='1' WHERE id='$Page' AND webid='$WebId'") 
+		$result = mysqli_query($CwDb,"UPDATE page_template SET trash='1' WHERE id='$Page' AND webid='$WebId'") 
 		or die(mysql_error());
 		$Info["id"] = $Page;
         $Info["type"] = "page_template";
@@ -116,7 +116,7 @@ if($Login == "1"){
 		$Page = $_GET['end'];
 		$Page = OtarDecrypt($key, $Page);
 		$Post = Cw_Quick_Info("transfer", $WebId, $Page, $Array);
-		$result = mysql_query("UPDATE transfer SET trash='1' WHERE id='$Page' AND webid='$WebId'") 
+		$result = mysqli_query($CwDb,"UPDATE transfer SET trash='1' WHERE id='$Page' AND webid='$WebId'") 
 		or die(mysql_error());
 		$Info["id"] = $Page;
         $Info["type"] = "transfer";
@@ -131,7 +131,7 @@ if($Login == "1"){
 		$RestoreId = $Restore['id'];
 		$RestoreId = OtarDecrypt($key, $RestoreId);
 		$Post = Cw_Quick_Info($RestoreType, $WebId, $RestoreId, $Array);
-		mysql_query("DELETE FROM $RestoreType WHERE id='$RestoreId' AND webid='$WebId'") 
+		mysqli_query($CwDb,"DELETE FROM $RestoreType WHERE id='$RestoreId' AND webid='$WebId'") 
 		or die(mysql_error());
 		$Info["id"] = $RestoreId;
         $Info["type"] = $RestoreType;
@@ -143,7 +143,7 @@ if($Login == "1"){
 		$Restore = $_GET['end'];
 		$RestoreId = OtarDecrypt($key, $Restore);
 		$Post = Cw_Quick_Info("messages", $WebId, $RestoreId, $Array);
-		mysql_query("UPDATE messages  SET trash='1' WHERE id='$RestoreId' AND webid='$WebId'") 
+		mysqli_query($CwDb,"UPDATE messages  SET trash='1' WHERE id='$RestoreId' AND webid='$WebId'") 
 		or die(mysql_error());
 		$Info["id"] = $RestoreId;
         $Info["type"] = "messages";
@@ -155,7 +155,7 @@ if($Login == "1"){
 		$Restore = $_GET['end'];
 		$RestoreId = OtarDecrypt($key, $Restore);
 		$Post = Cw_Quick_Info("messages", $WebId, $RestoreId, $Array);
-		mysql_query("UPDATE messages  SET trash='0' WHERE id='$RestoreId' AND webid='$WebId'") 
+		mysqli_query($CwDb,"UPDATE messages  SET trash='0' WHERE id='$RestoreId' AND webid='$WebId'") 
 		or die(mysql_error());
 		$Info["id"] = $RestoreId;
         $Info["type"] = "messages";

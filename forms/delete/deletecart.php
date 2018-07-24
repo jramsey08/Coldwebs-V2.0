@@ -3,8 +3,8 @@
 $Page = $_GET['end'];
 $Page = OtarDecrypt($key, $Page);
 $Post = Cw_Quick_Info("articles", $WebId, $Page, $Array);
-$result = mysql_query("UPDATE cw_cart SET trash='1' WHERE id='$Page' AND webid='$WebId'") 
-or die(mysql_error());
+$result = mysqli_query($CwDb,"UPDATE cw_cart SET trash='1' WHERE id='$Page' AND webid='$WebId'") 
+or die(mysqli_error());
 // TRACKS CHANGES MADE FROM USERS \\
     $Info = array();
     $Info["webid"] = $WebId;

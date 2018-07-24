@@ -11,10 +11,10 @@ if($Login == "1"){
 			foreach($Articles as $value){
 			    $Post = Cw_Quick_Info("articles", $WebId, $value, $Array);
                 $Info["images"] = Cw_Pull_Post_Images($value,$WebId,$Array);
-				$result = mysql_query("DELETE FROM articles WHERE id='$value' AND webid='$WebId'") 
-				or die(mysql_error());
-				$result = mysql_query("DELETE FROM images WHERE album='$value' AND webid='$WebId'")
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"DELETE FROM articles WHERE id='$value' AND webid='$WebId'") 
+				or die(mysqli_error());
+				$result = mysqli_query($CwDb,"DELETE FROM images WHERE album='$value' AND webid='$WebId'")
+				or die(mysqli_error());
         // TRACKS CHANGES MADE FROM USERS \\
                 $Info = array();
                 $Info["id"] = $value;
@@ -32,10 +32,10 @@ if($Login == "1"){
 		if($Get_Id == "restore"){
 			foreach($Articles as $value){
 			    $Post = Cw_Quick_Info("articles", $WebId, $value, $Array);
-				$result = mysql_query("UPDATE articles set trash='0' WHERE id='$value' AND webid='$WebId'") 
-				or die(mysql_error());
-				$result = mysql_query("UPDATE images set trash='0' WHERE album='$value' AND webid='$WebId'")
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE articles set trash='0' WHERE id='$value' AND webid='$WebId'") 
+				or die(mysqli_error());
+				$result = mysqli_query($CwDb,"UPDATE images set trash='0' WHERE album='$value' AND webid='$WebId'")
+				or die(mysqli_error());
         // TRACKS CHANGES MADE FROM USERS \\
                 $Info = array();
                 $Info["id"] = $value;
