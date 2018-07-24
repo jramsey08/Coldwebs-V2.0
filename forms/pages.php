@@ -19,6 +19,11 @@ if($Login == "1"){
 	$Article_Info = $_POST["content"];
 	
 	$Image_Order = $_POST["ImageOrder"];
+	$Track_Name = $_POST["TrackName"];
+    $Image_Active = $_POST["Imageactive"];
+	$Image_Url = $_POST["ImageUrl"];
+	$Audio_Active = $_POST["audioactive"];
+	$Cinema_Active = $_POST["cinemaactive"];
 	$Rand = rand(100,100000000);
 	$TransferId = $_POST["transferid"];
 	$Tags = $_POST["tags"];
@@ -161,34 +166,32 @@ if($Login == "1"){
 	if($Article_Id == ""){
 	    $Manual_Message = "Created Page";
 	    $PostImages = serialize($PostImages);
-		mysql_query("INSERT INTO articles(name, url, active, category, type, other, rand, date, feat, content, info, img, date_created,webid) 
-		VALUES('$Article_Name', '$Article_Url', '$Article_Active',  '$Article_Category', 'page',  '$Article_Other', '$GalRand','$Article_Date', '$Article_Feat', '$Article_Content', '$Article_Info ', '$PostImages', '$Date_Created', '$WebId') ")or die(mysql_error());
+		mysqli_query($CwDb,"INSERT INTO articles(name, url, active, category, type, other, rand, date, feat, content, info, img, date_created,webid) 
+		VALUES('$Article_Name', '$Article_Url', '$Article_Active',  '$Article_Category', 'page',  '$Article_Other', '$GalRand','$Article_Date', '$Article_Feat', '$Article_Content', '$Article_Info ', '$PostImages', '$Date_Created', '$WebId') ")or die(mysqli_error());
 // PROCESS GALLERY IMAGE UPLOADS \\
 		$query = "SELECT * FROM articles WHERE trash='0' AND rand='$GalRand' AND webid='$WebId' AND type='page'";
-		$result = mysql_query($query) or die(mysql_error());
-		$row = mysql_fetch_array($result);
+		$result = mysqli_query($CwDb,$query) or die(mysqli_error());
+		$row = mysqli_fetch_assoc($result);
 		$Album = $row['id'];
 		$Article_Id = $row['id'];
-		$result = mysql_query("UPDATE images SET album='$Album' WHERE album='$GalRand' AND webid='$WebId'") 
-        or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET rand='' WHERE id='$Album' AND webid='$WebId'") 
-		or die(mysql_error());
+		$result = mysqli_query($CwDb,"UPDATE images SET album='$Album' WHERE album='$GalRand' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET rand='' WHERE id='$Album' AND webid='$WebId'") or die(mysqli_error());
 		
 		
 		
 	}else{
 	    
 	    $query = "SELECT * FROM page_template WHERE id='$TemplateId'";
-    	$result = mysql_query($query) or die(mysql_error());
-    	$Article = mysql_fetch_array($result);
+    	$result = mysqli_query($CwDb,$query) or die(mysqli_error());
+    	$Article = mysqli_fetch_assoc($result);
     	$Article = CwOrganize($Article,$Array);
         $Article = Cw_Filter_Array($Article);
 	    
 // UN-LINK OLD TAGS FROM ARTICLE \\
 		$UnlinkTag =  explode(",", $Tags);
 		$query = "SELECT * FROM articles WHERE id='$Article_Id' AND webid='$WebId'";
-		$result = mysql_query($query) or die(mysql_error());
-		$row = mysql_fetch_array($result);
+		$result = mysqli_query($CwDb,$query) or die(mysqli_error());
+		$row = mysqli_fetch_assoc($result);
 		$row = PbUnSerial($row);
 		$SRTags = $row["other"]["tags"];
 		if($SRTags == ""){
@@ -198,83 +201,101 @@ if($Login == "1"){
 			$Count = "0";
 			foreach($TagRemove as $value){
 				$Query = "SELECT * FROM cw_tags WHERE name='$value' AND webid='$WebId'";
-				$Result = mysql_query($Query) or die(mysql_error());
-				$Row = mysql_fetch_array($Result);
+				$Result = mysqli_query($CwDb,$Query) or die(mysqli_error());
+				$Row = mysqli_fetch_assoc($Result);
 				$ListTagId = $Row["id"];
 				$ListTag = OtarDecrypt($key,$Row['content']);
 				$key = array_search(f, $ListTag);
 				unset($ListTag[$key]);
 				$NewTagArray = OtarEncrypt($key,$ListTag);
-				$result = mysql_query("UPDATE cw_tags SET content='$NewTagArray' WHERE id='$ListTagId' AND webid='$WebId'")
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE cw_tags SET content='$NewTagArray' WHERE id='$ListTagId' AND webid='$WebId'")or die(mysqli_error());
 		   }
 		}
 // PROCESS GALLERY IMAGE UPLOADS \\
-		if($Image_Order == ""){ 
-		}else{
+		if($Image_Order != ""){ 
 			foreach($Image_Order as $ImageO){
 				$ImageId = key($Image_Order);
-				$result = mysql_query("UPDATE images SET list='$ImageO' WHERE id='$ImageId' AND webid='$WebId'") 
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE images SET list='$ImageO' WHERE id='$ImageId' AND webid='$WebId'") or die(mysqli_error());
 				next($Image_Order);
 			}
 		}
+		if($Track_Name != ""){ 
+			foreach($Track_Name as $TrackN){
+				$TrackId = key($Track_Name);
+                if($TrackN != ""){
+				    $result = mysqli_query($CwDb,"UPDATE images SET name='$TrackN' WHERE id='$TrackId' AND webid='$WebId'") or die(mysqli_error());
+                }
+				next($Track_Name);
+			}
+		}
+		if($Image_Url != ""){ 
+			foreach($Image_Url as $ImageU){
+				$ImageUId = key($Image_Url);
+				$result = mysqli_query($CwDb,"UPDATE images SET url='$ImageU' WHERE id='$ImageUId' AND webid='$WebId'") or die(mysqli_error());
+				next($Image_Url);
+			}
+		}
+		if(is_array($Image_Active)){
+			foreach($Image_Active as $ImageA){
+				$ImageAId = key($Image_Active);
+				$result = mysqli_query($CwDb,"UPDATE images SET active='$ImageA' WHERE id='$ImageAId' AND webid='$WebId'") or die(mysqli_error());
+				$result = mysqli_query($CwDb,"UPDATE images SET gallery='ads' WHERE id='$ImageAId' AND webid='$WebId'") or die(mysqli_error());
+				next($Image_Active);
+			}
+		}
+		if(is_array($Audio_Active)){
+			foreach($Audio_Active as $AudioA){
+				$AudioAId = key($Audio_Active);
+				$result = mysqli_query($CwDb,"UPDATE images SET active='$AudioA' WHERE id='$AudioAId' AND webid='$WebId'") or die(mysqli_error());
+				next($Audio_Active);
+			}
+		}
+		if(is_array($Cinema_Active)){
+			foreach($Cinema_Active as $CinA){
+				$CinAId = key($Cinema_Active);
+				$result = mysqli_query($CwDb,"UPDATE images SET active='$CinA' WHERE id='$CinAId' AND webid='$WebId'") or die(mysqli_error());
+				next($Cinema_Active);
+			}
+		}
 // UPDATE THE DATABASE WITH ANY NEW/OLD INFORMATION \\
-		$result = mysql_query("UPDATE articles SET url='$Article_Url' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET active='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET info='$Article_Info' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET category='$Article_Category' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET other='$Article_Other' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET date_created='$Date_Created' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET feat='$Article_Feat' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET content='$Article_Content' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET name='$Article_Name' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET url='$Article_Url' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE articles SET active='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE articles SET info='$Article_Info' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE articles SET category='$Article_Category' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE articles SET other='$Article_Other' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET date_created='$Date_Created' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET feat='$Article_Feat' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET content='$Article_Content' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET name='$Article_Name' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
         if(is_array($PostImages)){
             $PostImages = serialize($PostImages);
-		    $result = mysql_query("UPDATE articles SET img='$PostImages' WHERE id='$Article_Id' AND webid='$WebId'") 
-		    or die(mysql_error());
+		    $result = mysqli_query($CwDb,"UPDATE articles SET img='$PostImages' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
         }
 	}
 
 
 	if($TemplateId == ""){
 	    $Query = "SELECT * FROM page_template WHERE article='$Article_Id' AND webid='$WebId'";
-        $Result = mysql_query($Query) or die(mysql_error());
-        $Row = mysql_fetch_array($Result);
+        $Result = mysqli_query($CwDb,$Query);
+        $Row = mysqli_fetch_assoc($Result);
         if($Row["id"] == ""){
-		    mysql_query("INSERT INTO page_template (name, template, url, urlid, urltype, end, active, article, webid) VALUES('$Article_Name', '$ArticleTheme', '$Article_Url', '$Article_UrlId', '$Article_UrlType', '$Article_End', '$Article_Active', '$Article_Id', '$WebId') ") or die(mysql_error());
+		    mysqli_query($CwDb,"INSERT INTO page_template (name, template, url, urlid, urltype, end, active, article, webid) 
+		    VALUES('$Article_Name', '$ArticleTheme', '$Article_Url', '$Article_UrlId', '$Article_UrlType', '$Article_End', '$Article_Active', '$Article_Id', '$WebId') ");
         }
         $Query = "SELECT * FROM page_template WHERE article='$Article_Id' AND webid='$WebId'";
-        $Result = mysql_query($Query) or die(mysql_error());
-        $Row = mysql_fetch_array($Result);
+        $Result = mysqli_query($CwDb,$Query);
+        $Row = mysqli_fetch_assoc($Result);
         $TemplateId = $Row["id"];
 	}else{
 //UPDATES THE PAGE_TEMPLATE TABLE
-		$result = mysql_query("UPDATE page_template SET template='$ArticleTheme' WHERE id='$TemplateId' AND webid='$WebId'")
-		or die(mysql_error());
-		$result = mysql_query("UPDATE page_template SET name='$Article_Name' WHERE id='$TemplateId' AND webid='$WebId'")
-		or die(mysql_error());
-		$result = mysql_query("UPDATE page_template SET url='$Article_Url' WHERE id='$TemplateId' AND webid='$WebId'")
-		or die(mysql_error());
-		$result = mysql_query("UPDATE page_template SET urlid='$Article_UrlId' WHERE id='$TemplateId' AND webid='$WebId'")
-		or die(mysql_error());
-		$result = mysql_query("UPDATE page_template SET urltype='$Article_UrlType' WHERE id='$TemplateId' AND webid='$WebId'")
-		or die(mysql_error());
-		$result = mysql_query("UPDATE page_template SET end='$Article_End' WHERE id='$TemplateId' AND webid='$WebId'")
-		or die(mysql_error());
-		$result = mysql_query("UPDATE page_template SET active='$Article_Active' WHERE id='$TemplateId' AND webid='$WebId'")
-		or die(mysql_error());
-		$result = mysql_query("UPDATE page_template SET article='$Article_Id' WHERE id='$TemplateId' AND webid='$WebId'")
-		or die(mysql_error());
+		$result = mysqli_query($CwDb,"UPDATE page_template SET template='$ArticleTheme' WHERE id='$TemplateId' AND webid='$WebId'")or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE page_template SET name='$Article_Name' WHERE id='$TemplateId' AND webid='$WebId'")or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE page_template SET url='$Article_Url' WHERE id='$TemplateId' AND webid='$WebId'")or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE page_template SET urlid='$Article_UrlId' WHERE id='$TemplateId' AND webid='$WebId'")or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE page_template SET urltype='$Article_UrlType' WHERE id='$TemplateId' AND webid='$WebId'")or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE page_template SET end='$Article_End' WHERE id='$TemplateId' AND webid='$WebId'")or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE page_template SET active='$Article_Active' WHERE id='$TemplateId' AND webid='$WebId'")or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE page_template SET article='$Article_Id' WHERE id='$TemplateId' AND webid='$WebId'")or die(mysqli_error());
 	}  
 
 
@@ -282,32 +303,24 @@ if($Login == "1"){
 //UPDATES THE PAGE_SETTINGS TABLE
 	if($SettingsId == ""){
 	    $Query = "SELECT * FROM page_settings WHERE tempid='$TemplateId' AND article='$Article_Id' AND type='page'AND webid='$WebId' ";
-        $Result = mysql_query($Query) or die(mysql_error());
-        $Row = mysql_fetch_array($Result);
+        $Row = Cw_Fetch($Query);
         if($Row["id"] == ""){
-		    mysql_query("INSERT INTO page_settings (secure, autoplay, background, active, tempid, webid, article, template, type, structure, img) 
-		    VALUES('$SettingsSecure', '$SettingsAuto', '$SettingsBackground', '$Article_Active', '$TemplateId', '$WebId', '$Article_Id', '$ArticleTheme', 'page', '$StructureType', '$Article_Img') ") or die(mysql_error());
+		    mysqli_query($CwDb,"INSERT INTO page_settings (secure, autoplay, background, active, tempid, webid, article, template, type, structure, img) 
+		    VALUES('$SettingsSecure', '$SettingsAuto', '$SettingsBackground', '$Article_Active', '$TemplateId', '$WebId', '$Article_Id', '$ArticleTheme', 'page', '$StructureType', '$Article_Img') ") or die(mysqli_error());
         }
 	}else{
-		$result = mysql_query("UPDATE page_settings SET autoplay='$SettingsAuto' WHERE id='$SettingsId' AND webid='$WebId'")
-		or die(mysql_error());
-		$result = mysql_query("UPDATE page_settings SET background='$SettingsBackground' WHERE id='$SettingsId' AND webid='$WebId'")
-		or die(mysql_error());
-		$result = mysql_query("UPDATE page_settings SET secure='$SettingsSecure' WHERE id='$SettingsId' AND webid='$WebId'")
-		or die(mysql_error());
-		$result = mysql_query("UPDATE page_settings SET structure='$StructureType' WHERE id='$SettingsId' AND webid='$WebId'")
-		or die(mysql_error());
-		$result = mysql_query("UPDATE page_settings SET img='$Article_Img' WHERE id='$SettingsId' AND webid='$WebId'")
-		or die(mysql_error());
-		$result = mysql_query("UPDATE page_settings SET article='$Article_Id' WHERE id='$SettingsId' AND webid='$WebId'")
-		or die(mysql_error());
+		$result = mysqli_query($CwDb,"UPDATE page_settings SET autoplay='$SettingsAuto' WHERE id='$SettingsId' AND webid='$WebId'")or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE page_settings SET background='$SettingsBackground' WHERE id='$SettingsId' AND webid='$WebId'")or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE page_settings SET secure='$SettingsSecure' WHERE id='$SettingsId' AND webid='$WebId'")or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE page_settings SET structure='$StructureType' WHERE id='$SettingsId' AND webid='$WebId'")or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE page_settings SET img='$Article_Img' WHERE id='$SettingsId' AND webid='$WebId'")or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE page_settings SET article='$Article_Id' WHERE id='$SettingsId' AND webid='$WebId'")or die(mysqli_error());
 		
 	}
 
 	if(is_array($GalleryRemoval)){
 		foreach($GalleryRemoval as $value){
-			$result = mysql_query("UPDATE images SET trash='1' WHERE id='$value' AND webid='$WebId'")
-			or die(mysql_error());
+			$result = mysqli_query($CwDb,"UPDATE images SET trash='1' WHERE id='$value' AND webid='$WebId'")or die(mysqli_error());
 		}
 	}
 

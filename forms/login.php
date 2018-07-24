@@ -60,8 +60,8 @@ if($_SESSION['current_user'] == ""){
         $REDIRECT = "/Login?error=$Array[error]";
     }else{
         $query = "SELECT * FROM users WHERE email='$Post_Username' OR username='$Post_Username'";
-        $result = mysql_query($query) or die(mysql_error());
-        $row = mysql_fetch_array($result);
+        $result = mysqli_query($CwDb,$query);
+        $row = mysqli_fetch_assoc($result);
         $row = CwOrganize($row,$Array);
         $row['url'] = strtolower($row['url']);
         $row['email'] = strtolower($row['email']);
@@ -100,10 +100,8 @@ if($_SESSION['current_user'] == ""){
         }
 
         if($Login == 1){
-            $result = mysql_query("UPDATE login_session SET trash='1' WHERE userid='$UserId' AND webid='$WebId'") 
-            or die(mysql_error());
-            $result = mysql_query("UPDATE login_session SET active='0' WHERE userid='$UserId' AND webid='$WebId'") 
-            or die(mysql_error());
+            $result = mysqli_query($CwDb,"UPDATE login_session SET trash='1' WHERE userid='$UserId' AND webid='$WebId'") or die(mysqli_error());
+            $result = mysqli_query($CwDb,"UPDATE login_session SET active='0' WHERE userid='$UserId' AND webid='$WebId'") or die(mysqli_error());
             $_SESSION['accountid'] = $UserId;
             $_SESSION['current_user'] = $UserId;
             if(is_numeric($WebId)){
@@ -116,9 +114,9 @@ if($_SESSION['current_user'] == ""){
             $UserOther['lastlogin'] = $Date;
             $UserOther['webid'] = $WebId;
             $UserOther = serialize($UserOther);
-            $result = mysql_query("UPDATE users SET other='$UserOther' WHERE id='$UserId' AND webid='$WebId'") or die(mysql_error());
-            mysql_query("INSERT INTO login_session(active, session, date, computerinfo, ipaddress, userid, browser_name, browser_useragent, browser_version, browser_platform, browser_pattern, country, state, city, zip, lat, lon, countrycode, timezone, session_generate, cookie, webid) 
-            VALUES('1', '$Session_Generate', '$Date', '$Computer_Name', '$User_Ip', '$UserId', '$Browser_Name', '$Browser_User_Agent', '$Browser_Version', '$Browser_Platform', '$Browser_Pattern', '$Country', '$State', '$City', '$Zipcode', '$Latitude', '$Longitude', '$Country_Code', '$TimeZone', '$Session_Generate', '$Session_Generate', '$WebId' ) ") or die(mysql_error());
+            $result = mysqli_query($CwDb,"UPDATE users SET other='$UserOther' WHERE id='$UserId' AND webid='$WebId'") or die(mysql_error());
+            mysqli_query($CwDb,"INSERT INTO login_session(active, session, date, computerinfo, ipaddress, userid, browser_name, browser_useragent, browser_version, browser_platform, browser_pattern, country, state, city, zip, lat, lon, countrycode, timezone, session_generate, cookie, webid) 
+            VALUES('1', '$Session_Generate', '$Date', '$Computer_Name', '$User_Ip', '$UserId', '$Browser_Name', '$Browser_User_Agent', '$Browser_Version', '$Browser_Platform', '$Browser_Pattern', '$Country', '$State', '$City', '$Zipcode', '$Latitude', '$Longitude', '$Country_Code', '$TimeZone', '$Session_Generate', '$Session_Generate', '$WebId' ) ") or die(mysqli_error());
             $REDIRECT = "/admin/";
             if($Access > "3"){
                 $Array['error'] = "114"; $REDIRECT = "/Dashboard/";
@@ -134,9 +132,9 @@ if($_SESSION['current_user'] == ""){
     }
 }else{
     $query = "SELECT * FROM users WHERE id='$_SESSION[current_user]' AND webid='$WebId'";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
-    $row = PbUnserial($row);
+    $result = mysqli_query($CwDb,$query);
+    $row = mysqli_fetch_assoc($result);
+    $row = CwOrganize($row,$Array);
     $Access = $row['info']['access'];
     if($Access > "3"){
         $Array['error'] = "114"; $REDIRECT = "/My-Account/";

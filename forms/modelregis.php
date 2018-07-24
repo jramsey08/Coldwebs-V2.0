@@ -91,28 +91,26 @@ $PostImages = serialize($PostImages);
 if($Model_Id == ""){
     $Manual_Message = "Cresated Model";
     $PostImages = serialize($PostImages);
-    mysql_query("INSERT INTO cw_model(first_name, last_name, bio, gender, email, birthday_month, birthday_day, birthday_year, height, 
+    mysqli_query($CwDb,"INSERT INTO cw_model(first_name, last_name, bio, gender, email, birthday_month, birthday_day, birthday_year, height, 
     waist, dress_size, hip_size, chest_size, cup_size, shoe_size, eyes, hair, ethnicity, content, other, notes, rand, date, img)  
     VALUES('$Model_First_Name', '$Model_Last_Name',  '$Model_Info', '$Model_Gender', '$Model_Email', '$Model_Birthday_Month', 
     '$Model_Birthday_Day', '$Model_Birthday_Year', '$Model_Height ', '$Model_Waist', '$Model_Dress', '$Model_Hip', 
     '$Model_Chest', '$Model_Cup', '$Model_Shoe', '$Model_Eyes', '$Model_Hair', '$Model_Ethnicity', '$Model_Content', '$Model_Other', 
-    '$Model_Notes', '$GalRand', '$Date', '$PostImages' ) ")or die(mysql_error());
+    '$Model_Notes', '$GalRand', '$Date', '$PostImages' ) ")or die(mysqli_error());
 
 // PROCESS GALLERY IMAGE UPLOADS \\
     $query = "SELECT * FROM cw_model WHERE trash='0' AND rand='$Rand'";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($CwDb,$query) or die(mysqli_error());
+    $row = mysqli_fetch_assoc($result);
     $Album = $row['id'];
-	$result = mysql_query("UPDATE images SET album='$Album' WHERE album='$GalRand' AND webid='$WebId'") 
-    or die(mysql_error());
-	$result = mysql_query("UPDATE articles SET rand='' WHERE id='$Album' AND webid='$WebId'") 
-	or die(mysql_error());
+	$result = mysqli_query($CwDb,"UPDATE images SET album='$Album' WHERE album='$GalRand' AND webid='$WebId'") or die(mysqli_error());
+	$result = mysqli_query($CwDb,"UPDATE articles SET rand='' WHERE id='$Album' AND webid='$WebId'") or die(mysqli_error());
 
 
 }else{
     $query = "SELECT * FROM articles WHERE id='$Article_Id'";
-    $result = mysql_query($query) or die(mysql_error());
-    $Article = mysql_fetch_array($result);
+    $result = mysqli_query($CwDb,$query) or die(mysqli_error());
+    $Article = mysqli_fetch_assoc($result);
     $Article = CwOrganize($Article,$Array);
     $Article = Cw_Filter_Array($Article);
 
@@ -120,76 +118,50 @@ if($Model_Id == ""){
     if($Image_Order != ""){ 
         foreach($Image_Order as $ImageO){
             $ImageId = key($Image_Order);
-	        $result = mysql_query("UPDATE images SET list='$ImageO' WHERE id='$ImageId'") 
-	        or die(mysql_error());
+	        $result = mysqli_query($CwDb,"UPDATE images SET list='$ImageO' WHERE id='$ImageId'") or die(mysqli_error());
 	        next($Image_Order);
 	    }
     }
     if($Image_Url != ""){ 
         foreach($Image_Url as $ImageU){
 	    $ImageUId = key($Image_Url);
-	    $result = mysql_query("UPDATE images SET url='$ImageU' WHERE id='$ImageUId'") 
-	    or die(mysql_error());
+	    $result = mysqli_query($CwDb,"UPDATE images SET url='$ImageU' WHERE id='$ImageUId'") or die(mysqli_error());
 	    next($Image_Url);
 	    }
     }
 
 // UPDATE THE DATABASE WITH ANY NEW/OLD INFORMATION \\
-    $result = mysql_query("UPDATE cw_model SET first_name ='$Model_First_Name' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET last_name='$Model_Last_Name' WHERE id='$Model_Id'") 
-    or die(mysql_error()); 
-    $result = mysql_query("UPDATE cw_model SET bio='$Model_Info' WHERE id='$Model_Id'") 
-    or die(mysql_error()); 
-    $result = mysql_query("UPDATE cw_model SET gender='$Model_Gender' WHERE id='$Model_Id'") 
-    or die(mysql_error()); 
-    $result = mysql_query("UPDATE cw_model SET email='$Model_Email' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET birthday_month='$Model_Birthday_Month' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET birthday_day='$Model_Birthday_Day' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET birthday_year='$Model_Birthday_Year' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET height='$Model_Height' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET waist='$Model_Waist' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET shoe_size='$Model_Shoe' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET dress_size='$Model_Dress' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET hip_size='$Model_Hip' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET chest_size='$Model_Chest' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET cup_size='$Model_Cup' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET eyes='$Model_Eyes' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET hair='$Model_Hair' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET ethnicity='$Model_Ethnicity' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET content='$Model_Content' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET other='$Model_Other' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET active='$Model_Active' WHERE id='$Model_Id'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE cw_model SET notes='$Model_Notes' WHERE id='$Model_Id'") 
-    or die(mysql_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET first_name ='$Model_First_Name' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET last_name='$Model_Last_Name' WHERE id='$Model_Id'") or die(mysqli_error()); 
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET bio='$Model_Info' WHERE id='$Model_Id'") or die(mysqli_error()); 
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET gender='$Model_Gender' WHERE id='$Model_Id'") or die(mysqli_error()); 
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET email='$Model_Email' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET birthday_month='$Model_Birthday_Month' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET birthday_day='$Model_Birthday_Day' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET birthday_year='$Model_Birthday_Year' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET height='$Model_Height' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET waist='$Model_Waist' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET shoe_size='$Model_Shoe' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET dress_size='$Model_Dress' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET hip_size='$Model_Hip' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET chest_size='$Model_Chest' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET cup_size='$Model_Cup' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET eyes='$Model_Eyes' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET hair='$Model_Hair' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET ethnicity='$Model_Ethnicity' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET content='$Model_Content' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET other='$Model_Other' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET active='$Model_Active' WHERE id='$Model_Id'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE cw_model SET notes='$Model_Notes' WHERE id='$Model_Id'") or die(mysqli_error());
 
     if(is_array($PostImages)){
         $PostImages = serialize($PostImages);
-        $result = mysql_query("UPDATE cw_model SET img='$PostImages' WHERE id='$Model_Id'") 
-	or die(mysql_error());
+        $result = mysqli_query($CwDb,"UPDATE cw_model SET img='$PostImages' WHERE id='$Model_Id'") or die(mysqli_error());
     }
     if(is_array($GalleryRemoval)){
         foreach($GalleryRemoval as $value){
-	    $result = mysql_query("UPDATE images SET trash='1' WHERE id='$value'")
-	    or die(mysql_error());
-	}
+	        $result = mysqli_query($CwDb,"UPDATE images SET trash='1' WHERE id='$value'")or die(mysqli_error());
+	    }
     }
 
 

@@ -31,7 +31,10 @@ switch ($Get_Type) {
         break;               
     case "editarticle":
         include("forms/edit/editarticle.php");
-        break;               
+        break;    
+    case "editalert":
+        include("forms/edit/editalert.php");
+        break;    
     case "cwaccess":
         include("forms/cwaccess.php");
         break;               

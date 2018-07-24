@@ -22,13 +22,9 @@ if(strpos($Get_Email,'@') !== false){
 }
 
 if($Get_Email != ""){
-    $query = "SELECT * FROM subscribe WHERE email='$Get_Email' AND active='1' AND trash='0'";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
+    $row = Cw_Fetch("SELECT * FROM subscribe WHERE email='$Get_Email' AND active='1' AND trash='0'",$Array);
     if($row['email'] == ""){
-        mysql_query("INSERT INTO subscribe 
-        (name, email) VALUES('$Get_Name', '$Get_Email' ) ")
-        or die(mysql_error());
+        Cw_Query("INSERT INTO subscribe (name, email) VALUES('$Get_Name', '$Get_Email' ) ");
         $to = $Subscribe_Email;
         if($Get_Name == ""){
             $subject = "$Get_Email has just subscribed to your website";
@@ -44,14 +40,10 @@ if($Get_Email != ""){
     }else{
         $_SESSION['subscribe_Check'] = "1";
         $Past_Subscribe = "1";
-        $result = mysql_query("UPDATE subscribe SET gender='$Get_Gender' WHERE email='$Get_Email'") 
-        or die(mysql_error());
-        $result = mysql_query("UPDATE subscribe SET user='$Get_User' WHERE email='$Get_Email'") 
-	or die(mysql_error());
-        $result = mysql_query("UPDATE subscribe SET country='$Get_Country' WHERE email='$Get_Email'") 
-	or die(mysql_error());
-        $result = mysql_query("UPDATE subscribe SET birth='$Get_Birth' WHERE email='$Get_Email'") 
-	or die(mysql_error());
+        $result = Cw_Query("UPDATE subscribe SET gender='$Get_Gender' WHERE email='$Get_Email'");
+        $result = Cw_Query("UPDATE subscribe SET user='$Get_User' WHERE email='$Get_Email'");
+        $result = Cw_Query("UPDATE subscribe SET country='$Get_Country' WHERE email='$Get_Email'");
+        $result = Cw_Query("UPDATE subscribe SET birth='$Get_Birth' WHERE email='$Get_Email'");
     }
 }
 header("Location: http://$Website_Url_Auth/");

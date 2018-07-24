@@ -1,7 +1,7 @@
 <?php
 
-$result = mysql_query("UPDATE login_session SET active='0' WHERE userid='$CurrentUser' AND active='1' AND session='$_COOKIE[_CwSess]' AND session_generate='$_SESSION[sessiongenerate]' AND webid='$_COOKIE[_CwOrgWebId]'")
-or die(mysql_error());
+$result = mysqli_query($CwDb,"UPDATE login_session SET active='0' WHERE userid='$CurrentUser' AND active='1' AND session='$_COOKIE[_CwSess]' AND session_generate='$_SESSION[sessiongenerate]' AND webid='$_COOKIE[_CwOrgWebId]'")
+or die(mysqli_error());
 session_destroy();
 unset($_COOKIE['PHPSESSID']);
 unset($_COOKIE['_CwSess']);

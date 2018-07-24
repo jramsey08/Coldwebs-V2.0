@@ -24,9 +24,9 @@ if($Login == "1"){
 		}
 		
         $query = "SELECT * FROM users WHERE id='$Id' AND webid='$WebId'";
-        $result = mysql_query($query) or die(mysql_error());
-        $Article = mysql_fetch_array($result);
-        $Article = PbUnSerial($Article);
+        $result = mysqli_query($CwDb,$query) or die(mysqli_error());
+        $Article = mysqli_fetch_assoc($result);
+        $Article = CwOrganize($Article,$Array);
         $Info = $Article['info'];
         $Article = Cw_Filter_Array($Article);
         
@@ -64,18 +64,15 @@ if($Login == "1"){
         $Info["lastname"] = $LastName;
         $Info = serialize($Info);
         if(isset($Info)){
-		$result = mysql_query("UPDATE users SET info='$Info' WHERE id='$Id' AND webid='$WebId'") 
-		or die(mysql_error());
+		$result = mysqli_query($CwDb,"UPDATE users SET info='$Info' WHERE id='$Id' AND webid='$WebId'") or die(mysqli_error());
 		}
 		
 		if(isset($Password)){
-			$result = mysql_query("UPDATE users SET password='$Password' WHERE id='$Id' AND webid='$WebId'") 
-			or die(mysql_error());
+			$result = mysqli_query($CwDb,"UPDATE users SET password='$Password' WHERE id='$Id' AND webid='$WebId'") or die(mysqli_error());
 		}
 		
 		if(isset($FullName)){
-			$result = mysql_query("UPDATE users SET name='$FullName' WHERE id='$Id' AND webid='$WebId'") 
-			or die(mysql_error());
+			$result = mysqli_query($CwDb,"UPDATE users SET name='$FullName' WHERE id='$Id' AND webid='$WebId'") or die(mysqli_error());
 		}
 
 	}

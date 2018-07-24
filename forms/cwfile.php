@@ -92,8 +92,8 @@ if($Login == "1"){
 	}
 	if($CwFileCount == "" OR $CwFileCount == "1"){
 		$query = "SELECT * FROM images WHERE album='$Article_Id' AND active='1' AND trash='0'";
-		$result = mysql_query($query) or die(mysql_error());
-		while($row = mysql_fetch_array($result)){
+		$result = mysqli_query($CwDb,$query) or die(mysqli_error());
+		while($row = mysqli_fetch_assoc($result)){
 			$CwFileCount = $CwFileCount + "1";
 		}
 	}else{
@@ -122,25 +122,23 @@ if($Login == "1"){
 
 	if($Article_Id == ""){
         $PostImages = serialize($PostImages);
-		mysql_query("INSERT INTO articles(url, active, category, type, other, rand, date, feat, content, info, img, webid)
+		mysqli_query($CwDb,"INSERT INTO articles(url, active, category, type, other, rand, date, feat, content, info, img, webid)
 		VALUES('$Article_Url', '$Article_Active',  '$Article_Category', '$Article_Type', '$Article_Other', '$GalRand','$Article_Date', '$Article_Feat', '$Article_Content', '$Article_Info ', '$PostImages', '$WebId') ")or die(mysql_error());
 
 // PROCESS GALLERY IMAGE UPLOADS \\
 		$query = "SELECT * FROM articles WHERE trash='0' AND rand='$Rand' AND webid='$WebId'";
-		$result = mysql_query($query) or die(mysql_error());
-		$row = mysql_fetch_array($result);
+		$result = mysqli_query($CwDb,$query) or die(mysql_error());
+		$row = mysqli_fetch_assoc($result);
 		$Album = $row['id'];
-		$result = mysql_query("UPDATE images SET album='$Album' WHERE album='$GalRand' AND webid='$WebId'") 
-        or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET rand='' WHERE id='$Album' AND webid='$WebId'") 
-		or die(mysql_error());
+		$result = mysqli_query($CwDb,"UPDATE images SET album='$Album' WHERE album='$GalRand' AND webid='$WebId'") or die(mysql_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET rand='' WHERE id='$Album' AND webid='$WebId'") or die(mysql_error());
 
 
 	}else{
 
         $query = "SELECT * FROM articles WHERE id='$Article_Id'";
-    	$result = mysql_query($query) or die(mysql_error());
-    	$Article = mysql_fetch_array($result);
+    	$result = mysqli_query($CwDb,$query) or die(mysqli_error());
+    	$Article = mysqli_fetch_assoc($result);
     	$Article = CwOrganize($Article,$Array);
         $Article = Cw_Filter_Array($Article);
             
@@ -150,8 +148,7 @@ if($Login == "1"){
 		}else{
 			foreach($Image_Order as $ImageO){
 				$ImageId = key($Image_Order);
-				$result = mysql_query("UPDATE images SET list='$ImageO' WHERE id='$ImageId' AND webid='$WebId'") 
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE images SET list='$ImageO' WHERE id='$ImageId' AND webid='$WebId'") or die(mysql_error());
 				next($Image_Order);
 			}
 		}
@@ -159,31 +156,24 @@ if($Login == "1"){
 		}else{
 			foreach($Image_Url as $ImageU){
 				$ImageUId = key($Image_Order);
-				$result = mysql_query("UPDATE images SET url='$ImageU' WHERE id='$ImageUId' AND webid='$WebId'") 
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE images SET url='$ImageU' WHERE id='$ImageUId' AND webid='$WebId'") or die(mysql_error());
 				next($Image_Url);
 			}
 		}
 
 // UPDATE THE DATABASE WITH ANY NEW/OLD INFORMATION \\
-		$result = mysql_query("UPDATE articles SET active='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET info='$Article_Info' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET other='$Article_Other' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET content='$Article_Content' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET active='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE articles SET info='$Article_Info' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE articles SET other='$Article_Other' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET content='$Article_Content' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
 		if(is_array($PostImages)){
 		    $PostImages = serialize($PostImages);
-			$result = mysql_query("UPDATE articles SET img='$PostImages' WHERE id='$Article_Id' AND webid='$WebId'") 
-			or die(mysql_error());
+			$result = mysqli_query($CwDb,"UPDATE articles SET img='$PostImages' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysql_error());
 		}
 
 		if(is_array($GalleryRemoval)){
 			foreach($GalleryRemoval as $value){
-				$result = mysql_query("UPDATE images SET trash='1' WHERE id='$value' AND webid='$WebId'")
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE images SET trash='1' WHERE id='$value' AND webid='$WebId'")or die(mysql_error());
 			}
 		}
 

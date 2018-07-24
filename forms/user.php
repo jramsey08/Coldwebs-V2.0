@@ -67,62 +67,44 @@ if($Login == "1"){
 		if($Id == ""){
 		    $Manual_Message = "Created User Account";
             $Info = unserialize($Info);
-			$query = "SELECT * FROM cwoptions WHERE category='$_POST[access]' AND type='useraccess' AND active='1' AND trash='0'";
-			$result = mysql_query($query) or die(mysql_error());
-			$Row = mysql_fetch_array($result);
-            $Row = PbUnSerial($Row);
+			$Row = Cw_Fetch("SELECT * FROM cwoptions WHERE category='$_POST[access]' AND type='useraccess' AND active='1' AND trash='0'",$Array);
             $LevelAccess = $Row['content'];
-			$query = "SELECT * FROM cwoptions WHERE category='4' AND type='useraccess' AND active='1' AND trash='0'";
-			$result = mysql_query($query) or die(mysql_error());
-			$Row = mysql_fetch_array($result);
-            $Row = PbUnSerial($Row);
+			$Row = Cw_Fetch("SELECT * FROM cwoptions WHERE category='4' AND type='useraccess' AND active='1' AND trash='0'",$Array);
             if($_POST['siteaccess'] == $Row['content']){
                 $Info['siteaccess'] = $LevelAccess;
             }
             $Info = serialize($Info);
-			$query = "SELECT * FROM users WHERE email='$Email' OR username='$Username'";
-			$result = mysql_query($query) or die(mysql_error());
-			$row = mysql_fetch_array($result);
+			$row = Cw_Fetch("SELECT * FROM users WHERE email='$Email' OR username='$Username'",$Array);
 			if($row['email'] != $Email AND $row['username'] != $Username){
-				mysql_query("INSERT INTO users
-				(name, email, other, info, password, username, webid) VALUES('$FullName', '$Email', '$Other', '$Info', '$Password', '$Username', '$WebId' ) ") 
-				or die(mysql_error());
+				Cw_Query("INSERT INTO users
+				(name, email, other, info, password, username, webid) VALUES('$FullName', '$Email', '$Other', '$Info', '$Password', '$Username', '$WebId' ) ");
 			}else{
 				$UserRedir = OtarEncrypt($key,$row['id']);
 				$Redirect = "admin/Users/$UserRedir";
 			}
 		}else{
 		    
-		    $query = "SELECT * FROM users WHERE id='$Id'";
-    		$result = mysql_query($query) or die(mysql_error());
-    		$Article = mysql_fetch_array($result);
-    		$Article = CwOrganize($Article,$Array);
+		    $Article = Cw_Fetch("SELECT * FROM users WHERE id='$Id'",$Array);
             $Article = Cw_Filter_Array($Article);
             
             
 			if(isset($Info)){
-				$result = mysql_query("UPDATE users SET info='$Info' WHERE id='$Id'") 
-				or die(mysql_error());
+				$result = Cw_Query("UPDATE users SET info='$Info' WHERE id='$Id'");
 			}
 			if(isset($Other)){
-				$result = mysql_query("UPDATE users SET other='$Other' WHERE id='$Id'") 
-				or die(mysql_error());
+				$result = Cw_Query("UPDATE users SET other='$Other' WHERE id='$Id'");
 			}
 			if(isset($Password)){
-				$result = mysql_query("UPDATE users SET password='$Password' WHERE id='$Id'") 
-				or die(mysql_error());
+				$result = Cw_Query("UPDATE users SET password='$Password' WHERE id='$Id'");
 			}
 			if(isset($Username)){
-				$result = mysql_query("UPDATE users SET username='$Username' WHERE id='$Id'") 
-				or die(mysql_error());
+				$result = Cw_Query("UPDATE users SET username='$Username' WHERE id='$Id'");
 			}
 			if(isset($FullName)){
-				$result = mysql_query("UPDATE users SET name='$FullName' WHERE id='$Id'") 
-				or die(mysql_error());
+				$result = Cw_Query("UPDATE users SET name='$FullName' WHERE id='$Id'");
 			}
 			if(isset($Email)){
-				$result = mysql_query("UPDATE users SET email='$Email' WHERE id='$Id'") 
-				or die(mysql_error());
+				$result = Cw_Query("UPDATE users SET email='$Email' WHERE id='$Id'");
 			}
 			$Redirect = "admin/Users";
 		}

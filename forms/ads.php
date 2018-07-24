@@ -98,95 +98,75 @@ if($Login == "1"){
 
 
 	if($Ad_Id == ""){
-	
+	    $Manual_Message = "Created Advertisement";
 	
 //CREATES ROW FOR NEW ADVERTISEMENT \\
-		mysql_query("INSERT INTO cw_ads(name, type, feat, location, adlimit, height, width, img, pb, other, info, rand, active, webid) VALUES('$Ad_Name', '$Ad_Type', '$Ad_Feat', '$Ad_Location', '$Ad_Limit', '$Ad_Height', '$Ad_Width', '$Ad_Img', '$Ad_Pb', '$Ad_Other', '$Ad_Info', '$Rand', '$Ad_Active', '$WebId') ")or die(mysql_error());
+		mysqli_query($CwDb,"INSERT INTO cw_ads(name, type, feat, location, adlimit, height, width, img, pb, other, info, rand, active, webid) VALUES('$Ad_Name', '$Ad_Type', '$Ad_Feat', '$Ad_Location', '$Ad_Limit', '$Ad_Height', '$Ad_Width', '$Ad_Img', '$Ad_Pb', '$Ad_Other', '$Ad_Info', '$Rand', '$Ad_Active', '$WebId') ")or die(mysqli_error());
 		$query = "SELECT * FROM cw_ads WHERE rand='$Rand'";
-		$result = mysql_query($query) or die(mysql_error());
-		$row = mysql_fetch_array($result);
+        $result = mysqli_query($CwDb, $query);
+        $row = mysqli_fetch_assoc($result);
 		$row = Cw_Filter_Array($row);
 		$Ad_Id = $row['id'];
-		$result = mysql_query("UPDATE cw_ads SET rand='' WHERE id='$Ad_Id'") 
-		or die(mysql_error());
+		$result = mysqli_query($CwDb,"UPDATE cw_ads SET rand='' WHERE id='$Ad_Id'") or die(mysqli_error());
 // PROCESS GALLERY IMAGE UPLOADS \\
 		$Array["galleryupload"]["id"] = $Ad_Id;
 		$Upload = $files["gallery"];
 		CwGallery($Array,$files);
-		$result = mysql_query("UPDATE cw_ads SET rand='' WHERE id='$Album'") 
-		or die(mysql_error());
+		$result = mysqli_query($CwDb,"UPDATE cw_ads SET rand='' WHERE id='$Album'") or die(mysqli_error());
 		
 		
 	}else{
+	    $Manual_Message = "Updated Advertisement";
 
             $query = "SELECT * FROM cw_ads WHERE id='$Ad_Id'";
-    		$result = mysql_query($query) or die(mysql_error());
+    		$result = mysql_query($CwDb,$query);
     		$Article = mysql_fetch_array($result);
     		$Article = CwOrganize($Article,$Array);
             $Article = Cw_Filter_Array($Article);
 	
 //// GENERAL SITE ADVERTISEMENT UPDATE \\\\
-		$result = mysql_query("UPDATE cw_ads SET name='$Ad_Name' WHERE id='$Ad_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE cw_ads SET type='$Ad_Type' WHERE id='$Ad_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE cw_ads SET feat='$Ad_Feat' WHERE id='$Ad_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE cw_ads SET location='$Ad_Location' WHERE id='$Ad_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE cw_ads SET adlimit='$Ad_Limit' WHERE id='$Ad_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE cw_ads SET height='$Ad_Height' WHERE id='$Ad_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE cw_ads SET width='$Ad_Width' WHERE id='$Ad_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE cw_ads SET img='$Ad_Img' WHERE id='$Ad_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE cw_ads SET pb='$Ad_Pb' WHERE id='$Ad_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE cw_ads SET other='$Ad_Other' WHERE id='$Ad_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE cw_ads SET info='$Ad_Info' WHERE id='$Ad_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE cw_ads SET active='$Ad_Active' WHERE id='$Ad_Id' AND webid='$WebId'") 
-		or die(mysql_error());
+		$result = mysqli_query($CwDb,"UPDATE cw_ads SET name='$Ad_Name' WHERE id='$Ad_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE cw_ads SET type='$Ad_Type' WHERE id='$Ad_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE cw_ads SET feat='$Ad_Feat' WHERE id='$Ad_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE cw_ads SET location='$Ad_Location' WHERE id='$Ad_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE cw_ads SET adlimit='$Ad_Limit' WHERE id='$Ad_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE cw_ads SET height='$Ad_Height' WHERE id='$Ad_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE cw_ads SET width='$Ad_Width' WHERE id='$Ad_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE cw_ads SET img='$Ad_Img' WHERE id='$Ad_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE cw_ads SET pb='$Ad_Pb' WHERE id='$Ad_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE cw_ads SET other='$Ad_Other' WHERE id='$Ad_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE cw_ads SET info='$Ad_Info' WHERE id='$Ad_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE cw_ads SET active='$Ad_Active' WHERE id='$Ad_Id' AND webid='$WebId'") or die(mysqli_error());
 		
 		$Array["galleryupload"]["id"] = $Ad_Id;
 		CwGallery($Array,$files);
 		if($Image_Order != ""){ 
 			foreach($Image_Order as $ImageO){
 				$ImageId = key($Image_Order);
-				$result = mysql_query("UPDATE images SET list='$ImageO' WHERE id='$ImageId' AND webid='$WebId'") 
-				or die(mysql_error());
-				$result = mysql_query("UPDATE images SET gallery='ads' WHERE id='$ImageId' AND webid='$WebId'") 
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE images SET list='$ImageO' WHERE id='$ImageId' AND webid='$WebId'") or die(mysqli_error());
+				$result = mysqli_query($CwDb,"UPDATE images SET gallery='ads' WHERE id='$ImageId' AND webid='$WebId'") or die(mysqli_error());
 				next($Image_Order);
 			}
 		}
 		if($Image_Url != ""){
 			foreach($Image_Url as $ImageU){
 				$ImageUId = key($Image_Url);
-				$result = mysql_query("UPDATE images SET url='$ImageU' WHERE id='$ImageUId' AND webid='$WebId'") 
-				or die(mysql_error());
-				$result = mysql_query("UPDATE images SET gallery='ads' WHERE id='$ImageId' AND webid='$WebId'") 
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE images SET url='$ImageU' WHERE id='$ImageUId' AND webid='$WebId'") or die(mysqli_error());
+				$result = mysqli_query($CwDb,"UPDATE images SET gallery='ads' WHERE id='$ImageId' AND webid='$WebId'") or die(mysqli_error());
 				next($Image_Url);
 			}
 		}
 // REMOVE REQUESTED EXTRA IMAGES \\
 		if(is_array($GalleryRemoval)){
 			foreach($GalleryRemoval as $value){
-				$result = mysql_query("UPDATE images SET trash='1' WHERE id='$value' AND webid='$WebId'")
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE images SET trash='1' WHERE id='$value' AND webid='$WebId'")or die(mysqli_error());
 			}
 		}
 		if(is_array($Image_Active)){
 			foreach($Image_Active as $ImageA){
 				$ImageAId = key($Image_Active);
-				$result = mysql_query("UPDATE images SET active='$ImageA' WHERE id='$ImageAId' AND webid='$WebId'") 
-				or die(mysql_error());
-				$result = mysql_query("UPDATE images SET gallery='ads' WHERE id='$ImageAId' AND webid='$WebId'") 
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE images SET active='$ImageA' WHERE id='$ImageAId' AND webid='$WebId'") or die(mysqli_error());
+				$result = mysqli_query($CwDb,"UPDATE images SET gallery='ads' WHERE id='$ImageAId' AND webid='$WebId'") or die(mysqli_error());
 				next($Image_Active);
 			}
 		}
@@ -243,6 +223,7 @@ if($Login == "1"){
     $Info["user"] = $Current_Admin_Id;
     $Info["error"] = $error;
     $Info["tracker"] = $Load_Sess;
+    $Info["manual_message"] = $Manual_Message;
     $Info["id"] = $Ad_Id;
     $Info["type"] = "cw_ads";
     Cw_Changes($Info, $Article, $Array);
@@ -256,8 +237,7 @@ if($Login == "1"){
     #print $result;
 
 
-		#$result = mysql_query("UPDATE cw_ads SET pb='$content' WHERE id='$Ad_Id' AND webid='$WebId'") 
-		#or die(mysql_error());
+		#$result = mysqli_query($CwDb,"UPDATE cw_ads SET pb='$content' WHERE id='$Ad_Id' AND webid='$WebId'") or die(mysqli_error());
 		#unlink($file);
 	#unset($content);
 

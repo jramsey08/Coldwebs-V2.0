@@ -10,4 +10,4 @@ if($Login == "1"){
 	$Upload = $files["file"];
 	CwFileUpload($Array,$CwFiles);
 
-}
+} 

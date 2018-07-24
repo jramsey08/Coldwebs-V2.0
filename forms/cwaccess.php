@@ -16,22 +16,19 @@ if($Login == "1"){
 	
 	if($Article_Id == ""){
 // CREATE A NEW LISTING WITH THE INFORMATION PROVIDED \\
-		mysql_query("INSERT INTO cwoptions(type, active, name, content, webid) 
-		VALUES('access', '$Article_Active',  '$Article_Name', '$Article_Content', '$WebId') ")or die(mysql_error());
+		mysqli_query($CwDb,"INSERT INTO cwoptions(type, active, name, content, webid) 
+		VALUES('access', '$Article_Active',  '$Article_Name', '$Article_Content', '$WebId') ")or die(mysqli_error());
 	}else{
 	    $query = "SELECT * FROM cwoptions WHERE id='$Article_Id'";
-    	$result = mysql_query($query) or die(mysql_error());
-    	$Article = mysql_fetch_array($result);
+    	$result = mysqli_query($CwDb,$query) or die(mysqli_error());
+    	$Article = mysqli_fetch_assoc($result);
     	$Article = CwOrganize($Article,$Array);
         $Article = Cw_Filter_Array($Article);
         
 // UPDATE THE DATABASE WITH ANY NEW/OLD INFORMATION \\
-		$result = mysql_query("UPDATE cwoptions SET name='$Article_Name' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE cwoptions SET content='$Article_Content' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE cwoptions SET active='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
+		$result = mysqli_query($CwDb,"UPDATE cwoptions SET name='$Article_Name' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE cwoptions SET content='$Article_Content' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE cwoptions SET active='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error()); 
 	}
 
 // TRACKS CHANGES MADE FROM USERS \\

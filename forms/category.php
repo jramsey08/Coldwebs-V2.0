@@ -31,6 +31,7 @@ if($Login == "1"){
 	$Article_Content["embedcode"] = $_POST["embedcode"];
 	$Article_Content["cattype"] = $_POST["cattype"];
 	$Article_Content["maincat"] = $_POST["maincat"];
+	$Article_Content["mainaudio"] = $_POST["mainaudio"];
 
 	$SettingsAuto = $_POST["auto"];
 	$SettingsAlbum = $_POST["album"];
@@ -156,41 +157,38 @@ if($Login == "1"){
 
 
 	if($Article_Id == ""){
+	    $Manual_Message = "Created New Category";
         $PostImages = serialize($PostImages);
-	    mysql_query("INSERT INTO articles(url, active, category, type, other, rand, date, feat, content, info, img, date_created, shortcode, webid, name) 
-	    VALUES('$Article_Url', '$Article_Active',  '$Article_Category', '$Article_Type', '$Article_Other', '$GalRand','$Article_Date', '$Article_Feat', '$Article_Content', '$Article_Info ', '$PostImages', '$Date_Created', '$ShortCode', '$WebId', '$Article_Name') ")or die(mysql_error());
+	    mysqli_query($CwDb,"INSERT INTO articles(url, active, category, type, other, rand, date, feat, content, info, img, date_created, shortcode, webid, name) 
+	    VALUES('$Article_Url', '$Article_Active',  '$Article_Category', '$Article_Type', '$Article_Other', '$GalRand','$Article_Date', '$Article_Feat', '$Article_Content', '$Article_Info ', '$PostImages', '$Date_Created', '$ShortCode', '$WebId', '$Article_Name') ")or die(mysqli_error());
 
 // PROCESS GALLERY IMAGE UPLOADS \\
 		$query = "SELECT * FROM articles WHERE trash='0' AND rand='$Rand' AND webid='$WebId'";
-		$result = mysql_query($query) or die(mysql_error());
-		$row = mysql_fetch_array($result);
-		$Album = $row["id"];
-		$result = mysql_query("UPDATE images SET album='$Album' WHERE album='$GalRand' AND webid='$WebId'") 
-        or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET rand='' WHERE id='$Album' AND webid='$WebId'") 
-		or die(mysql_error());
+		$result = mysqli_query($CwDb,$query) or die(mysql_error());
+		$row = mysqli_fetch_assoc($result);
+		$Article_Id = $row["id"];
+		$result = mysqli_query($CwDb,"UPDATE images SET album='$Article_Id' WHERE album='$GalRand' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET rand='' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
 
 // UPDATE ALL TRANSFERRED ARTICLE INFORMATION \\
-		$result = mysql_query("UPDATE transfer SET trash='1' WHERE id='$TransferId' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE transfer SET trash='1' WHERE url='$Article_Url' AND webid='$WebId'") 
-		or die(mysql_error());
+		$result = mysqli_query($CwDb,"UPDATE transfer SET trash='1' WHERE id='$TransferId' AND webid='$WebId'") or die(mysql_error());
+		$result = mysqli_query($CwDb,"UPDATE transfer SET trash='1' WHERE url='$Article_Url' AND webid='$WebId'") or die(mysqli_error());
 
 
 
 	}else{
-
+        $Manual_Message = "Updated Category Information";
         $query = "SELECT * FROM articles WHERE id='$Article_Id'";
-    	$result = mysql_query($query) or die(mysql_error());
-    	$Article = mysql_fetch_array($result);
+    	$result = mysqli_query($CwDb,$query) or die(mysqli_error());
+    	$Article = mysql_fetch_assoc($result);
     	$Article = CwOrganize($Article,$Array);
         $Article = Cw_Filter_Array($Article);
 
 // UN-LINK OLD TAGS FROM ARTICLE \\
 		$UnlinkTag =  explode(",", $Tags);
 		$query = "SELECT * FROM articles WHERE id='$Article_Id' AND webid='$WebId'";
-		$result = mysql_query($query) or die(mysql_error());
-		$row = mysql_fetch_array($result);
+		$result = mysqli_query($CwDb,$query) or die(mysqli_error());
+		$row = mysqli_fetch_assoc($result);
 		$row = CwOrganize($row,$Array);
 		$SRTags = $row["other"]["tags"];
 		if($SRTags == ""){
@@ -200,15 +198,14 @@ if($Login == "1"){
 			$Count = "0";
 			foreach($TagRemove as $value){
 				$Query = "SELECT * FROM cw_tags WHERE name='$value' AND webid='$WebId'";
-				$Result = mysql_query($Query) or die(mysql_error());
-				$Row = mysql_fetch_array($Result);
+				$Result = mysqli_query($CwDb,$Query) or die(mysqli_error());
+				$Row = mysqli_fetch_assoc($Result);
 				$ListTagId = $Row["id"];
 				$ListTag = unserialize($Row["content"]);
 				$Tag_key = array_search($Article_Id, $ListTag);
 				unset($ListTag[$Tag_key]);
 				$NewTagArray = serialize($ListTag);
-				$result = mysql_query("UPDATE cw_tags SET content='$NewTagArray' WHERE id='$ListTagId' AND webid='$WebId'")
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE cw_tags SET content='$NewTagArray' WHERE id='$ListTagId' AND webid='$WebId'")or die(mysqli_error());
 		   }
 		}
 
@@ -217,39 +214,26 @@ if($Login == "1"){
 		}else{
 			foreach($Image_Order as $ImageO){
 				$ImageId = key($Image_Order);
-				$result = mysql_query("UPDATE images SET list='$ImageO' WHERE id='$ImageId' AND webid='$WebId'") 
-				or die(mysql_error());
+				$result = mysqli_query($CwDb,"UPDATE images SET list='$ImageO' WHERE id='$ImageId' AND webid='$WebId'") or die(mysqli_error());
 				next($Image_Order);
 			}
 		}
 
 // UPDATE THE DATABASE WITH ANY NEW/OLD INFORMATION \\
-		$result = mysql_query("UPDATE articles SET url='$Article_Url' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET shortcode='$ShortCode' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET shortcode='$ShortCode' WHERE category='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET active='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET info='$Article_Info' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET name='$Article_Name' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET category='$Article_Category' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET other='$Article_Other' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET date_created='$Date_Created' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET feat='$Article_Feat' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET content='$Article_Content' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET url='$Article_Url' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET shortcode='$ShortCode' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET shortcode='$ShortCode' WHERE category='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET active='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE articles SET info='$Article_Info' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE articles SET name='$Article_Name' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE articles SET category='$Article_Category' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error()); 
+		$result = mysqli_query($CwDb,"UPDATE articles SET other='$Article_Other' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET date_created='$Date_Created' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET feat='$Article_Feat' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
+		$result = mysqli_query($CwDb,"UPDATE articles SET content='$Article_Content' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
         if(is_array($PostImages)){
             $PostImages = serialize($PostImages);
-		    $result = mysql_query("UPDATE articles SET img='$PostImages' WHERE id='$Article_Id' AND webid='$WebId'") 
-		    or die(mysql_error());
+		    $result = mysqli_query($CwDb,"UPDATE articles SET img='$PostImages' WHERE id='$Article_Id' AND webid='$WebId'") or die(mysqli_error());
         }
 
 
@@ -262,16 +246,15 @@ if($Login == "1"){
 	$Tags =  explode(",", $Tags);
 	foreach($Tags as $value){
 		$query = "SELECT * FROM cw_tags WHERE name='$value' AND webid='$WebId'"; 
-		$result = mysql_query($query) or die(mysql_error());
-		$row = mysql_fetch_array($result);
+		$result = mysqli_query($CwDb,$query) or die(mysqli_error());
+		$row = mysqli_fetch_assoc($result);
 		$TagSearchId = $row["id"];
 		if($TagSearchId == ""){
 			$TagId = array("$TagArticle");
 			$TagId = serialize($TagId);
 			if($value == ""){
 			}else{
-				mysql_query("INSERT INTO cw_tags
-				(name, content, webid) VALUES('$value', '$TagId', '$WebId') ")or die(mysql_error());
+				mysqli_query($CwDb,"INSERT INTO cw_tags(name, content, webid) VALUES('$value', '$TagId', '$WebId') ")or die(mysqli_error());
 			}
 		}else{
 			$TagId = $row["content"];
@@ -280,7 +263,7 @@ if($Login == "1"){
     			if(!in_array($TagArticle, $TagId)){
     				array_push($TagId, $TagArticle);
     				$NewTagArray = serialize($TagId);
-    				$result = mysql_query("UPDATE cw_tags SET content='$NewTagArray' WHERE id='$TagSearchId' AND webid='$WebId'")
+    				$result = mysqli_query($CwDb,"UPDATE cw_tags SET content='$NewTagArray' WHERE id='$TagSearchId' AND webid='$WebId'")
     				or die(mysql_error());
     			}
 			}
@@ -293,6 +276,7 @@ if($Login == "1"){
     $Info["user"] = $Current_Admin_Id;
     $Info["error"] = $error;
     $Info["tracker"] = $Load_Sess;
+    $Info["manual_message"] = $Manual_Message;
     $Info["id"] = $Article_Id;
     $Info["type"] = "articles";
     Cw_Changes($Info, $Article, $Array);

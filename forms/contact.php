@@ -22,10 +22,9 @@
 	if($Email != ""){ 
 		if($Name != ""){
 			if($Message != ""){
-				mysql_query("INSERT INTO messages 
+				mysqli_query($CwDb,"INSERT INTO messages 
 				(name, email, subject, message, user, date, priority, webid, type, other, admin)
-				VALUES('$Name', '$Email', '$Subject', '$Message', '$User', '$Date', '$Priority', '$WebId', 'inbox', '$Other', '1' ) ") 
-				or die(mysql_error()); 
+				VALUES('$Name', '$Email', '$Subject', '$Message', '$User', '$Date', '$Priority', '$WebId', 'inbox', '$Other', '1' ) ") or die(mysqli_error()); 
 			}
             if($Subject == ""){
                 $subject = "$Name has just sent you a message";

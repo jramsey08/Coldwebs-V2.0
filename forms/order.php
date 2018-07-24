@@ -58,8 +58,7 @@ if($Get_Id == "address"){
             $row['other']['address'] = $CurrentUser['info']['address'];
         }
         $Other = serialize($row[other]);
-        $result = mysql_query("UPDATE trans SET other='$Other' WHERE id='$Trans' AND webid='$WebId'") 
-        or die(mysql_error());
+        $result = mysqli_query($CwDb,"UPDATE trans SET other='$Other' WHERE id='$Trans' AND webid='$WebId'") or die(mysqli_error());
     }else{
         $Redir = "Cart";
     }
@@ -67,8 +66,7 @@ if($Get_Id == "address"){
 
 if($Get_Id == "shipping"){
     if($Trans != ""){
-        $result = mysql_query("UPDATE trans SET delivery_option='$Trans_Delivery' WHERE id='$Trans' AND webid='$WebId'") 
-        or die(mysql_error());
+        $result = mysqli_query($CwDb,"UPDATE trans SET delivery_option='$Trans_Delivery' WHERE id='$Trans' AND webid='$WebId'") or die(mysqli_error());
     }else{
         $Redir = "Cart";
     }
@@ -80,8 +78,8 @@ if($Get_Id == "order-message"){
     $Message = $_POST['message'];
     $Name = $CurrentUser['info']['firstname'] . $CurrentUser['info']['lastname'];
     $Other = $_POST['id_order'];
-    mysql_query("INSERT INTO messages(other,message,subject,name,user,priority,webid,type) VALUES('$Other', '$Message', 
-    '$Subject', '$Name', '$Current_Admin', '$Priority', '$WebId', 'inbox')")or die(mysql_error());
+    mysqli_query($CwDb,"INSERT INTO messages(other,message,subject,name,user,priority,webid,type) VALUES('$Other', '$Message', 
+    '$Subject', '$Name', '$Current_Admin', '$Priority', '$WebId', 'inbox')")or die(mysqli_error());
     $Redir = "My-Account";
 }
 
@@ -90,8 +88,8 @@ if($Get_Id == "payment-process"){
         $Cart_New = CwCartTotal($_SESSION['cart']);
         $Cart_Total = $Cart_New['total'];
         $query = "SELECT * FROM cw_coupon WHERE cart='$_SESSION[cart]' AND webid='$WebId'";
-        $result = mysql_query($query) or die(mysql_error());
-        $row = mysql_fetch_array($result);
+        $result = mysqli_query($CwDb,$query) or die(mysqli_error());
+        $row = mysqli_fetch_assoc($result);
         $row = CwOrganize($row,$Array);
         if($row['type'] == "percent"){
             $Discount = $row['amount'] / "100";
@@ -113,19 +111,17 @@ if($Get_Id == "cart"){
     $_SESSION['cart'] = $Cart;
     foreach($Qty as $value => $Q){
         if($Q <= "0"){
-            $result = mysql_query("UPDATE cw_cart SET active='0' WHERE id='$value' AND webid='$WebId'") 
-        or die(mysql_error());
+            $result = mysqli_query($CwDb,"UPDATE cw_cart SET active='0' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
             $Q = "0";
         }
-        $result = mysql_query("UPDATE cw_cart SET qty='$Q' WHERE id='$value' AND webid='$WebId'") 
-        or die(mysql_error());
+        $result = mysqli_query($CwDb,"UPDATE cw_cart SET qty='$Q' WHERE id='$value' AND webid='$WebId'") or die(mysqli_error());
         $Prod_Count = $Prod_Count + $Q;
     }
     $Cart_New = CwCartTotal($Cart);
     $Cart_Total = $Cart_New['total'];
     $query = "SELECT * FROM cw_coupon WHERE cart='$Cart' AND webid='$WebId'";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($CwDb,$query) or die(mysqli_error());
+    $row = mysqli_fetch_assoc($result);
     $row = CwOrganize($row,$Array);
     if($row['type'] == "percent"){
         $Discount = $row['amount'] / "100";
@@ -137,18 +133,16 @@ if($Get_Id == "cart"){
     $Trans_Other['message'] = "";
     $Trans_Other = serialize($Trans_Other);
     if($Trans == ""){
-        mysql_query("INSERT INTO trans(type, method, user, status, price, transid, typeid, other, notes, attend, img, qty, guest, cart, session, delivery_option,webid) VALUES('$Trans_Type',  
+        mysqli_query($CwDb,"INSERT INTO trans(type, method, user, status, price, transid, typeid, other, notes, attend, img, qty, guest, cart, session, delivery_option,webid) VALUES('$Trans_Type',  
         '$Trans_Method', '$Trans_User', '$Trans_Status', '$Cart_Total', '$Trans_Ref', '$Trans_Type_Id', '$Trans_Other', '$Trans_Notes', '$Trans_Attend ', '$Trans_Img', '$Prod_Count', 
-        '$Trans_Guest', '$Cart', '$Trans_Session', '$Trans_Delivery', '$WebId')")or die(mysql_error());
+        '$Trans_Guest', '$Cart', '$Trans_Session', '$Trans_Delivery', '$WebId')")or die(mysqli_error());
     $query = "SELECT * FROM trans WHERE cart='$Cart' AND session='$Session[id]' AND active='1' AND trash='0' AND webid='$WebId'";
-    $result = mysql_query($query) or die(mysql_error());
-    $row = mysql_fetch_array($result);
+    $result = mysqli_query($CwDb,$query) or die(mysqli_error());
+    $row = mysqli_fetch_assoc($result);
         $_SESSION['trans'] = $row['id'];
     }else{
-    $result = mysql_query("UPDATE trans SET qty='$Prod_Count' WHERE id='$Trans' AND webid='$WebId'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE trans SET price='$Cart_Total' WHERE id='$Trans' AND webid='$WebId'") 
-    or die(mysql_error());
+    $result = mysqli_query($CwDb,"UPDATE trans SET qty='$Prod_Count' WHERE id='$Trans' AND webid='$WebId'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE trans SET price='$Cart_Total' WHERE id='$Trans' AND webid='$WebId'") or die(mysqli_error());
     }
 }
 
@@ -163,10 +157,8 @@ if($Get_Id == "process-complete"){
             $row['other']['address'] = $CurrentUser['info']['address'];
         }
         $Other = serialize($row['other']);
-        $result = mysql_query("UPDATE trans SET other='$Other' WHERE id='$Trans' AND webid='$WebId'") 
-        or die(mysql_error());
-        $result = mysql_query("UPDATE trans SET delivery_option='$Trans_Delivery' WHERE id='$Trans' AND webid='$WebId'") 
-        or die(mysql_error());
+        $result = mysqli_query($CwDb,"UPDATE trans SET other='$Other' WHERE id='$Trans' AND webid='$WebId'") or die(mysqli_error());
+        $result = mysqli_query($CwDb,"UPDATE trans SET delivery_option='$Trans_Delivery' WHERE id='$Trans' AND webid='$WebId'") or die(mysqli_error());
         include("api/coldwebs/payment/main.php");
     }else{
         $Redir = "Cart";
@@ -188,16 +180,11 @@ if($Get_Id == "checkout"){
     $Checkout_Other = serialize($Checkout_Other);
     $Price = $Trans["price"];
     $TotalPrice = $Checkout_Price + $DeliveryPrice;
-    $result = mysql_query("UPDATE trans SET price='$TotalPrice' WHERE id='$Trans' AND webid='$WebId'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE trans SET delivery_option='$Checkout_Delivery' WHERE id='$Trans' AND webid='$WebId'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE trans SET method='$Checkout_Payment' WHERE id='$Trans' AND webid='$WebId'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE trans SET other='$Checkout_Other' WHERE id='$Trans' AND webid='$WebId'") 
-    or die(mysql_error());
-    $result = mysql_query("UPDATE trans SET date='$Checkout_Date' WHERE id='$Trans' AND webid='$WebId'") 
-    or die(mysql_error());
+    $result = mysqli_query($CwDb,"UPDATE trans SET price='$TotalPrice' WHERE id='$Trans' AND webid='$WebId'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE trans SET delivery_option='$Checkout_Delivery' WHERE id='$Trans' AND webid='$WebId'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE trans SET method='$Checkout_Payment' WHERE id='$Trans' AND webid='$WebId'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE trans SET other='$Checkout_Other' WHERE id='$Trans' AND webid='$WebId'") or die(mysqli_error());
+    $result = mysqli_query($CwDb,"UPDATE trans SET date='$Checkout_Date' WHERE id='$Trans' AND webid='$WebId'") or die(mysqli_error());
     $Api = Cw_Quick_Info("cwoptions",$WebId,$Checkout_Payment,$Array);
     $Method = $Api["content"]["api"];
     include("api/coldwebs/payment/main.php");
@@ -205,7 +192,49 @@ if($Get_Id == "checkout"){
 }
 
 
-
+if($Get_Id == "donate"){
+    if($_SESSION["donate_id"] == ""){ 
+        $Item_Content = RandomCode(100);
+        mysqli_query($CwDb,"INSERT INTO cw_cart(session, item, price, content, qty, webid) VALUES('$Session[cart]', 'donate', '$_POST[donate_amnt]', '$Item_Content', '1', '$WebId' ) ") or die(mysqli_error());
+        $query = "SELECT * FROM cw_cart WHERE content='$Item_Content' AND webid='$WebId'";
+        $result = mysqli_query($CwDb,$query) or die(mysqli_error());
+        $row = mysqli_fetch_assoc($result);
+        $_SESSION["donate_id"] = $row["id"];
+    }else{
+        $result = mysqli_query($CwDb,"UPDATE cw_cart SET price='$_POST[donate_amnt]' WHERE id='$_SESSION[donate_id]' AND webid='$WebId'") or die(mysqli_error());
+        $result = mysqli_query($CwDb,"UPDATE cw_cart SET active='0' WHERE !id='$_SESSION[donate_id]' AND session='$Session[cart]' AND webid='$WebId'") or die(mysqli_error());
+    }
+    $Cart_New = CwCartTotal($Session["cart"]);
+    $Cart_Total = $_POST["donate_amnt"];
+    $CwCartTotal = $_POST["donate_amnt"];
+    $Trans_Type = "donate";
+    $Trans_Other['message'] = "Donation";
+    $Trans_Guest["name"] = $_POST["name"];
+    $Trans_Guest["email"] = $_POST["email"];
+    $Trans_Guest = serialize($Trans_Guest);
+    $Trans_User = $_POST["email"];
+    $Trans_Notes = "Basic Donation";
+    $Trans_Delivery = "n/a";
+    $Trans_Other = serialize($Trans_Other);
+    if($Trans == ""){
+        mysqli_query($CwDb,"INSERT INTO trans(type, method, user, status, price, transid, typeid, other, notes, attend, img, qty, guest, cart, session, delivery_option, webid) VALUES('$Trans_Type',  
+        '$Trans_Method', '$Trans_User', '$Trans_Status', '$Cart_Total', '$Trans_Ref', '$Trans_Type_Id', '$Trans_Other', '$Trans_Notes', '$Trans_Attend ', '$Trans_Img', '1', 
+        '$Trans_Guest', '$Cart', '$Trans_Session', '$Trans_Delivery', '$WebId')")or die(mysqli_error());
+    $query = "SELECT * FROM trans WHERE cart='$Cart' AND session='$Session[id]' AND active='1' AND trash='0' AND webid='$WebId'";
+    $result = mysqli_query($CwDb,$query) or die(mysqli_error());
+    $row = mysqli_fetch_assoc($result);
+        $_SESSION['trans'] = $row['id'];
+        $TransId = $_SESSION['trans'];
+    }else{
+        $result = mysqli_query($CwDb,"UPDATE trans SET price='$Cart_Total' WHERE id='$Trans' AND webid='$WebId'") or die(mysqli_error());
+        $TransId = $_SESSION['trans'];
+    }
+    #$Api = Cw_Quick_Info("cwoptions",$WebId,$Checkout_Payment,$Array);
+    #$Method = $Api["content"]["api"];
+    #include("api/coldwebs/payment/main.php");
+    #$TransId = Otarencrypt($key,$Trans);
+    include("api/paypal/payment.php");
+}
 
 
 if($Root_Redir != "1"){

@@ -31,9 +31,7 @@ $Redirect = $_POST['redirect'];
 $Name = $_POST['firstname'] . " " . $_POST['lastname'];
 
 
-$query = "SELECT * FROM users WHERE email='$Email' OR username='$Username'";
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
+$row = Cw_Fetch("SELECT * FROM users WHERE email='$Email' OR username='$Username'",$Array);
 if($row['id'] == ""){
     $Ar = "0";
 }else{
@@ -58,9 +56,7 @@ if($Email == "" OR $Password == ""){
             $Redirect = "Login?error=ar&redir=$Redirect";
         }
     }else{
-        mysql_query("INSERT INTO users
-        (username, email, password, other, info, webid, name) VALUES('$Username', '$Email', '$Password', '$Other', '$Info', '$WebId', '$Name' ) ") 
-        or die(mysql_error());
+        Cw_Query("INSERT INTO users(username, email, password, other, info, webid, name) VALUES('$Username', '$Email', '$Password', '$Other', '$Info', '$WebId', '$Name' ) ");
         if($Redirect == ""){
             $Redirect = "Login";
         }

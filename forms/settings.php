@@ -9,16 +9,13 @@ if($Login == "1"){
 	$Settings_BgImg = $_POST['bgimg'];
 	$Settings_Content = $_POST['content'];
 	$Settings_Status['offline'] = $_POST['offline'];
-	$Settings_Extra = $_POST['cwsettings'];
 
-	$queRy = "SELECT * FROM info WHERE id='$WebId'";
-	$resuLt = mysql_query($queRy) or die(mysql_error(drdrdrd));
-	$row = mysql_fetch_array($resuLt);
-    $row = PbUnSerial($row);
+	$row = Cw_Fetch("SELECT * FROM info WHERE id='$WebId'",$Array);
     if(is_array($row['other'])){
         $Settings_Other = $row['other'];
     }
 	$Settings_Other['phone'] = $_POST['phone'];
+	$Settings_Other['cwsettings'] = $_POST['cwsettings'];
 	$Settings_Other['admin_theme'] = $_POST['admin_theme'];
 	$Settings_Other['article'] = "3";
 	$Settings_Other['email'] = $_POST['email'];
@@ -30,6 +27,7 @@ if($Login == "1"){
     $Settings_Other['google_analytics'] = $_POST['google_analytics'];
 	$Settings_Other['tags'] = $_POST['tags'];
 	$Settings_Other['subscribe'] = $_POST['subscribe'];
+	$Settings_Other['paypalemail'] = $_POST['paypalemail'];
 
 	$CurrentMainTheme = $Array['siteinfo']['theme'];
 	#$CurrentAdminTheme = $Array['sitetheme']['admin'];
@@ -41,8 +39,8 @@ if($Login == "1"){
 	
 	
 	$query = "SELECT * FROM info WHERE id='$WebId'";
-    $result = mysql_query($query) or die(mysql_error());
-    $Article = mysql_fetch_array($result);
+    $result = mysqli_query($CwDb,$query);
+    $Article = mysqli_fetch_assoc($result);
     $Article = CwOrganize($Article,$Array);
     $Article = Cw_Filter_Array($Article);
 	
@@ -92,8 +90,7 @@ if($Login == "1"){
 	$Settings_Other = serialize($Settings_Other);
 	$Settings_Status = serialize($Settings_Status);
 //CHANGES THE THEME ON ALL PAGES THAT WAS USING THE CURRENT THEME
-	$result = mysql_query("UPDATE page_template SET template='$MainTheme' WHERE template='$CurrentMainTheme' AND webid='$WebId'") 
-	or die(mysql_error());
+	$result = Cw_Query("UPDATE page_template SET template='$MainTheme' WHERE template='$CurrentMainTheme' AND webid='$WebId'");
 
 // UPDATES THE AUTO POSTING FOR SOCIAL MEDIA SITES \\
 	$Array['facebook']['autopost'] = $FbAuto;
@@ -101,63 +98,35 @@ if($Login == "1"){
 	$FbUpdate = serialize($FbUpdate);
 	#$Array['twitter']['autopost'] = $TwAuto;
 	$TwUpdate = $Array['twitter'];
-	$result = mysql_query("UPDATE settings SET content='$FbUpdate' WHERE name='facebook' AND webid='$WebId'") 
-	or die(mysql_error());
-	$result = mysql_query("UPDATE settings SET content='$TwUpdate' WHERE name='twitter' AND webid='$WebId'") 
-	or die(mysql_error());
-// UPDATES THE EXTRA WEBSITE SETTINGS COLUMN FOR CWOPTIONS \\
-	if(is_array($Settings_Extra)){
-		foreach($Settings_Extra as $key => $value){
-			$queRy = "SELECT * FROM cwoptions WHERE name='$key' AND type='settings' AND webid='$WebId'";
-			$resuLt = mysql_query($queRy) or die(mysql_error(drdrdrd));
-			$row = mysql_fetch_array($resuLt);
-			$Setting_Type = $row['category'];
-			if($Setting_Type != "text"){
-				$result = mysql_query("UPDATE cwoptions SET active='$value' WHERE name='$key' AND type='settings' AND webid='$WebId'") 
-				or die(mysql_error());
-			}else{
-				$result = mysql_query("UPDATE cwoptions SET content='$value' WHERE name='$key' AND type='settings' AND webid='$WebId'") 
-				or die(mysql_error());
-			}
-		}
-	}
-
+	$result = Cw_Query("UPDATE settings SET content='$FbUpdate' WHERE name='facebook' AND webid='$WebId'");
+	$result = Cw_Query("UPDATE settings SET content='$TwUpdate' WHERE name='twitter' AND webid='$WebId'");
 //GENERAL SITE SETTINGS UPDATE \\
 	if(isset($Settings_Name)){
-		$result = mysql_query("UPDATE info SET name='$Settings_Name' WHERE id='$WebId'") 
-		or die(mysql_error());
+		$result = Cw_Query("UPDATE info SET name='$Settings_Name' WHERE id='$WebId'");
 	}
 	if(isset($Settings_Slogan)){
-		$result = mysql_query("UPDATE info SET slogan='$Settings_Slogan' WHERE id='$WebId'") 
-		or die(mysql_error());
+		$result = Cw_Query("UPDATE info SET slogan='$Settings_Slogan' WHERE id='$WebId'");
 	}	
 	if(isset($Settings_Mp)){
-		$result = mysql_query("UPDATE info SET mp='$Settings_Mp' WHERE id='$WebId'") 
-		or die(mysql_error());
+		$result = Cw_Query("UPDATE info SET mp='$Settings_Mp' WHERE id='$WebId'");
 	}	
 	if(isset($Settings_Domain)){
-		#$result = mysql_query("UPDATE info SET domain='$Settings_Domain' WHERE id='$WebId'") 
-		#or die(mysql_error());
+		#$result = Cw_Query("UPDATE info SET domain='$Settings_Domain' WHERE id='$WebId'");
 	}	
 	if(isset($Settings_Other)){
-		$result = mysql_query("UPDATE info SET other='$Settings_Other' WHERE id='$WebId'") 
-		or die(mysql_error());
+		$result = Cw_Query("UPDATE info SET other='$Settings_Other' WHERE id='$WebId'");
 	}
 	if(isset($Settings_Status)){
-		$result = mysql_query("UPDATE info SET status='$Settings_Status' WHERE id='$WebId'") 
-		or die(mysql_error());
+		$result = Cw_Query("UPDATE info SET status='$Settings_Status' WHERE id='$WebId'");
 	}
 	if(isset($Settings_Logo)){
-		$result = mysql_query("UPDATE info SET logo='$Settings_Logo' WHERE id='$WebId'") 
-		or die(mysql_error());
+		$result = Cw_Query("UPDATE info SET logo='$Settings_Logo' WHERE id='$WebId'");
 	}
 	if(isset($MainTheme)){
-		$result = mysql_query("UPDATE info SET theme='$MainTheme' WHERE id='$WebId'") 
-		or die(mysql_error());
+		$result = Cw_Query("UPDATE info SET theme='$MainTheme' WHERE id='$WebId'");
 	}
 	if(isset($Settings_Content)){
-		$result = mysql_query("UPDATE info SET info='$Settings_Content' WHERE id='$WebId'") 
-		or die(mysql_error());
+		$result = Cw_Query("UPDATE info SET info='$Settings_Content' WHERE id='$WebId'");
 	}
 	
 // TRACKS CHANGES MADE FROM USERS \\

@@ -5,7 +5,6 @@ if($Login == "1"){
 	$Article_Id = $_POST["id"];
 	$Article_Type = $_POST["imgtype"];
 	$Article_Category = $_POST["category"];
-	$Article_Info = $_POST["content"];
 	$Article_Active = $_POST["active"];
 	$Article_Url = $_POST["url"];
 	$Article_Date = strtotime($_POST["date"]);
@@ -28,7 +27,8 @@ if($Login == "1"){
 	$Article_Other["status"] = $_POST["status"];
     $Article_Other["mainsocial"] = $_POST["mainsocial"];
 	$Article_Other["socialqty"] = $_POST["socialqty"];
-
+    $Article_Other["auth"] = $_POST["auth"];
+    $Article_Other["artist"] = "%-" . $_POST["artist"] . "-%";
 	$Search_Name = $Article_Content["name"];
 	$Search_Parent = $_POST["id"];
 	$Search_Other = "";
@@ -36,6 +36,18 @@ if($Login == "1"){
     if($Article_Active == ""){
         $Article_Active = "0";
     }
+
+
+
+/////////////////////////////////// SETS DEFAULT VARIABLE VALUES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+if($_POST["auth"] != "" AND $Article_Id != ""){
+    $AuthBypass = "1";
+    $Article_Active = "1";
+}
+
+
+
 
 
 /////////////////////////// FINALIZE ALL ARRAYS FOR UPLOAD TO DATABASE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -51,47 +63,33 @@ if($Login == "1"){
 	if($Article_Id == ""){
 	    $Manual_Message = "Created Post";
         $PostImages = serialize($PostImages);
-        mysql_query("INSERT INTO articles(url, active, category, type, other, rand, date, feat, content, info, img, date_created,webid) VALUES('$Article_Url', '0',  
-        '$Article_Category', '$Article_Type', '$Article_Other', '$Rand','$Article_Date', '$Article_Feat', '$Article_Content', '$Article_Info ', '$PostImages', '$Date_Created', '$WebId') ")or  
-        die(mysql_error());
-        $query = "SELECT * FROM articles WHERE trash='0' AND type='$Article_Type' AND rand='$Rand' AND webid='$WebId'";
-        $result = mysql_query($query) or die(mysql_error());
-        $row = mysql_fetch_array($result);
+        Cw_Query("INSERT INTO articles(url, active, category, type, other, rand, date, feat, content, info, img, date_created,webid) VALUES('$Article_Url', '0',  
+        '$Article_Category', '$Article_Type', '$Article_Other', '$Rand','$Article_Date', '$Article_Feat', '$Article_Content', '$Article_Info ', '$PostImages', '$Date_Created', '$WebId') ");
+        $row = Cw_Fetch("SELECT * FROM articles WHERE trash='0' AND type='$Article_Type' AND rand='$Rand' AND webid='$WebId'",$Array);
         $PostId = $row['id'];
 
 	}else{
-        $query = "SELECT * FROM articles WHERE id='$Article_Id'";
-    	$result = mysql_query($query) or die(mysql_error());
-    	$Article = mysql_fetch_array($result);
-		$Article = CwOrganize($Article,$Array);   
+        $Article = Cw_Fetch("SELECT * FROM articles WHERE id='$Article_Id'",$Array);
 		$Article = Cw_Filter_Array($Article);
 
 // UPDATE THE DATABASE WITH ANY NEW/OLD INFORMATION \\
-		$result = mysql_query("UPDATE articles SET url='$Article_Url' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET info='$Article_Info' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET category='$Article_Category' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error()); 
-		$result = mysql_query("UPDATE articles SET other='$Article_Other' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET feat='$Article_Feat' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET content='$Article_Content' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET date_created='$Date_Created' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET date='$Article_Date' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
-		$result = mysql_query("UPDATE articles SET rand='' WHERE id='$Article_Id' AND webid='$WebId'") 
-		or die(mysql_error());
+        if($AuthBypass == "1"){
+            $result = Cw_Query("UPDATE articles SET active='$Article_Active' WHERE id='$Article_Id' AND webid='$WebId'");
+        }
+		$result = Cw_Query("UPDATE articles SET url='$Article_Url' WHERE id='$Article_Id' AND webid='$WebId'");
+		$result = Cw_Query("UPDATE articles SET category='$Article_Category' WHERE id='$Article_Id' AND webid='$WebId'"); 
+		$result = Cw_Query("UPDATE articles SET other='$Article_Other' WHERE id='$Article_Id' AND webid='$WebId'");
+		$result = Cw_Query("UPDATE articles SET feat='$Article_Feat' WHERE id='$Article_Id' AND webid='$WebId'");
+		$result = Cw_Query("UPDATE articles SET content='$Article_Content' WHERE id='$Article_Id' AND webid='$WebId'");
+		$result = Cw_Query("UPDATE articles SET date_created='$Date_Created' WHERE id='$Article_Id' AND webid='$WebId'");
+		$result = Cw_Query("UPDATE articles SET date='$Article_Date' WHERE id='$Article_Id' AND webid='$WebId'");
+		$result = Cw_Query("UPDATE articles SET rand='' WHERE id='$Article_Id' AND webid='$WebId'");
 		if(is_array($PostImages)){
 		    $PostImages = serialize($PostImages);
-			$result = mysql_query("UPDATE articles SET img='$PostImages' WHERE id='$Article_Id' AND webid='$WebId'") 
-		    or die(mysql_error());
+			$result = Cw_Query("UPDATE articles SET img='$PostImages' WHERE id='$Article_Id' AND webid='$WebId'");
 		}
-
 	}
+	
     if($Article_Id == ""){
         $Article_Id = $PostId;
     }else{
@@ -103,9 +101,7 @@ if($Login == "1"){
 ////////////////////////////////// VERIFY SOCIAL MEDIA ACCOUNT \\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     if($Article_Id == ""){
-        $Query = "SELECT * FROM articles WHERE type='$Article_Type' AND category='$Article_Category' AND url='$Article_Url' AND trash='0' AND webid='$WebId'";
-        $Result = mysql_query($Query) or die(mysql_error());
-        $Row = mysql_fetch_array($Result);
+        $Row = Cw_Fetch("SELECT * FROM articles WHERE type='$Article_Type' AND category='$Article_Category' AND url='$Article_Url' AND trash='0' AND webid='$WebId'",$Array);
         $Article_Id = $Row['id'];
     }
 
@@ -137,10 +133,7 @@ if($Login == "1"){
 
 
     if($_POST["mainsocial"] != ""){
-        $query = "SELECT * FROM info WHERE domain LIKE '%$Website%'";
-        $result = mysql_query($query) or die(mysql_error());
-        $row = mysql_fetch_array($result);
-        $row = PbUnSerial($row);
+        $row = Cw_Fetch("SELECT * FROM info WHERE domain LIKE '%$Website%'",$Array);
         $NewSocialOther = $row['other'];
         if(!is_array($NewSocialOther)){
             $NewSocialOther['socialauth'] = array();
@@ -155,15 +148,7 @@ if($Login == "1"){
             }
         }
         $NewSocialOther = serialize($NewSocialOther);
-        $result = mysql_query("UPDATE info SET other='$NewSocialOther' WHERE id='$WebId'") 
-        or die(mysql_error()); 
-    }
-
-
-	if($Root_Redi == "1"){
-	    header("Location: $REDIRECT");
-    }else{
-        header("Location: http://$Website_Url_Auth/$REDIRECT");
+        $result = Cw_Query("UPDATE info SET other='$NewSocialOther' WHERE id='$WebId'"); 
     }
 
 // TRACKS CHANGES MADE FROM USERS \\
@@ -177,6 +162,11 @@ if($Login == "1"){
     $Info["type"] = "articles";
     Cw_Changes($Info, $Article, $Array);
 /////////////////////////////////////////
+}
+if($Root_Redi == "1"){
+    header("Location: $REDIRECT");
+}else{
+    header("Location: http://$Website_Url_Auth/$REDIRECT");
 }
 
 

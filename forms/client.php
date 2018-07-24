@@ -4,8 +4,8 @@ if($Login == "1"){
 	$Preview = $_REQUEST['preview'];
 
 	$query = "SELECT * FROM articles WHERE active='1' AND trash='0' AND other='$Preview'  AND webid='$WebId'";
-	$result = mysql_query($query) or die(mysql_error());
-	$row = mysql_fetch_array($result);
+	$result = mysqli_query($CwDb,$query) or die(mysql_error());
+	$row = mysqli_fetch_assoc($result);
 
 	$_SESSION['previewcode'] = $row['other'];
 

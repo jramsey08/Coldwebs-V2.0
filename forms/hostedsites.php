@@ -57,44 +57,44 @@ if($Login == "1"){
 	    $Manual_Message = "Created Website";
 	    
 // ICREATE NEW ENTRY IN DATABASE \\
-		mysql_query("INSERT INTO info(name, domain, status, mp, slogan, logo, theme, other, info) 
-		VALUES('$Website_Name', '$Website_Domain', '$Website_Status',  '$Website_Mp', '$Website_Slogan', '$Website_Logo', '$Website_Theme','$Website_Other', '$Website_Info') ")or die(mysql_error());
+		mysqli_query($CwDb,"INSERT INTO info(name, domain, status, mp, slogan, logo, theme, other, info) 
+		VALUES('$Website_Name', '$Website_Domain', '$Website_Status',  '$Website_Mp', '$Website_Slogan', '$Website_Logo', '$Website_Theme','$Website_Other', '$Website_Info') ")or die(mysqli_error());
 
 	}else{
 
         $query = "SELECT * FROM info WHERE id='$Website_Id'";
-    	$result = mysql_query($query) or die(mysql_error());
-    	$Article = mysql_fetch_array($result);
+    	$result = mysqli_query($CwDb,$query) or die(mysql_error());
+    	$Article = mysqli_fetch_assoc($result);
     	$Article = CwOrganize($Article,$Array);
         $Article = Cw_Filter_Array($Article);
 
 // UPDATE THE DATABASE WITH ANY NEW/OLD INFORMATION \\
     	if(isset($Website_Name)){
-    		$result = mysql_query("UPDATE info SET name='$Website_Name' WHERE id='$Website_Id'") or die(mysql_error());
+    		$result = mysqli_query($CwDb,"UPDATE info SET name='$Website_Name' WHERE id='$Website_Id'") or die(mysqli_error());
     	}
     	if(isset($Website_Slogan)){
-    		$result = mysql_query("UPDATE info SET slogan='$Website_Slogan' WHERE id='$Website_Id'") or die(mysql_error());
+    		$result = mysqli_query($CwDb,"UPDATE info SET slogan='$Website_Slogan' WHERE id='$Website_Id'") or die(mysqli_error());
     	}
     	if(isset($Website_Mp)){
-    		$result = mysql_query("UPDATE info SET mp='$Website_Mp' WHERE id='$Website_Id'") or die(mysql_error());
+    		$result = mysqli_query($CwDb,"UPDATE info SET mp='$Website_Mp' WHERE id='$Website_Id'") or die(mysqli_error());
     	}
     	if(isset($Website_Domain)){
-    		$result = mysql_query("UPDATE info SET domain='$Website_Domain' WHERE id='$Website_Id'") or die(mysql_error());
+    		$result = mysqli_query($CwDb,"UPDATE info SET domain='$Website_Domain' WHERE id='$Website_Id'") or die(mysqli_error());
     	}
     	if(isset($Website_Other)){
-    		$result = mysql_query("UPDATE info SET other='$Website_Other' WHERE id='$Website_Id'") or die(mysql_error());
+    		$result = mysqli_query($CwDb,"UPDATE info SET other='$Website_Other' WHERE id='$Website_Id'") or die(mysqli_error());
     	}
     	if(isset($Website_Status)){
-    		$result = mysql_query("UPDATE info SET status='$Website_Status' WHERE id='$Website_Id'") or die(mysql_error());
+    		$result = mysqli_query($CwDb,"UPDATE info SET status='$Website_Status' WHERE id='$Website_Id'") or die(mysqli_error());
     	}
     	if(isset($Website_Logo)){
-    		$result = mysql_query("UPDATE info SET logo='$Website_Logo' WHERE id='$Website_Id'") or die(mysql_error());
+    		$result = mysqli_query($CwDb,"UPDATE info SET logo='$Website_Logo' WHERE id='$Website_Id'") or die(mysqli_error());
     	}
     	if(isset($Website_Theme)){
-    		$result = mysql_query("UPDATE info SET theme='$Website_Theme' WHERE id='$Website_Id'") or die(mysql_error());
+    		$result = mysqli_query($CwDb,"UPDATE info SET theme='$Website_Theme' WHERE id='$Website_Id'") or die(mysqli_error());
     	}
     	if(isset($Website_Content)){
-    		$result = mysql_query("UPDATE info SET info='$Website_Content' WHERE id='$Website_Id'") or die(mysql_error());
+    		$result = mysqli_query($CwDb,"UPDATE info SET info='$Website_Content' WHERE id='$Website_Id'") or die(mysqli_error());
     	}
 		
 		

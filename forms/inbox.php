@@ -4,12 +4,11 @@ if($Login == "1"){
     $Message_Name = $_POST["name"];
     $Message_Reply = $_POST["reply"];
     $Message_Subject = $_POST["subject"];    
-    $Message_Email = $_POST["email"];
-    $Message_Email = explode(",", $Message_Email);
+    $Message_Email = explode(",", $_POST["email"]);
     $Message_Category = $_POST["category"];
     $Message_User = $_POST["user"];
     $Message_Message = $_POST["message"];
-    $Message_Cc = $_POST["cc"];
+    $Message_Cc = explode(",", $_POST["cc"]);
     
     $Message_Other["ip"] = $_POST["ip"];
     $Message_Other["phone"] = $_POST["phone"];
@@ -23,6 +22,17 @@ if($Login == "1"){
 	
 /////////////////////////////////// SETS DEFAULT VARIABLE VALUES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	
     $Message_Message = "<html>" . $Message_Message . "</html>";
+    
+    if($UserSiteAccess['adminmessages'] == "1"){
+        if($Message_Reply == $SiteInfo["other"]["email"]){
+            $Message_Admin = "1";
+        }else{
+            $Message_Admin = "0";
+        }
+    }else{
+        $Message_Admin = "0";
+    }
+    
     
     $Domain = "http://$Website_Url_Auth";
     $Date = strtotime("now");
@@ -69,7 +79,8 @@ if($Login == "1"){
             $Message_Cc = "";
         }
     }
-    
+    $Message_Cc = str_replace("Array,","","$Message_Cc");
+    $Message_Email = str_replace("Array,","","$Message_Email");
 /////////////////////////// FINALIZE ALL ARRAYS FOR UPLOAD TO DATABASE \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\	
 	$Message_Other = Cw_Filter_Array($Message_Other);
 	$Message_Other = serialize($Message_Other);
@@ -79,12 +90,12 @@ if($Login == "1"){
         
         $Manual_Message = "Created Message";
         
-        mysql_query("INSERT INTO messages(name, subject, message, email, user, receiver, type, admin, date, webid, category, other) 
-        VALUES('$Message_Name', '$Message_Subject', '$Message_Message', '$Message_Email', '$Message_User', '$Message_Email', 'sent', '$Message_Admin', '$Date', '$WebId', '$Message_Category', '$Message_Other') ")or die(mysql_error());
+        mysqli_query($CwDb,"INSERT INTO messages(name, subject, message, email, user, receiver, type, admin, date, webid, category, other) 
+        VALUES('$Message_Name', '$Message_Subject', '$Message_Message', '$Message_Email', '$Message_User', '$Message_Email', 'sent', '$Message_Admin', '$Date', '$WebId', '$Message_Category', '$Message_Other') ")or die(mysqli_error());
 
         $query = "SELECT * FROM messages WHERE date='$Date' AND type='sent' AND webid='$WebId'";
-    	$result = mysql_query($query) or die(mysql_error());
-    	$row = mysql_fetch_array($result);
+    	$result = mysqli_query($CwDb,$query) or die(mysqli_error());
+    	$row = mysqli_fetch_assoc($result);
     	$Post = CwOrganize($row,$Array);
         
         $to = $Message_Email;

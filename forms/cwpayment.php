@@ -2,8 +2,8 @@
 $Trans_Id = OtarDecrypt($key,$_GET['type']);
 
 $query = "SELECT * FROM trans WHERE id='$Trans_Id'"; 
-$result = mysql_query($query) or die(mysql_error());
-$row = mysql_fetch_array($result);
+$result = mysqli_query($CwDb,$query) or die(mysql_error());
+$row = mysqli_fetch_assoc($result);
 
 $Cw_Shipment = "10";
 $Cart_Total = $row['price'];

@@ -18,9 +18,8 @@ if($Login == "1"){
 	$Content['email'] = $Email;
 	$Content = serialize($Content); 
 
-	mysql_query("INSERT INTO articles 
-	(content,info,category,type,active,date, webid) VALUES('$Content', '$Message', '$Id', 'comment', '1', '$Date', '$WebId' ) ") 
-	or die(mysql_error()); 
+	mysqli_query($CwDb,"INSERT INTO articles content,info,category,type,active,date, webid) 
+	VALUES('$Content', '$Message', '$Id', 'comment', '1', '$Date', '$WebId' ) ") or die(mysqli_error()); 
 
 }
 
